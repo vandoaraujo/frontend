@@ -5,6 +5,6 @@ export default props =>
     <footer className="footer">
         <span>
             Desenvolvido com <i className="fa fa-heart text-danger"></i> por
-            <strong> <span class="text-danger">Vando Araujo</span></strong>
+            <strong> <span className="text-danger">Vando Araujo</span></strong>
         </span>
     </footer>
