@@ -43,6 +43,33 @@ export default class UserCrud extends Component {
         return list
     }
 
+    /**
+     * Interessante evoluir o estado e nao atualizá-lo diretamente
+     * @param {event}
+     */
+    updateField(event){
+        const user = { ...this.state.user }
+        user[event.target.name] = event.target.value
+        this.setState({ user })
+    }
+
+    renderForm() {
+        return (
+            <div className="form">
+                <div className="row">
+                    <div className="col-12 col-md-6">
+                        <div className="form-group">
+                            <label>Nome</label>
+                            <input type="text" className="form-controle"
+                                name="name" value={this.state.user.name}
+                                onChange={e => this.updateField(e)}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     render() {
         return (
             <Main {...headerProps}>
