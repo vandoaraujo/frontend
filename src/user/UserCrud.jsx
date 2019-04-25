@@ -29,6 +29,7 @@ export default class UserCrud extends Component {
         axios[method](url, user)
             .then(resp => {
                 const list = this.getUpdatedList(resp.data)
+                this.setState({ user: initialState.user, list })
             })
     }
 
