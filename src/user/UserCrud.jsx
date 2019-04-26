@@ -18,6 +18,12 @@ export default class UserCrud extends Component {
 
     state = { ...initialState }
 
+    componentWillMount() {
+        axios(baseURL).then(resp => {
+            this.setState({ list: resp.data })
+        })
+    }
+
     clear() {
         this.setState( { user: initialState.user} )
     }
@@ -29,7 +35,7 @@ export default class UserCrud extends Component {
         axios[method](url, user)
             .then(resp => {
                 const list = this.getUpdatedList(resp.data)
-                this.setState({ user: initialState.user, list })
+                this.setState({ user: initialState.user, list })    
             })
     }
 
@@ -38,9 +44,9 @@ export default class UserCrud extends Component {
      * Removo usuario da lista e adiciono o novo criando uma lista nova
      * @param user 
      */
-    getUpdatedList(user) {
+    getUpdatedList(user, add = true) {
         const list = this.state.list.filter(u => u.id !== user.id)
-        list.unshift(user)
+        if(add) list.unshift(user)
         return list
     }
 
@@ -52,6 +58,35 @@ export default class UserCrud extends Component {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
+    }
+
+    load(user){
+        this.setState({ user })
+    }
+
+    renderTable(){
+        return(
+            <table className="table mt-4">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.renderRows()}
+                </tbody>
+            </table>
+        )
+    }
+
+    remove(user){
+        axios.delete(`${baseURL}/${user.id}`).then(resp => {
+            const list = this.getUpdatedList(user, false)
+            this.setState({list})
+        })
     }
 
     renderForm() {
@@ -93,16 +128,42 @@ export default class UserCrud extends Component {
                             Cancelar
                         </button>
                     </div>   
-                </div>
+                </div>  
             </div>
             
         )
     }
 
+    renderRows(){
+        return this.state.list.map(user => {
+            return (
+                <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                        <button className="btn btn-warning"
+                            onClick={() => this.load(user)}>
+                            <i className="fa fa-pencil"></i>
+                        </button    >
+                    </td>
+                    <td>
+                        <button className="btn btn-danger ml-2"
+                            onClick={() => this.remove(user)}>
+                            <i className="fa fa-trash"></i>
+                        </button>
+                    </td>   
+                </tr>
+            )
+        })
+    }
+
     render() {
+        console.log(this.state.list)
         return (
             <Main {...headerProps}>
                 {this.renderForm()}
+                {this.renderTable()} 
             </Main>
         )
     }
