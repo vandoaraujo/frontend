@@ -88,7 +88,8 @@ class Login extends Component {
   login = (e) => {
     // this.isAuthenticated = false;
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    var apiBaseUrl = `http://localhost:4000/api-token-auth`;
+    var apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth'
+
     var payload = {
       email: this.state.formControls.email.value,
       password: this.state.formControls.password.value
