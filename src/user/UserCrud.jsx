@@ -20,6 +20,7 @@ export default class UserCrud extends Component {
     state = { ...initialState }
 
     componentWillMount() {
+        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         axios(baseURL).then(resp => {
             this.setState({ list: resp.data })
         })
