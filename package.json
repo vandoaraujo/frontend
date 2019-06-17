@@ -23,7 +23,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://api.teste.com.br/v1",
   "browserslist": [
     ">0.2%",
     "not dead",
