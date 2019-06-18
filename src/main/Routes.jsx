@@ -8,8 +8,12 @@ import {
 } from "react-router-dom";
 import App from '../main/App';
 import Main from '../components/template/Main'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
+
+toast.configure()
+
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -97,28 +101,28 @@ class Login extends Component {
 
     axios.post(apiBaseUrl, payload)
     .then(response => {
-      console.log("Response Code" + response.status);
-
       if (response.status === 200) {
-        console.log("Login successfull");
         axios.defaults.headers.common['Authorization'] = response.data.token;
-        // this.isAuthenticated = true;
         fakeAuth.authenticate(() => {
           this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
-          // const { user, rememberMe } = this.state;
-          console.log(response.data.user)
           localStorage.setItem('userLogado', response.data.user.username);
           localStorage.setItem('token', response.data.token);
-          
-          // localStorage.setItem('user', rememberMe ? user : '');
         });
       }
       else if (response.status === 204) {
-        console.log("Username password do not match");
-        alert("username password do not match")
+        
+        toast('Usuario e Senha não conferem', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+          });
+        
       }
       else {
-        console.log("Username does not exists");
+        alert("Usuário não existe...")
       }
     })
     .catch(error => {
@@ -126,7 +130,14 @@ class Login extends Component {
 
       if (error.response) {
         console.log('Retorno 500...');
-        alert(error.response.data);
+        toast(error.response.data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+          });
       } else if (error.request) {
         console.log(error.request);
       } else {
@@ -223,7 +234,7 @@ const AuthButton = withRouter(
         </button>
       </p>
     ) : (
-        <p>Você não está logado...</p>
+        <p>Clique no link para efetuar o login no sistema</p>
       )
 );
 
