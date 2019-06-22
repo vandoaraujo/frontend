@@ -4,11 +4,13 @@ import axios from 'axios'
 
 const headerProps = {
     icon: 'users',
-    title: 'Usuários',
-    subtitle: 'Cadastro de usuários: Incluir, Listar, Alterar e Excluir'
+    title: 'Membros',
+    subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }
 
-const baseURL = 'https://cadastromembrosibbback.herokuapp.com/users'
+//const baseURL = 'https://cadastromembrosibbback.herokuapp.com/users'
+const baseURL = 'http://localhost:4000/membros'
+//axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU3MjMzODczLCJleHAiOjE1NTczMjAyNzN9.JUXciiKuGc5GL0sTMX9br0nObC_CrBGxlKmB_iqp1zY'
 
 const initialState = {
     user: {name: '', email: ''},
@@ -21,7 +23,7 @@ export default class UserCrud extends Component {
 
     componentWillMount() {
         axios(baseURL).then(resp => {
-            this.setState({ list: resp.data })
+            this.setState({ list: resp.data.users })
         })
     }
 
@@ -108,7 +110,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>E-mail</label>
                             <input type="text" className="form-control"
-                            name="email"
+                            name="email" 
                             value={this.state.user.email}
                             onChange={e => this.updateField(e)}
                             placeholder="Digite o email..."
