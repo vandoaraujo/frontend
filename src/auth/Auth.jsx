@@ -1,10 +1,14 @@
 import './auth.css'
 import React, { Component } from 'react'
+import axios from 'axios'
 import Row from '../common/layout/row'
 import Grid from '../common/layout/grid'
 import Main from '../components/template/Main'
 import { ToastContainer, toast } from 'react-toastify';
+import App from '../main/App';
 import 'react-toastify/dist/ReactToastify.css';
+import { Redirect } from 'react-router'
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
 toast.configure()

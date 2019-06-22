@@ -8,9 +8,14 @@ import {
 } from "react-router-dom";
 import App from '../main/App';
 import Main from '../components/template/Main'
-import { ToastContainer } from 'react-toastify';
 import Public from '../main/Public'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'
+
+toast.configure()
+
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -79,9 +84,10 @@ class Login extends Component {
   } 
 
   login = (e) => {
-    // this.isAuthenticated = false;
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    var apiBaseUrl = `http://localhost:4000/api-token-auth`;
+    var apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth'
+    //var apiBaseUrl = 'http://localhost:3001/api-token-auth'
+
     var payload = {
       email: this.state.formControls.email.value,
       password: this.state.formControls.password.value
@@ -89,26 +95,28 @@ class Login extends Component {
 
     axios.post(apiBaseUrl, payload)
     .then(response => {
-      console.log("Response Code" + response.status);
-
       if (response.status === 200) {
-        console.log("Login successfull");
         axios.defaults.headers.common['Authorization'] = response.data.token;
-        // this.isAuthenticated = true;
         fakeAuth.authenticate(() => {
           this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
-          // const { user, rememberMe } = this.state;
-          console.log(response.data.user)
           localStorage.setItem('userLogado', response.data.user.username);
-          // localStorage.setItem('user', rememberMe ? user : '');
+          localStorage.setItem('token', response.data.token);
         });
       }
       else if (response.status === 204) {
-        console.log("Username password do not match");
-        alert("username password do not match")
+        
+        toast('Usuario e Senha não conferem', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+          });
+        
       }
       else {
-        console.log("Username does not exists");
+        alert("Usuário não existe...")
       }
     })
     .catch(error => {
@@ -116,7 +124,14 @@ class Login extends Component {
 
       if (error.response) {
         console.log('Retorno 500...');
-        alert(error.response.data);
+        toast(error.response.data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+          });
       } else if (error.request) {
         console.log(error.request);
       } else {

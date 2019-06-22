@@ -2,11 +2,19 @@
 import axios from 'axios'
 import consts from '../consts'
 
+<<<<<<< HEAD
 export function login(values) {
     var retorno = submit(values, `${consts.OAPI_URL}api-token-auth`)
     console.log('Retorno function Login' + retorno)
     return retorno
 }
+=======
+// export function login(values) {
+//     var retorno = submit(values, `${consts.OAPI_URL}api-token-auth`)
+//     console.log('Retorno function Login' + retorno)
+//     return retorno
+// }
+>>>>>>> b4ff441cb0ac342540567f07e68b814e1bdb3b88
 
 // export function signup(values) {
 //     return submit(values, `${consts.OAPI_URL}/signup`)

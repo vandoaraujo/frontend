@@ -22,6 +22,7 @@ export default class UserCrud extends Component {
     state = { ...initialState }
 
     componentWillMount() {
+        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         axios(baseURL).then(resp => {
             this.setState({ list: resp.data.users })
         })
@@ -32,6 +33,7 @@ export default class UserCrud extends Component {
     }
 
     save() {
+        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         const user  = this.state.user
         const method = user.id ? 'put' : 'post'
         const url = user.id ? `${baseURL}/${user.id}` : baseURL
@@ -86,6 +88,7 @@ export default class UserCrud extends Component {
     }
 
     remove(user){
+        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         axios.delete(`${baseURL}/${user.id}`).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
