@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-<<<<<<< HEAD
-=======
 import Login from './main/Login';
->>>>>>> b4ff441cb0ac342540567f07e68b814e1bdb3b88
 import * as serviceWorker from './serviceWorker';
 import Routes from './main/Routes';
 
