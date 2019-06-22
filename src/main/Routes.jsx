@@ -12,7 +12,7 @@ import Public from '../main/Public'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios'
+
 
 toast.configure()
 
