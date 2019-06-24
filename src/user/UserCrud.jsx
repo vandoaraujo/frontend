@@ -13,7 +13,8 @@ const baseURL = 'http://localhost:4000/membros'
 //axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU3MjMzODczLCJleHAiOjE1NTczMjAyNzN9.JUXciiKuGc5GL0sTMX9br0nObC_CrBGxlKmB_iqp1zY'
 
 const initialState = {
-    user: {name: '', email: ''},
+    user: {name: '', email: '', cep: '', endereco: '', cidade: '', telefone: '', dataNascimento: '', sexo: '', estadoCivil: '',
+    conjuge: '', escolaridade: '', profissao: ''},
     list: []
 }
 
@@ -77,6 +78,16 @@ export default class UserCrud extends Component {
                         <th>Id</th>
                         <th>Nome</th>
                         <th>E-mail</th>
+                        <th>Cep</th>
+                        <th>Endereco</th>
+                        <th>Cidade</th>
+                        <th>Telefone</th>
+                        <th>Data Nas</th>
+                        <th>Sexo</th>
+                        <th>Estado Civil</th>
+                        <th>Conjuge</th>
+                        <th>Escolaridade</th>
+                        <th>Profissão</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -99,7 +110,7 @@ export default class UserCrud extends Component {
         return (
             <div className="form">
                 <div className="row">
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-12">
                         <div className="form-group">
                             <label>Nome</label>
                             <input type="text" className="form-control"
@@ -108,44 +119,45 @@ export default class UserCrud extends Component {
                                 placeholder="Digite o nome..."/>
                         </div>
                     </div>
-
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>Endereço</label>
-                            <input type="text" className="form-control"
-                            name="email" 
-                            value={this.state.user.endereco}
-                            onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
-                            />
-                        </div>
-                    </div>
                 </div>
                 
                 <div className="row">
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>Cidade</label>
-                            <input type="text" className="form-control"
-                                name="name" value={this.state.user.cidade}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
-                        </div>
-                    </div>
-
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                         <div className="form-group">
                             <label>CEP</label>
                             <input type="text" className="form-control"
                             name="email" 
                             value={this.state.user.cep}
                             onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
+                            placeholder="Digite o cep..."
                             />
                         </div>
                     </div>
                 </div>
                 
+                <div className="row">
+                <div className="col-12 col-md-8">
+                        <div className="form-group">
+                            <label>Endereço</label>
+                            <input type="text" className="form-control"
+                            name="email" 
+                            value={this.state.user.endereco}
+                            onChange={e => this.updateField(e)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                        <div className="form-group">
+                            <label>Cidade</label>
+                            <input type="text" className="form-control"
+                                name="name" value={this.state.user.cidade}
+                                onChange={e => this.updateField(e)}
+                                />
+                        </div>
+                    </div>
+                </div>
+
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -153,7 +165,7 @@ export default class UserCrud extends Component {
                             <input type="text" className="form-control"
                                 name="name" value={this.state.user.telefone}
                                 onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                placeholder="Digite o telefone..."/>
                         </div>
                     </div>
 
@@ -171,25 +183,35 @@ export default class UserCrud extends Component {
                 </div>
 
                 <div className="row">
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                         <div className="form-group">
                             <label>Data Nascimento</label>
-                            <input type="text" className="form-control"
-                                name="name" value={this.state.user.cidade}
+                            <input type="date" className="form-control"
+                                name="name" value={this.state.user.dataNascimento}
                                 onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                placeholder="Digite a Data de nascimento..."/>
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-4">
                         <div className="form-group">
                             <label>Sexo</label>
                             <input type="text" className="form-control"
                             name="email" 
                             value={this.state.user.sexo}
                             onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
+                            placeholder="Digite o sexo..."
                             />
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-md-4">
+                        <div className="form-group">
+                            <label>Estado Civil</label>
+                            <input type="text" className="form-control"
+                                name="name" value={this.state.user.estadoCivil}
+                                onChange={e => this.updateField(e)}
+                                placeholder="Digite o estado civil..."/>
                         </div>
                     </div>
                 </div>
@@ -197,22 +219,12 @@ export default class UserCrud extends Component {
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <div className="form-group">
-                            <label>Estado Civil</label>
-                            <input type="text" className="form-control"
-                                name="name" value={this.state.user.estadoCivil}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
-                        </div>
-                    </div>
-
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>Nome Conjuge</label>
+                            <label>Nome Cônjuge</label>
                             <input type="text" className="form-control"
                             name="email" 
-                            value={this.state.user.sexo}
+                            value={this.state.user.conjuge}
                             onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
+                            placeholder="Digite o nome do conjuge..."
                             />
                         </div>
                     </div>
@@ -224,8 +236,7 @@ export default class UserCrud extends Component {
                             <label>Escolaridade</label>
                             <input type="text" className="form-control"
                                 name="name" value={this.state.user.escolaridade}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                onChange={e => this.updateField(e)} />
                         </div>
                     </div>
 
@@ -236,7 +247,6 @@ export default class UserCrud extends Component {
                             name="email" 
                             value={this.state.user.profissao}
                             onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
                             />
                         </div>
                     </div>
@@ -267,6 +277,16 @@ export default class UserCrud extends Component {
                     <td>{user.id}</td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
+                    <td>{user.cep}</td>
+                    <td>{user.endereco}</td>
+                    <td>{user.cidade}</td>
+                    <td>{user.telefone}</td>
+                    <td>{user.dataNascimento}</td>
+                    <td>{user.sexo}</td>
+                    <td>{user.estadoCivil}</td>
+                    <td>{user.conjuge}</td>
+                    <td>{user.escolaridade}</td>
+                    <td>{user.profissao}</td>
                     <td>
                         <button className="btn btn-warning"
                             onClick={() => this.load(user)}>
