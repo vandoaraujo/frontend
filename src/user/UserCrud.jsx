@@ -126,7 +126,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>CEP</label>
                             <input type="text" className="form-control"
-                            name="email" 
+                            name="cep" 
                             value={this.state.user.cep}
                             onChange={e => this.updateField(e)}
                             placeholder="Digite o cep..."
@@ -140,7 +140,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Endereço</label>
                             <input type="text" className="form-control"
-                            name="email" 
+                            name="endereco" 
                             value={this.state.user.endereco}
                             onChange={e => this.updateField(e)}
                             />
@@ -151,7 +151,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Cidade</label>
                             <input type="text" className="form-control"
-                                name="name" value={this.state.user.cidade}
+                                name="cidade" value={this.state.user.cidade}
                                 onChange={e => this.updateField(e)}
                                 />
                         </div>
@@ -163,7 +163,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Telefone</label>
                             <input type="text" className="form-control"
-                                name="name" value={this.state.user.telefone}
+                                name="telefone" value={this.state.user.telefone}
                                 onChange={e => this.updateField(e)}
                                 placeholder="Digite o telefone..."/>
                         </div>
@@ -187,7 +187,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Data Nascimento</label>
                             <input type="date" className="form-control"
-                                name="name" value={this.state.user.dataNascimento}
+                                name="dataNascimento" value={this.state.user.dataNascimento}
                                 onChange={e => this.updateField(e)}
                                 placeholder="Digite a Data de nascimento..."/>
                         </div>
@@ -197,7 +197,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Sexo</label>
                             <input type="text" className="form-control"
-                            name="email" 
+                            name="sexo" 
                             value={this.state.user.sexo}
                             onChange={e => this.updateField(e)}
                             placeholder="Digite o sexo..."
@@ -209,7 +209,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Estado Civil</label>
                             <input type="text" className="form-control"
-                                name="name" value={this.state.user.estadoCivil}
+                                name="estadoCivil" value={this.state.user.estadoCivil}
                                 onChange={e => this.updateField(e)}
                                 placeholder="Digite o estado civil..."/>
                         </div>
@@ -221,7 +221,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Nome Cônjuge</label>
                             <input type="text" className="form-control"
-                            name="email" 
+                            name="conjuge" 
                             value={this.state.user.conjuge}
                             onChange={e => this.updateField(e)}
                             placeholder="Digite o nome do conjuge..."
@@ -235,7 +235,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Escolaridade</label>
                             <input type="text" className="form-control"
-                                name="name" value={this.state.user.escolaridade}
+                                name="escolaridade" value={this.state.user.escolaridade}
                                 onChange={e => this.updateField(e)} />
                         </div>
                     </div>
@@ -244,7 +244,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Profissão</label>
                             <input type="text" className="form-control"
-                            name="email" 
+                            name="profissao" 
                             value={this.state.user.profissao}
                             onChange={e => this.updateField(e)}
                             />
