@@ -8,8 +8,8 @@ const headerProps = {
     subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }
 
-//const baseURL = 'https://cadastromembrosibbback.herokuapp.com/users'
-const baseURL = 'http://localhost:4000/membros'
+const baseURL = 'https://cadastromembrosibbback.herokuapp.com/users'
+//const baseURL = 'http://localhost:4000/membros'
 //axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU3MjMzODczLCJleHAiOjE1NTczMjAyNzN9.JUXciiKuGc5GL0sTMX9br0nObC_CrBGxlKmB_iqp1zY'
 
 const initialState = {
