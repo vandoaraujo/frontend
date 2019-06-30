@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
+import ViaCep from 'react-via-cep';
+
 
 const headerProps = {
     icon: 'users',
@@ -8,13 +10,15 @@ const headerProps = {
     subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }
 
-const baseURL = 'https://cadastromembrosibbback.herokuapp.com/users'
-//const baseURL = 'http://localhost:4000/membros'
+//const baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
+const baseURL = 'http://localhost:3001/membros'
 //axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU3MjMzODczLCJleHAiOjE1NTczMjAyNzN9.JUXciiKuGc5GL0sTMX9br0nObC_CrBGxlKmB_iqp1zY'
 
 const initialState = {
-    user: {name: '', email: '', cep: '', endereco: '', cidade: '', telefone: '', dataNascimento: '', sexo: '', estadoCivil: '',
-    conjuge: '', escolaridade: '', profissao: ''},
+    user: { name: '', email: '', cep: '', endereco: '',
+            cidade: '', telefone: '', dataNascimento: '',
+            sexo: '', estadoCivil: '', conjuge: '',
+            escolaridade: '', profissao: ''},
     list: []
 }
 
@@ -66,6 +70,16 @@ export default class UserCrud extends Component {
         this.setState({ user })
     }
 
+        /**
+     * Interessante evoluir o estado e nao atualizá-lo diretamente
+     * @param {event}
+     */
+    updateAdress(event){
+        const user = { ...this.state.user }
+        user[event.target.name] = event.target.value
+        this.setState({ user })
+    }
+
     load(user){
         this.setState({ user })
     }
@@ -110,7 +124,7 @@ export default class UserCrud extends Component {
         return (
             <div className="form">
                 <div className="row">
-                    <div className="col-12 col-md-12">
+                    <div className="col-12 col-md-8">
                         <div className="form-group">
                             <label>Nome</label>
                             <input type="text" className="form-control"
@@ -122,16 +136,41 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                    <div className="col-12 col-md-4">
-                        <div className="form-group">
+                    <div className="col-12 col-md-2">
+                        {/* <div className="form-group">
                             <label>CEP</label>
                             <input type="text" className="form-control"
                             name="cep" 
                             value={this.state.user.cep}
-                            onChange={e => this.updateField(e)}
+                            onChange={e => this.updateAdress(e)}
                             placeholder="Digite o cep..."
                             />
-                        </div>
+                        </div> */}
+<ViaCep cep={this.state.cep} lazy>
+  { ({ data, loading, error, fetch }) => {
+    if (loading) {
+      return <p>loading...</p>
+    }
+    if (error) {
+      return <p>error</p>
+    }
+    if (data) {
+      return <div>
+        <p>
+          CEP: {data.cep} <br/>
+          CIDADE: {data.localidade} <br/>
+          UF: {data.uf} <br/>
+        </p>
+      </div>
+    }
+    return <div>
+      <input onChange={this.handleChangeCep} value={this.state.cep} placeholder="CEP" type="text"/>
+      <button onClick={fetch}>Pesquisar</button>
+    </div>
+  }}
+</ViaCep>
+
+
                     </div>
                 </div>
                 
