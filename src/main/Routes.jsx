@@ -85,9 +85,16 @@ class Login extends Component {
 
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    var apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth'
-    //var apiBaseUrl = 'http://localhost:3001/api-token-auth'
-
+    var url = window.location.href;
+    var apiBaseUrl;
+    if(url.includes('http://localhost:3000/')){
+      console.log('localhost')
+      apiBaseUrl = 'http://localhost:3001/api-token-auth'
+    }else{
+      console.log('cadastro membros')
+      apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth'
+    }
+        
     var payload = {
       email: this.state.formControls.email.value,
       password: this.state.formControls.password.value
