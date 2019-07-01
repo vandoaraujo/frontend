@@ -10,10 +10,6 @@ const headerProps = {
     subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }
 
-const baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
-//const baseURL = 'http://localhost:3001/membros'
-//axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTU3MjMzODczLCJleHAiOjE1NTczMjAyNzN9.JUXciiKuGc5GL0sTMX9br0nObC_CrBGxlKmB_iqp1zY'
-
 const initialState = {
     user: { name: '', email: '', cep: '', endereco: '',
             cidade: '', telefone: '', dataNascimento: '',
@@ -27,8 +23,19 @@ export default class UserCrud extends Component {
     state = { ...initialState }
 
     componentWillMount() {
+
+        var apiBaseUrl = undefined;
+        var url = window.location.href;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            apiBaseUrl = 'http://localhost:3001/membros'
+        }else{
+            console.log('cadastro membros')
+            apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/membros'
+        }
+
         axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
-        axios(baseURL).then(resp => {
+        axios(apiBaseUrl).then(resp => {
             this.setState({ list: resp.data.users })
         })
     }
@@ -38,6 +45,16 @@ export default class UserCrud extends Component {
     }
 
     save() {
+
+        var baseURL = undefined;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            baseURL = 'http://localhost:3001/membros'
+        }else{
+            console.log('cadastro membros')
+            baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
+        }
+
         axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         const user  = this.state.user
         const method = user.id ? 'put' : 'post'
@@ -113,6 +130,16 @@ export default class UserCrud extends Component {
     }
 
     remove(user){
+        var baseURL = undefined;
+        var url = window.location.href;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            baseURL = 'http://localhost:3001/membros'
+        }else{
+            console.log('cadastro membros')
+            baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
+        }
+
         axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         axios.delete(`${baseURL}/${user.id}`).then(resp => {
             const list = this.getUpdatedList(user, false)
