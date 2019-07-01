@@ -4,6 +4,8 @@ import './index.css';
 import Login from './main/Login';
 import * as serviceWorker from './serviceWorker';
 import Routes from './main/Routes';
+import Amount from './main/Amount';
+
 
 ReactDOM.render(<Routes />,
      document.getElementById('root'));
