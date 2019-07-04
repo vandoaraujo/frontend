@@ -103,7 +103,7 @@ class Login extends Component {
     axios.post(apiBaseUrl, payload)
     .then(response => {
       if (response.status === 200) {
-        axios.defaults.headers.common['Authorization'] = response.data.token;
+        //FIXME axios.defaults.headers.common['Authorization'] = response.data.token;
         fakeAuth.authenticate(() => {
           this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
           localStorage.setItem('userLogado', response.data.user.username);

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
-import ViaCep from 'react-via-cep';
-
 
 const headerProps = {
     icon: 'users',
@@ -22,22 +20,30 @@ export default class UserCrud extends Component {
 
     state = { ...initialState }
 
-    componentWillMount() {
-
-        var apiBaseUrl = undefined;
+    retornarURL(e){
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            apiBaseUrl = 'http://localhost:3001/membros'
+            return 'http://localhost:3001/membros'
         }else{
             console.log('cadastro membros')
-            apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/membros'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros'
         }
+    }
 
-        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
-        axios(apiBaseUrl).then(resp => {
-            this.setState({ list: resp.data.users })
-        })
+    componentWillMount() {
+
+        var apiBaseUrl = undefined;
+        apiBaseUrl = this.retornarURL();
+
+        if(localStorage.getItem('token') != null){
+            var config = {
+                headers: {'Authorization': localStorage.getItem('token')}
+            };
+            axios.get(apiBaseUrl, config).then(resp => {
+                this.setState({ list: resp.data.users })
+            });
+        }
     }
 
     clear() {
@@ -47,15 +53,8 @@ export default class UserCrud extends Component {
     save() {
 
         var baseURL = undefined;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            baseURL = 'http://localhost:3001/membros'
-        }else{
-            console.log('cadastro membros')
-            baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
-        }
-
-        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
+        baseURL = this.retornarURL();
+        //FIXME axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         const user  = this.state.user
         const method = user.id ? 'put' : 'post'
         const url = user.id ? `${baseURL}/${user.id}` : baseURL
@@ -64,6 +63,14 @@ export default class UserCrud extends Component {
                 const list = this.getUpdatedList(resp.data)
                 this.setState({ user: initialState.user, list })    
             })
+    }
+
+    buscarCEP() {
+        const cep  = this.state.user.cep
+        axios("https://viacep.com.br/ws/" + cep+"/json").then(resp => {
+                console.log(resp.data.logradouro)
+                
+        })
     }
 
     /**
@@ -140,7 +147,7 @@ export default class UserCrud extends Component {
             baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
         }
 
-        axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
+        //FIXME axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
         axios.delete(`${baseURL}/${user.id}`).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
@@ -164,7 +171,7 @@ export default class UserCrud extends Component {
                 
                 <div className="row">
                     <div className="col-12 col-md-2">
-                        {/* <div className="form-group">
+                        <div className="form-group">
                             <label>CEP</label>
                             <input type="text" className="form-control"
                             name="cep" 
@@ -172,30 +179,36 @@ export default class UserCrud extends Component {
                             onChange={e => this.updateAdress(e)}
                             placeholder="Digite o cep..."
                             />
-                        </div> */}
-<ViaCep cep={this.state.cep} lazy>
-  { ({ data, loading, error, fetch }) => {
-    if (loading) {
-      return <p>loading...</p>
-    }
-    if (error) {
-      return <p>error</p>
-    }
-    if (data) {
-      return <div>
-        <p>
-          CEP: {data.cep} <br/>
-          CIDADE: {data.localidade} <br/>
-          UF: {data.uf} <br/>
-        </p>
-      </div>
-    }
-    return <div>
-      <input onChange={this.handleChangeCep} value={this.state.cep} placeholder="CEP" type="text"/>
-      <button onClick={fetch}>Pesquisar</button>
-    </div>
-  }}
-</ViaCep>
+                        </div>
+
+                        <button className="btn btn-warning"
+                            onClick={() => this.buscarCEP()}>
+                            <i className="fa fa-pencil"></i>
+                        </button    >
+{/* 
+                        <ViaCep cep={this.state.cep} lazy>
+                        { ({ data, loading, error, fetch }) => {
+                            if (loading) {
+                            return <p>loading...</p>
+                            }
+                            if (error) {
+                            return <p>error</p>
+                            }
+                            if (data) {
+                            return <div>
+                                <p>
+                                CEP: {data.cep} <br/>
+                                CIDADE: {data.localidade} <br/>
+                                UF: {data.uf} <br/>
+                                </p>
+                            </div>
+                            }
+                            return <div>
+                            <input onChange={this.handleChangeCep} value={this.state.cep} placeholder="CEP" type="text"/>
+                            <button onClick={fetch}>Pesquisar</button>
+                            </div>
+                        }}
+                        </ViaCep> */}
 
 
                     </div>

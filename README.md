@@ -25,3 +25,11 @@ Exemplo real de uso do jsonplaceholder
 
 https://github.com/typicode/jsonplaceholder/blob/master/src/app.js
  
+
+         axios.defaults.baseURL = 'http://localhost:3000/';
+        axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
+        // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
+        axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+        axios.defaults.headers.common['Authorization'] = null;
+
+        https://cors-anywhere.herokuapp.com/
