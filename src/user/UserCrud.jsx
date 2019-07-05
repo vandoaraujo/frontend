@@ -9,9 +9,9 @@ const headerProps = {
 }
 
 const initialState = {
-    user: { name: '', email: '', cep: '', endereco: '',
-            cidade: '', telefone: '', dataNascimento: '',
-            sexo: '', estadoCivil: '', conjuge: '',
+    user: { name: '', email: '', cep: '', endereco: '', bairro: '',
+            cidade: '', telefone: '', dataNascimento: '', numero: '',
+            uf: '', sexo: '', estadoCivil: '', conjuge: '',
             escolaridade: '', profissao: ''},
     list: []
 }
@@ -69,7 +69,12 @@ export default class UserCrud extends Component {
         const cep  = this.state.user.cep
         axios("https://viacep.com.br/ws/" + cep+"/json").then(resp => {
                 console.log(resp.data.logradouro)
-                
+                var user = { ...this.state.user }
+                user['endereco'] = resp.data.logradouro
+                user['bairro'] = resp.data.complemento
+                user['cidade'] = resp.data.localidade
+                user['uf'] = resp.data.uf
+                this.setState({ user })
         })
     }
 
@@ -158,7 +163,7 @@ export default class UserCrud extends Component {
         return (
             <div className="form">
                 <div className="row">
-                    <div className="col-12 col-md-8">
+                    <div className="col-8 col-md-8">
                         <div className="form-group">
                             <label>Nome</label>
                             <input type="text" className="form-control"
@@ -170,7 +175,7 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                    <div className="col-12 col-md-2">
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>CEP</label>
                             <input type="text" className="form-control"
@@ -179,12 +184,11 @@ export default class UserCrud extends Component {
                             onChange={e => this.updateAdress(e)}
                             placeholder="Digite o cep..."
                             />
+                             <button className="btn btn-warning"
+                                onClick={() => this.buscarCEP()}>
+                                <i className="fa fa-search"></i>
+                            </button    >
                         </div>
-
-                        <button className="btn btn-warning"
-                            onClick={() => this.buscarCEP()}>
-                            <i className="fa fa-pencil"></i>
-                        </button    >
 {/* 
                         <ViaCep cep={this.state.cep} lazy>
                         { ({ data, loading, error, fetch }) => {
@@ -215,7 +219,7 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                <div className="col-12 col-md-8">
+                    <div className="col-6 col-md-6">
                         <div className="form-group">
                             <label>Endereço</label>
                             <input type="text" className="form-control"
@@ -226,7 +230,40 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-4">
+                    <div className="col-1 col-md-1">
+                        <div className="form-group">
+                            <label>Número</label>
+                            <input type="text" className="form-control"
+                                name="numero" value={this.state.user.numero}
+                                onChange={e => this.updateField(e)}
+                                />
+                        </div>
+                    </div>
+
+                    <div className="col-2 col-md-2">
+                        <div className="form-group">
+                            <label>Bairro</label>
+                            <input type="text" className="form-control"
+                                name="bairro" value={this.state.user.bairro}
+                                onChange={e => this.updateField(e)}
+                                />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row">
+                <div className="col-1 col-md-1">
+                        <div className="form-group">
+                            <label>UF</label>
+                            <input type="text" className="form-control"
+                            name="uf" 
+                            value={this.state.user.uf}
+                            onChange={e => this.updateField(e)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>Cidade</label>
                             <input type="text" className="form-control"
@@ -237,8 +274,9 @@ export default class UserCrud extends Component {
                     </div>
                 </div>
 
+
                 <div className="row">
-                    <div className="col-12 col-md-6">
+                    <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>Telefone</label>
                             <input type="text" className="form-control"
@@ -248,7 +286,7 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>E-mail</label>
                             <input type="text" className="form-control"
@@ -259,10 +297,8 @@ export default class UserCrud extends Component {
                             />
                         </div>
                     </div>
-                </div>
 
-                <div className="row">
-                    <div className="col-12 col-md-4">
+                    <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>Data Nascimento</label>
                             <input type="date" className="form-control"
@@ -272,7 +308,11 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-4">
+                </div>
+
+                <div className="row">
+
+                    <div className="col-1 col-md-1">
                         <div className="form-group">
                             <label>Sexo</label>
                             <input type="text" className="form-control"
@@ -284,7 +324,7 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-4">
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>Estado Civil</label>
                             <input type="text" className="form-control"
@@ -296,7 +336,7 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                    <div className="col-12 col-md-6">
+                    <div className="col-4 col-md-4">
                         <div className="form-group">
                             <label>Nome Cônjuge</label>
                             <input type="text" className="form-control"
@@ -307,10 +347,8 @@ export default class UserCrud extends Component {
                             />
                         </div>
                     </div>
-                </div>
-                
-                <div className="row">
-                    <div className="col-12 col-md-6">
+
+                    <div className="col-4 col-md-4">
                         <div className="form-group">
                             <label>Escolaridade</label>
                             <input type="text" className="form-control"
@@ -319,7 +357,7 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-6">
+                    <div className="col-4 col-md-4">
                         <div className="form-group">
                             <label>Profissão</label>
                             <input type="text" className="form-control"
