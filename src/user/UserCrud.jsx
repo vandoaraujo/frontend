@@ -11,7 +11,7 @@ const headerProps = {
 const initialState = {
     user: { name: '', email: '', cep: '', endereco: '', bairro: '',
             cidade: '', telefone: '', dataNascimento: '', numero: '',
-            uf: '', sexo: '', estadoCivil: '', conjuge: '',
+            uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
             escolaridade: '', profissao: ''},
     list: []
 }
@@ -71,9 +71,10 @@ export default class UserCrud extends Component {
                 console.log(resp.data.logradouro)
                 var user = { ...this.state.user }
                 user['endereco'] = resp.data.logradouro
-                user['bairro'] = resp.data.complemento
+                user['bairro'] = resp.data.bairro
                 user['cidade'] = resp.data.localidade
                 user['uf'] = resp.data.uf
+                user['complemento'] = resp.data.complemento
                 this.setState({ user })
         })
     }
@@ -252,7 +253,18 @@ export default class UserCrud extends Component {
                 </div>
 
                 <div className="row">
-                <div className="col-1 col-md-1">
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Complemento</label>
+                            <input type="text" className="form-control"
+                            name="complemento" 
+                            value={this.state.user.complemento}
+                            onChange={e => this.updateField(e)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-1 col-md-1">
                         <div className="form-group">
                             <label>UF</label>
                             <input type="text" className="form-control"
@@ -298,7 +310,7 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-3 col-md-3">
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>Data Nascimento</label>
                             <input type="date" className="form-control"
@@ -336,7 +348,7 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                    <div className="col-4 col-md-4">
+                    <div className="col-8 col-md-8">
                         <div className="form-group">
                             <label>Nome Cônjuge</label>
                             <input type="text" className="form-control"
@@ -347,8 +359,9 @@ export default class UserCrud extends Component {
                             />
                         </div>
                     </div>
-
-                    <div className="col-4 col-md-4">
+                </div>
+                <div className="row">
+                    <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>Escolaridade</label>
                             <input type="text" className="form-control"
@@ -357,7 +370,7 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-4 col-md-4">
+                    <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>Profissão</label>
                             <input type="text" className="form-control"

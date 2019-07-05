@@ -12,6 +12,10 @@ import Public from '../main/Public'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Logo from '../components/template/Logo'
+import logo from '../assets/imgs/logoIgreja.jpg'
+
+
 
 
 toast.configure()
@@ -103,7 +107,6 @@ class Login extends Component {
     axios.post(apiBaseUrl, payload)
     .then(response => {
       if (response.status === 200) {
-        //FIXME axios.defaults.headers.common['Authorization'] = response.data.token;
         fakeAuth.authenticate(() => {
           this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
           localStorage.setItem('userLogado', response.data.user.username);
@@ -157,9 +160,11 @@ class Login extends Component {
     return (
       <div className="centerLogin">
         <div className="login-box">
-          <Main icon="home" title=""
-            subtitle="Login">
-          </Main>
+        <Link to="/" className="logo">
+            <img src={logo} alt="logo" />
+        </Link>
+          <br />
+          <br />
           <form>
             <div className="row">
               <div className="col-12 col-md-6">

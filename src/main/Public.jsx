@@ -1,4 +1,4 @@
 import React from  'react'
 
 export default props =>
-            <div>Public</div>
+            <div>Funcionalidade para cadastrar a família IBB</div>
