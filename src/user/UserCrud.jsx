@@ -54,11 +54,13 @@ export default class UserCrud extends Component {
 
         var baseURL = undefined;
         baseURL = this.retornarURL();
-        //FIXME axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
+        var config = {
+            headers: {'Authorization': localStorage.getItem('token')}
+        };
         const user  = this.state.user
         const method = user.id ? 'put' : 'post'
         const url = user.id ? `${baseURL}/${user.id}` : baseURL
-        axios[method](url, user)
+        axios[method](url, user, config)
             .then(resp => {
                 const list = this.getUpdatedList(resp.data)
                 this.setState({ user: initialState.user, list })    
@@ -144,17 +146,11 @@ export default class UserCrud extends Component {
 
     remove(user){
         var baseURL = undefined;
-        var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            baseURL = 'http://localhost:3001/membros'
-        }else{
-            console.log('cadastro membros')
-            baseURL = 'https://cadastromembrosibbback.herokuapp.com/membros'
-        }
-
-        //FIXME axios.defaults.headers.common['Authorization'] =  localStorage.getItem('token');
-        axios.delete(`${baseURL}/${user.id}`).then(resp => {
+        baseURL = this.retornarURL();
+        var config = {
+            headers: {'Authorization': localStorage.getItem('token')}
+        };
+        axios.delete(`${baseURL}/${user.id}`, config).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
         })
@@ -190,32 +186,6 @@ export default class UserCrud extends Component {
                                 <i className="fa fa-search"></i>
                             </button    >
                         </div>
-{/* 
-                        <ViaCep cep={this.state.cep} lazy>
-                        { ({ data, loading, error, fetch }) => {
-                            if (loading) {
-                            return <p>loading...</p>
-                            }
-                            if (error) {
-                            return <p>error</p>
-                            }
-                            if (data) {
-                            return <div>
-                                <p>
-                                CEP: {data.cep} <br/>
-                                CIDADE: {data.localidade} <br/>
-                                UF: {data.uf} <br/>
-                                </p>
-                            </div>
-                            }
-                            return <div>
-                            <input onChange={this.handleChangeCep} value={this.state.cep} placeholder="CEP" type="text"/>
-                            <button onClick={fetch}>Pesquisar</button>
-                            </div>
-                        }}
-                        </ViaCep> */}
-
-
                     </div>
                 </div>
                 

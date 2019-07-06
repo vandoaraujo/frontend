@@ -165,6 +165,9 @@ class Login extends Component {
         </Link>
           <br />
           <br />
+          <label>Cadastro de membros</label>
+          <br />
+          <br />
           <form>
             <div className="row">
               <div className="col-12 col-md-6">
