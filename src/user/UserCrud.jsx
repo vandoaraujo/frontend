@@ -32,7 +32,7 @@ export default class UserCrud extends Component {
     }
 
     componentWillMount() {
-
+        this.setState({ showConjuge: false })
         var apiBaseUrl = undefined;
         apiBaseUrl = this.retornarURL();
 
@@ -100,6 +100,12 @@ export default class UserCrud extends Component {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
+
+        if(event.target.value == 'Casado'){
+            this.setState({ showConjuge: true })
+        } else{
+            this.setState({ showConjuge: false })
+        }
     }
 
         /**
@@ -237,11 +243,44 @@ export default class UserCrud extends Component {
                     <div className="col-1 col-md-1">
                         <div className="form-group">
                             <label>UF</label>
-                            <input type="text" className="form-control"
+                            {/* <input type="text" className="form-control"
                             name="uf" 
                             value={this.state.user.uf}
                             onChange={e => this.updateField(e)}
-                            />
+                            /> */}
+                            <select className="form-control" name="uf" value={this.state.user.uf}
+                            onChange={e => this.updateField(e)} >
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                                <option value="ES">Estrangeiro</option>
+                            </select>
+
+
                         </div>
                     </div>
 
@@ -293,31 +332,40 @@ export default class UserCrud extends Component {
                 </div>
 
                 <div className="row">
-
-                    <div className="col-1 col-md-1">
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>Sexo</label>
-                            <input type="text" className="form-control"
-                            name="sexo" 
-                            value={this.state.user.sexo}
-                            onChange={e => this.updateField(e)}
-                            placeholder="Digite o sexo..."
-                            />
+                            <select className="form-control"
+                                name="sexo" value={this.state.user.sexo}
+                                onChange={e => this.updateField(e)} >
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
+                            
                         </div>
                     </div>
 
                     <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>Estado Civil</label>
-                            <input type="text" className="form-control"
-                                name="estadoCivil" value={this.state.user.estadoCivil}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o estado civil..."/>
+                            <select className="form-control" name="estadoCivil"
+                             value={this.state.user.estadoCivil}
+                                onChange={e => this.updateField(e)} >
+                                <option value="">Informe...</option>
+                                <option value="Solteiro">Solteiro</option>
+                                <option value="Casado">Casado</option>
+                                <option value="Separado">Separado</option>
+                                <option value="Divorciado">Divorciado</option>
+                                <option value="Viúvo">Viúvo</option>
+                                <option value="Amasiado">Amasiado</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 
-                <div className="row">
+                { this.state.showConjuge ? 
+                
+                <div className="row" >
                     <div className="col-8 col-md-8">
                         <div className="form-group">
                             <label>Nome Cônjuge</label>
@@ -330,13 +378,25 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
                 </div>
+                
+                : null }
+
+                
                 <div className="row">
                     <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>Escolaridade</label>
-                            <input type="text" className="form-control"
-                                name="escolaridade" value={this.state.user.escolaridade}
-                                onChange={e => this.updateField(e)} />
+                            <select className="form-control" name="escolaridade"
+                                value={this.state.user.escolaridade}
+                                onChange={e => this.updateField(e)}>
+                                <option value="">Informe...</option>
+                                <option value="ensino-fundamental">Ensino fundamental</option>
+                                <option value="ensino-fundamental-incompleto">Ensino fundamental incompleto</option>
+                                <option value="ensino-medio">Ensino médio</option>
+                                <option value="ensino-medio-incompleto">Ensino médio incompleto</option>
+                                <option value="ensino-superior">Ensino superior</option>
+                                <option value="ensino-superior-incompleto">Ensino superior incompleto</option>
+                            </select>
                         </div>
                     </div>
 
