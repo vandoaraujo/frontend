@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import MaskedInput from 'react-text-mask'
 
 const headerProps = {
     icon: 'users',
@@ -51,13 +54,13 @@ export default class UserCrud extends Component {
     }
 
     save() {
-
-        var baseURL = undefined;
+        const user  = this.state.user
+        if(this.validarDados(user)){
+            var baseURL = undefined;
         baseURL = this.retornarURL();
         var config = {
             headers: {'Authorization': localStorage.getItem('token')}
         };
-        const user  = this.state.user
         const method = user.id ? 'put' : 'post'
         const url = user.id ? `${baseURL}/${user.id}` : baseURL
         axios[method](url, user, config)
@@ -65,6 +68,7 @@ export default class UserCrud extends Component {
                 const list = this.getUpdatedList(resp.data)
                 this.setState({ user: initialState.user, list })    
             })
+        }
     }
 
     buscarCEP() {
@@ -90,6 +94,61 @@ export default class UserCrud extends Component {
         const list = this.state.list.filter(u => u.id !== user.id)
         if(add) list.unshift(user)
         return list
+    }
+
+    validarDados(user) {
+        var erro = false
+        /**
+         * user: { name: '', email: '', cep: '', endereco: '', bairro: '',
+            cidade: '', telefone: '', dataNascimento: '', numero: '',
+            uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
+            escolaridade: '', profissao: ''},
+         */
+         if(!user.name){
+            toast.error('O campo nome não pode ficar vazio...', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+                erro = true
+         }
+
+         if(!user.cep){
+            toast.error('O campo cep não pode ficar vazio...', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+                erro = true
+         }
+
+         if(user.email){
+
+            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (! re.test(user.email) ) {
+                toast.error('O campo email inválido...', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                    });
+                    erro = true
+            }
+         }
+
+         if(erro)
+            return false;
+        
+        return true
     }
 
     /**
@@ -181,12 +240,14 @@ export default class UserCrud extends Component {
                     <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>CEP</label>
-                            <input type="text" className="form-control"
-                            name="cep" 
+                            <MaskedInput
+                            mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                            className="form-control"
+                            placeholder="Enter cep"
+                            guide={false}
                             value={this.state.user.cep}
-                            onChange={e => this.updateAdress(e)}
-                            placeholder="Digite o cep..."
-                            />
+                            name="cep"
+                            onChange={e => this.updateAdress(e)}/>
                              <button className="btn btn-warning"
                                 onClick={() => this.buscarCEP()}>
                                 <i className="fa fa-search"></i>
@@ -240,14 +301,9 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
 
-                    <div className="col-1 col-md-1">
+                    <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>UF</label>
-                            {/* <input type="text" className="form-control"
-                            name="uf" 
-                            value={this.state.user.uf}
-                            onChange={e => this.updateField(e)}
-                            /> */}
                             <select className="form-control" name="uf" value={this.state.user.uf}
                             onChange={e => this.updateField(e)} >
                                 <option value="AC">Acre</option>
@@ -310,7 +366,7 @@ export default class UserCrud extends Component {
                     <div className="col-3 col-md-3">
                         <div className="form-group">
                             <label>E-mail</label>
-                            <input type="text" className="form-control"
+                            <input type="email" className="form-control"
                             name="email" 
                             value={this.state.user.email}
                             onChange={e => this.updateField(e)}
@@ -413,7 +469,7 @@ export default class UserCrud extends Component {
                 </div>
                 <hr />
                 <div className="row">
-                    <div className="col-12 d-flex justify-content-end">
+                    <div className="col-12 d-flex justify-content-start">
                         <button className="btn btn-primary"
                             onClick={e => this.save(e)}>
                             Salvar
