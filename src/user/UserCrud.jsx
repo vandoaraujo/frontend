@@ -128,6 +128,30 @@ export default class UserCrud extends Component {
                 erro = true
          }
 
+         if(!user.sexo){
+            toast.error('O campo Sexo não pode ficar vazio...', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+                erro = true
+         }
+
+         if(!user.estadoCivil){
+            toast.error('O campo Estado Civil não pode ficar vazio...', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+                erro = true
+         }
+
          if(user.email){
 
             let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
