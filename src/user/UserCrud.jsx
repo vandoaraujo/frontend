@@ -57,17 +57,25 @@ export default class UserCrud extends Component {
         const user  = this.state.user
         if(this.validarDados(user)){
             var baseURL = undefined;
-        baseURL = this.retornarURL();
-        var config = {
-            headers: {'Authorization': localStorage.getItem('token')}
-        };
-        const method = user.id ? 'put' : 'post'
-        const url = user.id ? `${baseURL}/${user.id}` : baseURL
-        axios[method](url, user, config)
-            .then(resp => {
-                const list = this.getUpdatedList(resp.data)
-                this.setState({ user: initialState.user, list })    
-            })
+            baseURL = this.retornarURL();
+            var config = {
+                headers: {'Authorization': localStorage.getItem('token')}
+            };
+            const method = user.id ? 'put' : 'post'
+            const url = user.id ? `${baseURL}/${user.id}` : baseURL
+            axios[method](url, user, config)
+                .then(resp => {
+                    const list = this.getUpdatedList(resp.data)
+                    this.setState({ user: initialState.user, list })    
+                })
+            toast.success('Membro cadastrado com sucesso! ', {
+                position: "top-right",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
         }
     }
 
@@ -140,6 +148,18 @@ export default class UserCrud extends Component {
                 erro = true
          }
 
+         if(!user.uf){
+            toast.error('Favor informar a UF(estado)...', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+                erro = true
+         }
+
          if(!user.estadoCivil){
             toast.error('O campo Estado Civil não pode ficar vazio...', {
                 position: "top-right",
@@ -183,11 +203,14 @@ export default class UserCrud extends Component {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
-
-        if(event.target.value == 'Casado'){
-            this.setState({ showConjuge: true })
-        } else{
-            this.setState({ showConjuge: false })
+        if(event.target.name == 'estadoCivil'){
+            if(event.target.value == 'Casado'){
+                this.setState({ showConjuge: true })
+            } else{
+                this.setState({ showConjuge: false })
+                user['conjuge'] = '';
+                this.setState({ user })
+            }    
         }
     }
 
@@ -328,8 +351,10 @@ export default class UserCrud extends Component {
                     <div className="col-2 col-md-2">
                         <div className="form-group">
                             <label>UF</label>
-                            <select className="form-control" name="uf" value={this.state.user.uf}
+                            <select className="form-control" name="uf"
+                            value={this.state.user.uf} 
                             onChange={e => this.updateField(e)} >
+                                <option value="">Selecione...</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
                                 <option value="AP">Amapá</option>
@@ -359,8 +384,6 @@ export default class UserCrud extends Component {
                                 <option value="TO">Tocantins</option>
                                 <option value="ES">Estrangeiro</option>
                             </select>
-
-
                         </div>
                     </div>
 
@@ -379,11 +402,16 @@ export default class UserCrud extends Component {
                 <div className="row">
                     <div className="col-3 col-md-3">
                         <div className="form-group">
-                            <label>Telefone</label>
-                            <input type="text" className="form-control"
-                                name="telefone" value={this.state.user.telefone}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o telefone..."/>
+                            <label>Celular</label>
+                            <MaskedInput
+                            mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                            className="form-control"
+                            placeholder="Digite o celular"
+                            guide={false}
+                            value={this.state.user.telefone}
+                            name="telefone"
+                            onChange={e => this.updateAdress(e)}/>
+
                         </div>
                     </div>
 
@@ -418,6 +446,7 @@ export default class UserCrud extends Component {
                             <select className="form-control"
                                 name="sexo" value={this.state.user.sexo}
                                 onChange={e => this.updateField(e)} >
+                                <option value="">Informe...</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
                             </select>
@@ -456,7 +485,7 @@ export default class UserCrud extends Component {
                             placeholder="Digite o nome do conjuge..."
                             />
                         </div>
-                    </div>
+                    </div>  
                 </div>
                 
                 : null }
