@@ -15,11 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../components/template/Logo'
 import logo from '../assets/imgs/logoIgreja.jpg'
 
-
-
-
 toast.configure()
-
 
 const fakeAuth = {
   isAuthenticated: false,

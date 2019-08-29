@@ -11,8 +11,6 @@ import Footer from '../components/template/Footer'
 import Row from '../common/layout/row'
 import Grid from '../common/layout/grid'
 import Main from '../components/template/Main'
-import UserCrud from '../user/UserCrud'
-
 
 export default props =>
 <div className="login-box">
