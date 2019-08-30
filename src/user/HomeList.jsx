@@ -78,11 +78,6 @@ export default class HomeList extends Component {
                         <th>Cidade</th>
                         <th>Telefone</th>
                         <th>Data Nas</th>
-                        <th>Sexo</th>
-                        <th>Estado Civil</th>
-                        <th>Conjuge</th>
-                        <th>Escolaridade</th>
-                        <th>Profissão</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
