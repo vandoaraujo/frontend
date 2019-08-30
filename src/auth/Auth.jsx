@@ -54,11 +54,9 @@ class Auth extends Component {
         return (
 
             <div className="login-box">
-
                 <Main icon="home" title=""
                     subtitle="Login">
                 </Main>
-
                 <form>
                     <div className="row">
                         <div className="col-12 col-md-6">

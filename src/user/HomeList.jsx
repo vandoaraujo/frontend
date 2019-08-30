@@ -125,10 +125,10 @@ export default class HomeList
     render() {
         return (
             <Main {...headerProps}>
-             <div className="form-group">
-                            <label>Quantidade de membros: </label>
-                            {this.state.list.length}
-                        </div>
+                <div className="form-group">
+                    <label>Quantidade de membros: </label>
+                    <h3>{this.state.list.length}</h3>
+                </div>
                 {this.renderTable()} 
             </Main>
         )
