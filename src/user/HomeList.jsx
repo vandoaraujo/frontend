@@ -8,7 +8,7 @@ import MaskedInput from 'react-text-mask'
 const headerProps = {
     icon: 'users',
     title: 'Membros',
-    subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
+    subtitle: 'Lista de membros'
 }
 
 const initialState = {
@@ -19,7 +19,8 @@ const initialState = {
     list: []
 }
 
-export default class HomeList extends Component {
+export default class HomeList
+ extends Component {
 
     state = { ...initialState }
 
@@ -48,7 +49,6 @@ export default class HomeList extends Component {
         }
     }
 
-
     /**
      * 
      * Removo usuario da lista e adiciono o novo criando uma lista nova
@@ -60,7 +60,6 @@ export default class HomeList extends Component {
         return list
     }
     
-    
     load(user){
         this.setState({ user })
     }
@@ -70,14 +69,11 @@ export default class HomeList extends Component {
             <table className="table mt-4">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Nome</th>
                         <th>E-mail</th>
-                        <th>Cep</th>
                         <th>Endereco</th>
-                        <th>Cidade</th>
                         <th>Telefone</th>
-                        <th>Data Nas</th>
+                        <th>Nascim</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -106,9 +102,7 @@ export default class HomeList extends Component {
                 <tr key={user.id}>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    <td>{user.cep}</td>
                     <td>{user.endereco}</td>
-                    <td>{user.cidade}</td>
                     <td>{user.telefone}</td>
                     <td>{user.dataNascimento}</td>
                     <td>
@@ -131,6 +125,10 @@ export default class HomeList extends Component {
     render() {
         return (
             <Main {...headerProps}>
+             <div className="form-group">
+                            <label>Quantidade de membros: </label>
+                            {this.state.list.length}
+                        </div>
                 {this.renderTable()} 
             </Main>
         )
