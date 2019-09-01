@@ -7,7 +7,7 @@ import MaskedInput from 'react-text-mask'
 
 const headerProps = {
     icon: 'users',
-    title: 'Membros',
+    title: 'Cadastro',
     subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }
 
@@ -23,30 +23,19 @@ export default class UserCrud extends Component {
 
     state = { ...initialState }
 
-    retornarURL(e){
-        var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            return 'http://localhost:3001/membros'
-        }else{
-            console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
-        }
-    }
-
     componentWillMount() {
         this.setState({ showConjuge: false })
         var apiBaseUrl = undefined;
-        apiBaseUrl = this.retornarURL();
+        //apiBaseUrl = this.retornarURL();
 
-        if(localStorage.getItem('token') != null){
-            var config = {
-                headers: {'Authorization': localStorage.getItem('token')}
-            };
-            axios.get(apiBaseUrl, config).then(resp => {
-                this.setState({ list: resp.data.users })
-            });
-        }
+        // if(localStorage.getItem('token') != null){
+        //     var config = {
+        //         headers: {'Authorization': localStorage.getItem('token')}
+        //     };
+        //     axios.get(apiBaseUrl, config).then(resp => {
+        //         this.setState({ list: resp.data.users })
+        //     });
+        // }
     }
 
     clear() {
@@ -226,46 +215,6 @@ export default class UserCrud extends Component {
 
     load(user){
         this.setState({ user })
-    }
-
-    renderTable(){
-        return(
-            <table className="table mt-4">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Cep</th>
-                        <th>Endereco</th>
-                        <th>Cidade</th>
-                        <th>Telefone</th>
-                        <th>Data Nas</th>
-                        <th>Sexo</th>
-                        <th>Estado Civil</th>
-                        <th>Conjuge</th>
-                        <th>Escolaridade</th>
-                        <th>Profissão</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderRows()}
-                </tbody>
-            </table>
-        )
-    }
-
-    remove(user){
-        var baseURL = undefined;
-        baseURL = this.retornarURL();
-        var config = {
-            headers: {'Authorization': localStorage.getItem('token')}
-        };
-        axios.delete(`${baseURL}/${user.id}`, config).then(resp => {
-            const list = this.getUpdatedList(user, false)
-            this.setState({list})
-        })
     }
 
     renderForm() {
@@ -539,46 +488,10 @@ export default class UserCrud extends Component {
         )
     }
 
-    renderRows(){
-        return this.state.list.map(user => {
-            return (
-                <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.cep}</td>
-                    <td>{user.endereco}</td>
-                    <td>{user.cidade}</td>
-                    <td>{user.telefone}</td>
-                    <td>{user.dataNascimento}</td>
-                    <td>{user.sexo}</td>
-                    <td>{user.estadoCivil}</td>
-                    <td>{user.conjuge}</td>
-                    <td>{user.escolaridade}</td>
-                    <td>{user.profissao}</td>
-                    <td>
-                        <button className="btn btn-warning"
-                            onClick={() => this.load(user)}>
-                            <i className="fa fa-pencil"></i>
-                        </button    >
-                    </td>
-                    <td>
-                        <button className="btn btn-danger ml-2"
-                            onClick={() => this.remove(user)}>
-                            <i className="fa fa-trash"></i>
-                        </button>
-                    </td>   
-                </tr>
-            )
-        })
-    }
-
     render() {
-        console.log(this.state.list)
         return (
             <Main {...headerProps}>
                 {this.renderForm()}
-                {this.renderTable()} 
             </Main>
         )
     }
