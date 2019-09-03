@@ -24,7 +24,7 @@ export default class UserCrud extends Component {
     state = { ...initialState }
 
     componentWillMount() {
-        this.setState({ showConjuge: false })
+        this.setState({ list: undefined })
     }
 
     clear() {
@@ -84,13 +84,7 @@ export default class UserCrud extends Component {
 
     validarDados(user) {
         var erro = false
-        /**
-         * user: { name: '', email: '', cep: '', endereco: '', bairro: '',
-            cidade: '', telefone: '', dataNascimento: '', numero: '',
-            uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
-            escolaridade: '', profissao: ''},
-         */
-         if(!user.name){
+        if(!user.name){
             toast.error('O campo nome não pode ficar vazio...', {
                 position: "top-right",
                 autoClose: 5000,
