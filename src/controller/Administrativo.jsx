@@ -36,9 +36,6 @@ export default class Administrativo
             var config = {
                 headers: {'Authorization': localStorage.getItem('token')}
             };
-            // axios.get(apiBaseUrl, config).then(resp => {
-            //     this.setState({ list: resp.data.users })
-            // });
         }
     }
 

@@ -5,8 +5,10 @@ import {
     BrowserRouter as Router,
     Route
   } from "react-router-dom";
-import UserCrud from '../../user/UserCrud'
-import HomeList from '../../user/HomeList';
+import UserCrud from '../../controller/UserCrud'
+import HomeList from '../../controller/HomeList';
+import Consulta from '../../controller/Consulta';
+import Administrativo from '../../controller/Administrativo';
 
 
 export default props =>
@@ -21,7 +23,7 @@ export default props =>
     </aside>
     <Route path="/" component={HomeList} />
     <Route path="/membros" component={UserCrud} />
-    <Route path="/consulta" component={UserCrud} />
-    <Route path="/consulta" component={UserCrud} />
+    <Route path="/consulta" component={Consulta} />
+    <Route path="/consulta" component={Administrativo} />
 
 </Router>
