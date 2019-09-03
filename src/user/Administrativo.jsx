@@ -12,7 +12,7 @@ const headerProps = {
 }
 
 
-export default class Consulta
+export default class Administrativo
  extends Component {
 
     state = { ...initialState }

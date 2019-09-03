@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MaskedInput from 'react-text-mask'
 
@@ -174,7 +174,7 @@ export default class UserCrud extends Component {
 
          if(user.email){
 
-            let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (! re.test(user.email) ) {
                 toast.error('O campo email inválido...', {
@@ -203,8 +203,8 @@ export default class UserCrud extends Component {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
-        if(event.target.name == 'estadoCivil'){
-            if(event.target.value == 'Casado'){
+        if(event.target.name === 'estadoCivil'){
+            if(event.target.value === 'Casado'){
                 this.setState({ showConjuge: true })
             } else{
                 this.setState({ showConjuge: false })

@@ -7,13 +7,14 @@ import {
   withRouter
 } from "react-router-dom";
 import App from '../main/App';
-import Main from '../components/template/Main'
 import Public from '../main/Public'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Logo from '../components/template/Logo'
-import logo from '../assets/imgs/logoIgreja.jpg'
+//import Logo from '../components/template/Logo'
+import logo from '../assets/imgs/imgs.png'
+    
+
 
 toast.configure()
 

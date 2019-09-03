@@ -3,11 +3,10 @@ import React from 'react'
 import NavItem from './NavItem'
 import {
     BrowserRouter as Router,
-    Route,
-    Redirect,
-    withRouter
+    Route
   } from "react-router-dom";
 import UserCrud from '../../user/UserCrud'
+import HomeList from '../../user/HomeList';
 
 
 export default props =>
@@ -20,7 +19,7 @@ export default props =>
             <NavItem rota="/relatorio" icon="fa fa-gear" title="Administrativo" />
         </nav>
     </aside>
-    <Route path="/consulta" component={UserCrud} />
+    <Route path="/" component={HomeList} />
     <Route path="/membros" component={UserCrud} />
     <Route path="/consulta" component={UserCrud} />
     <Route path="/consulta" component={UserCrud} />

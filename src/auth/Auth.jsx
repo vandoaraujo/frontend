@@ -54,8 +54,7 @@ class Auth extends Component {
         return (
 
             <div className="login-box">
-                <Main icon="home" title=""
-                    subtitle="Login">
+                <Main icon="home" title="" subtitle="Login">
                 </Main>
                 <form>
                     <div className="row">
@@ -66,7 +65,7 @@ class Auth extends Component {
                                     name="email"
                                     className="form-control"
                                     value={this.state.formControls.email.value}
-                                    placeholder="Digite o e-mail..."
+                                    placeholder="Digite seu e-mail..."
                                     onChange={this.changeHandler} />
                             </div>
                         </div>
@@ -79,7 +78,7 @@ class Auth extends Component {
                                     name="password"
                                     className="form-control"
                                     value={this.state.formControls.password.value}
-                                    placeholder="Digite o password..."
+                                    placeholder="Digite sua senha..."
                                     onChange={this.changeHandler}
                                 />
                             </div>
