@@ -7,30 +7,30 @@ import MaskedInput from 'react-text-mask'
 
 const headerProps = {
     icon: 'users',
-    title: 'Consulta',
-    subtitle: 'Permite consultar dados específicos...'
+    title: 'Administrativo',
+    subtitle: 'Administração...'
 }
 
 
 export default class Administrativo
  extends Component {
 
-    state = { ...initialState }
+    state = { }
 
-    retornarURL(e){
-        var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            return 'http://localhost:3001/membros'
-        }else{
-            console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
-        }
-    }
+    // retornarURL(e){
+    //     var url = window.location.href;
+    //     if(url.includes('http://localhost:3000/')){
+    //         console.log('localhost')
+    //         return 'http://localhost:3001/membros'
+    //     }else{
+    //         console.log('cadastro membros')
+    //         return 'https://cadastromembrosibbback.herokuapp.com/membros'
+    //     }
+    // }
 
     componentWillMount() {
         var apiBaseUrl = undefined;
-        apiBaseUrl = this.retornarURL();
+        // apiBaseUrl = this.retornarURL();
 
         if(localStorage.getItem('token') != null){
             var config = {

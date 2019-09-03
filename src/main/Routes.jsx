@@ -162,7 +162,9 @@ class Login extends Component {
         </Link>
           <br />
           <br />
-          <label>Cadastro de membros</label>
+          <div className="form-group">
+                    <h3>Cadastro de membros</h3>
+                </div>
           <br />
           <br />
           <form>

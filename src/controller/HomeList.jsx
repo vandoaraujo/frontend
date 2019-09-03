@@ -9,7 +9,7 @@ const headerProps = {
     subtitle: 'Lista de membros'
 }
 
-const initialState = {
+const homeList = {
     user: { name: '', email: '', cep: '', endereco: '', bairro: '',
             cidade: '', telefone: '', dataNascimento: '', numero: '',
             uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
@@ -20,7 +20,7 @@ const initialState = {
 export default class HomeList
  extends Component {
 
-    state = { ...initialState }
+    state = { ...homeList }
 
     retornarURL(e){
         var url = window.location.href;

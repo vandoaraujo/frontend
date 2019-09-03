@@ -15,7 +15,7 @@ const headerProps = {
 export default class Consulta
  extends Component {
 
-    state = { ...initialState }
+    state = {}
 
     retornarURL(e){
         var url = window.location.href;

@@ -16,14 +16,14 @@ export default props =>
     <aside className="menu-area">
         <nav className="menu">
             <NavItem rota="/" icon="fa fa-home" title="Início" />
-            <NavItem rota="/membros"  icon="fa fa-users" title="Cadastro" />
+            <NavItem rota="/cadastro"  icon="fa fa-users" title="Cadastro" />
             <NavItem rota="/consulta" icon="fa fa-search" title="Consulta" />
-            <NavItem rota="/relatorio" icon="fa fa-gear" title="Administrativo" />
+            <NavItem rota="/administrativo" icon="fa fa-gear" title="Administrativo" />
         </nav>
     </aside>
     <Route path="/" component={HomeList} />
-    <Route path="/membros" component={UserCrud} />
+    <Route path="/cadastro" component={UserCrud} />
     <Route path="/consulta" component={Consulta} />
-    <Route path="/consulta" component={Administrativo} />
+    <Route path="/administrativo" component={Administrativo} />
 
 </Router>
