@@ -25,17 +25,6 @@ export default class UserCrud extends Component {
 
     componentWillMount() {
         this.setState({ showConjuge: false })
-        var apiBaseUrl = undefined;
-        //apiBaseUrl = this.retornarURL();
-
-        // if(localStorage.getItem('token') != null){
-        //     var config = {
-        //         headers: {'Authorization': localStorage.getItem('token')}
-        //     };
-        //     axios.get(apiBaseUrl, config).then(resp => {
-        //         this.setState({ list: resp.data.users })
-        //     });
-        // }
     }
 
     clear() {
