@@ -25,6 +25,7 @@ export default class UserCrud extends Component {
 
     componentWillMount() {
         this.setState({ list: undefined })
+        //obter no load do componente HomeList o usar passado.
     }
 
     clear() {

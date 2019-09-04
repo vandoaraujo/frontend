@@ -3,6 +3,7 @@ import Main from '../components/template/Main'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Redirect } from 'react-router-dom'
 
 const headerProps = {
     icon: 'users',
@@ -20,8 +21,8 @@ const homeList = {
 
 export default class HomeList
  extends Component {
-
-    state = { ...homeList }
+    
+    state = { ...homeList, edicaoMembro: false }
 
     componentWillMount() {
         var apiBaseUrl = undefined;
@@ -57,26 +58,46 @@ export default class HomeList
         if(add) list.unshift(user)
         return list
     }
+
+    setEdicaoMembro = () => {
+        this.setState({
+          edicaoMembro: true
+        })
+    }
     
     load(user){
         this.setState({ user })
+        this.setEdicaoMembro(user)
     }
+
+    renderEdicaoMembro =  (user) => {
+        if (this.state.edicaoMembro) {
+          return <Redirect to={{
+            pathname: '/cadastro',
+            state: { membro: user }
+        }}  />
+        }
+      }
 
     renderTable(){
         return(
-            <table className="table mt-4">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Telefone</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderRows()}
-                </tbody>
-            </table>
+            <div>
+                {this.renderEdicaoMembro()}
+            
+                <table className="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderRows()}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 

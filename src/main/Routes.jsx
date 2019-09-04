@@ -209,7 +209,7 @@ function AuthExample() {
         <AuthButton />
         <ul>
           <li>
-            <Link to="/public">Manual de Uso.</Link>
+            <Link to="/public">Manual de Uso</Link>
           </li>
           <li>
             <Link to="/protected">Acessar</Link>
