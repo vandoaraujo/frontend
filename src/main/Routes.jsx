@@ -13,8 +13,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //import Logo from '../components/template/Logo'
 import logo from '../assets/imgs/imgs.png'
-    
-
 
 toast.configure()
 
@@ -112,7 +110,7 @@ class Login extends Component {
       }
       else if (response.status === 204) {
         
-        toast('Usuario e Senha não conferem', {
+        toast.error('Usuario e Senha não conferem', {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -120,7 +118,6 @@ class Login extends Component {
           pauseOnHover: true,
           draggable: true
           });
-        
       }
       else {
         alert("Usuário não existe...")
@@ -131,7 +128,7 @@ class Login extends Component {
 
       if (error.response) {
         console.log('Retorno 500...');
-        toast(error.response.data, {
+        toast.error(error.response.data, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -212,10 +209,10 @@ function AuthExample() {
         <AuthButton />
         <ul>
           <li>
-            <Link to="/public">Informações.</Link>
+            <Link to="/public">Manual de Uso.</Link>
           </li>
           <li>
-            <Link to="/protected">Login</Link>
+            <Link to="/protected">Acessar</Link>
           </li>
         </ul>
         <Route path="/public" component={Public} />
@@ -241,7 +238,7 @@ const AuthButton = withRouter(
       </div>
     ) : (
         <p>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site da Igreja</a>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site</a>
         </p>
       )
 );

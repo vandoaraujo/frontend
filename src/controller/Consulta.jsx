@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const headerProps = {
-    icon: 'users',
+    icon: 'search',
     title: 'Consulta',
     subtitle: 'Permite consultar dados específicos...'
 }

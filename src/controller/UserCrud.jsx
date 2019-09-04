@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import MaskedInput from 'react-text-mask'
 
 const headerProps = {
-    icon: 'users',
+    icon: 'address-card',
     title: 'Cadastro',
     subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const headerProps = {
@@ -68,9 +69,7 @@ export default class HomeList
                     <tr>
                         <th>Nome</th>
                         <th>E-mail</th>
-                        <th>Endereco</th>
                         <th>Telefone</th>
-                        <th>Nascim</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -90,7 +89,35 @@ export default class HomeList
         axios.delete(`${baseURL}/${user.id}`, config).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
+            toast.success('Membro ' + user.name  + ' removido com sucesso! ', {
+                position: "top-right",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
         })
+        .catch(error => {
+            console.log("Ocorreu um erro..." + error);
+      
+            if (error.response) {
+              toast.error(error.response.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error codigo...', error.message);
+            }
+          });
+
+
     }
 
     renderRows(){
@@ -99,9 +126,7 @@ export default class HomeList
                 <tr key={user.id}>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    <td>{user.endereco}</td>
                     <td>{user.telefone}</td>
-                    <td>{user.dataNascimento}</td>
                     <td>
                         <button className="btn btn-warning"
                             onClick={() => this.load(user)}>
