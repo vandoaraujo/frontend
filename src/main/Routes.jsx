@@ -158,7 +158,7 @@ class Login extends Component {
       <div className="centerLogin">
         <div className="login-box">
         <Link to="/" className="logo">
-            <img src={logo} alt="logo" />
+            {/* <img src={logo} alt="logo" /> */}
         </Link>
           <br />
           <br />
@@ -176,7 +176,7 @@ class Login extends Component {
                     name="email"
                     className="form-control"
                     value={this.state.formControls.email.value}
-                    placeholder="Digite o e-mail..."
+                    placeholder="Digite o seu e-mail..."
                     onChange={this.changeHandler} />
                 </div>
               </div>
@@ -189,7 +189,7 @@ class Login extends Component {
                     name="password"
                     className="form-control"
                     value={this.state.formControls.password.value}
-                    placeholder="Digite o password..."
+                    placeholder="Digite a sua senha..."
                     onChange={this.changeHandler}
                   />
                 </div>
@@ -230,16 +230,15 @@ function AuthExample() {
 const AuthButton = withRouter(
   ({ history }) =>
     fakeAuth.isAuthenticated ? (
-      <p>
-        Bem-vindo, {localStorage.getItem('userLogado')}!
-        <button
+
+      <div className="col-12 d-flex justify-content-start">
+          <button className="btn btn-dark"
           onClick={() => {
             fakeAuth.signout(() => history.push("/"));
           }}
-        >
-          Sair
+        > Sair
         </button>
-      </p>
+      </div>
     ) : (
         <p>
           <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site da Igreja</a>

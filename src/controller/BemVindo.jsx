@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const headerProps = {
-    icon: 'users',
-    title: 'Consulta',
-    subtitle: 'Permite consultar dados específicos...'
+    icon: 'book',
+    title: 'Início',
+    subtitle: 'Sistema para cadastrar a família IBB...'
 }
 
 const consultaState = {
@@ -15,7 +15,7 @@ const consultaState = {
 }
 
 
-export default class Consulta
+export default class BemVindo
  extends Component {
 
     state = { ...consultaState }
@@ -36,23 +36,16 @@ export default class Consulta
                 <div className="row">
                     <div className="col-8 col-md-8">
                         <div className="form-group">
-                            <label>Buscar por Nome</label>
-                            <input type="text" className="form-control"
-                                name="name" value={this.state.user.name}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                <h3>Bem-vindo, {localStorage.getItem('userLogado')}! </h3>
+                        </div>
+                        <div className="form-group">
+                            <label>Avisos: </label>
+                            <label>Link Agenda Site Igreja</label>
+                            <label>https://docs.google.com/spreadsheets/d/1ZgEwDF99_eBjJrLIC9QN--haI0ljkOg45nyry3gfn9o/edit#gid=1791516055</label>
                         </div>
                     </div>
                 </div>
                 <hr />
-                <div className="row">
-                    <div className="col-12 d-flex justify-content-start">
-                        <button className="btn btn-primary"
-                            onClick={e => this.buscar(e)}>
-                            Buscar
-                        </button>
-                    </div>   
-                </div>  
             </div>
         )
     }
@@ -82,27 +75,4 @@ export default class Consulta
                 })
         }
     }
-
-    validarDados(user) {
-        var erro = false
-        if(!user.name){
-            toast.error('Favor preencher o nome desejado...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
-         }
-
-        if(erro)
-            return false;
-     
-        return true
-    }
-
-
-
 }

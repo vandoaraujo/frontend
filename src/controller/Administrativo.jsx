@@ -3,7 +3,6 @@ import Main from '../components/template/Main'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import MaskedInput from 'react-text-mask'
 
 const headerProps = {
     icon: 'users',
@@ -15,7 +14,7 @@ const headerProps = {
 export default class Administrativo
  extends Component {
 
-    state = { }
+    // state = { }
 
     // retornarURL(e){
     //     var url = window.location.href;
@@ -43,7 +42,7 @@ export default class Administrativo
         return (
             <Main {...headerProps}>
                 <div className="form-group">
-                    <label>Consulta </label>
+                    <label>Consulta</label>
                 </div>
             </Main>
         )

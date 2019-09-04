@@ -22,17 +22,6 @@ export default class HomeList
 
     state = { ...homeList }
 
-    retornarURL(e){
-        var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            return 'http://localhost:3001/membros'
-        }else{
-            console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
-        }
-    }
-
     componentWillMount() {
         var apiBaseUrl = undefined;
         apiBaseUrl = this.retornarURL();
@@ -47,6 +36,16 @@ export default class HomeList
         }
     }
 
+    retornarURL(e){
+        var url = window.location.href;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            return 'http://localhost:3001/membros'
+        }else{
+            console.log('cadastro membros')
+            return 'https://cadastromembrosibbback.herokuapp.com/membros'
+        }
+    }
     /**
      * 
      * Removo usuario da lista e adiciono o novo criando uma lista nova
