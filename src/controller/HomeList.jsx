@@ -142,6 +142,46 @@ export default class HomeList
 
     }
 
+    transferir(user){
+        var baseURL = undefined;
+        baseURL = this.retornarURL();
+        var config = {
+            headers: {'Authorization': localStorage.getItem('token')}
+        };
+        axios.put(`${baseURL}/${user.id}`, config).then(resp => {
+            const list = this.getUpdatedList(user, false)
+            this.setState({list})
+            toast.success('Membro ' + user.name  + ' desvinculado com sucesso! ', {
+                position: "top-right",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
+        })
+        .catch(error => {
+            console.log("Ocorreu um erro..." + error);
+      
+            if (error.response) {
+              toast.error(error.response.data, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+                });
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error codigo...', error.message);
+            }
+          });
+
+
+    }
+
     renderRows(){
         return this.state.list.map(user => {
             return (
@@ -150,14 +190,19 @@ export default class HomeList
                     <td>{user.email}</td>
                     <td>{user.telefone}</td>
                     <td>
-                        <button className="btn btn-warning"
+                        <button className="btn btn-info"
                             onClick={() => this.load(user)}>
                             <i className="fa fa-pencil"></i>
                         </button    >
+                        <button className="btn btn-warning ml-2"
+                            onClick={() => this.transferir(user)}>
+                            <i className="fa fa-cut"></i>
+                        </button>
                         <button className="btn btn-danger ml-2"
                             onClick={() => this.remove(user)}>
                             <i className="fa fa-trash"></i>
                         </button>
+
                     </td>   
                 </tr>
             )
