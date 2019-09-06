@@ -154,8 +154,6 @@ export default class HomeList
                             onClick={() => this.load(user)}>
                             <i className="fa fa-pencil"></i>
                         </button    >
-                    </td>
-                    <td>
                         <button className="btn btn-danger ml-2"
                             onClick={() => this.remove(user)}>
                             <i className="fa fa-trash"></i>

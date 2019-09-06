@@ -233,7 +233,7 @@ const AuthButton = withRouter(
           onClick={() => {
             fakeAuth.signout(() => history.push("/"));
           }}
-        > Sair
+        > <i className="fa fa-sign-out" aria-hidden="true">Sair</i>
         </button>
       </div>
     ) : (
