@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import Main from '../components/template/Main'
-import axios from 'axios'
+import axios from 'axios';
+import React, { Component } from 'react';
+import MaskedInput from 'react-text-mask';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import MaskedInput from 'react-text-mask'
+import Main from '../components/template/Main';
 
 const headerProps = {
     icon: 'address-card',
     title: 'Cadastro',
-    subtitle: 'Cadastro de membros: Incluir, Listar, Alterar e Excluir'
+    subtitle: 'Incluir membro'
 }
 
 const initialState = {
@@ -26,20 +26,42 @@ export default class UserCrud extends Component {
     componentWillMount() {
         this.setState({ list: undefined })
         //obter no load do componente HomeList o usar passado.
+        this.buscarMembro();
+        
+    }
+
+    buscarMembro() {
+        if (this.props.location.state && this.props.location.state.userLoad) {
+            var { baseURL, config } = this.obterApi();
+            const url = `${baseURL}/${this.props.location.state.userLoad.id}`
+            console.log(url)
+            axios['get'](url, config)
+                .then(resp => {
+                    console.log('usuario banco' + resp.data)
+                    this.setState({ user: resp.data });
+                });
+        }
     }
 
     clear() {
         this.setState( { user: initialState.user} )
     }
 
+    retornarURL(e){
+        var url = window.location.href;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            return 'http://localhost:3001/membros';
+        }else{
+            console.log('cadastro membros')
+            return 'https://cadastromembrosibbback.herokuapp.com/membros'+ e;
+        }
+    }
+
     save() {
         const user  = this.state.user
         if(this.validarDados(user)){
-            var baseURL = undefined;
-            baseURL = this.retornarURL();
-            var config = {
-                headers: {'Authorization': localStorage.getItem('token')}
-            };
+            var { baseURL, config } = this.obterApi();
             const method = user.id ? 'put' : 'post'
             const url = user.id ? `${baseURL}/${user.id}` : baseURL
             axios[method](url, user, config)
@@ -56,6 +78,15 @@ export default class UserCrud extends Component {
                 draggable: true
             });
         }
+    }
+
+    obterApi() {
+        var baseURL = undefined;
+        baseURL = this.retornarURL();
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        return { baseURL, config };
     }
 
     buscarCEP() {
@@ -194,10 +225,6 @@ export default class UserCrud extends Component {
     updateAdress(event){
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
-        this.setState({ user })
-    }
-
-    load(user){
         this.setState({ user })
     }
 

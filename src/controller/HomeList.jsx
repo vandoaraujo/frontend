@@ -59,22 +59,23 @@ export default class HomeList
         return list
     }
 
-    setEdicaoMembro = () => {
+    setEdicaoMembro = (user) => {
         this.setState({
-          edicaoMembro: true
+          edicaoMembro: true,
+          user: user
         })
     }
     
     load(user){
-        this.setState({ user })
         this.setEdicaoMembro(user)
     }
 
-    renderEdicaoMembro =  (user) => {
+    renderEdicaoMembro () {
+        
         if (this.state.edicaoMembro) {
           return <Redirect to={{
             pathname: '/cadastro',
-            state: { membro: user }
+            state: { userLoad: this.state.user }
         }}  />
         }
       }
