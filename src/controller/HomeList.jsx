@@ -25,20 +25,21 @@ export default class HomeList
     state = { ...homeList, edicaoMembro: false }
 
     componentWillMount() {
+        console.log('Invocou o componentwillmount...')
         var apiBaseUrl = undefined;
-        apiBaseUrl = this.retornarURL();
+        apiBaseUrl = this.retornarURLLoad();
 
         if(localStorage.getItem('token') != null){
             var config = {
                 headers: {'Authorization': localStorage.getItem('token')}
             };
             axios.get(apiBaseUrl, config).then(resp => {
-                this.setState({ list: resp.data.users })
+                this.setState({ list: resp.data.users.membros })
             });
         }
     }
 
-    retornarURL(e){
+    retornarURLLoad(e){
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
@@ -46,6 +47,17 @@ export default class HomeList
         }else{
             console.log('cadastro membros')
             return 'https://cadastromembrosibbback.herokuapp.com/membros/?_sort=name&amp;_order=asc'
+        }
+    }
+
+    retornarURL(e){
+        var url = window.location.href;
+        if(url.includes('http://localhost:3000/')){
+            console.log('localhost')
+            return 'http://localhost:3001/membros'
+        }else{
+            console.log('cadastro membros')
+            return 'https://cadastromembrosibbback.herokuapp.com/membros'
         }
     }
     /**
@@ -109,16 +121,29 @@ export default class HomeList
             headers: {'Authorization': localStorage.getItem('token')}
         };
         axios.delete(`${baseURL}/${user.id}`, config).then(resp => {
-            const list = this.getUpdatedList(user, false)
-            this.setState({list})
-            toast.success('Membro ' + user.name  + ' removido com sucesso! ', {
+            console.log(resp)
+            if(resp.status > 200){
+                toast.error('Ocorreu um erro ao remover o membro...', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                    });
+            }else{
+                const list = this.getUpdatedList(user, false)
+                this.setState({list})
+                toast.success('Membro ' + user.name  + ' removido com sucesso! ', {
                 position: "top-right",
                 autoClose: 6000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true
-            });
+            });    
+            }
+            
         })
         .catch(error => {
             console.log("Ocorreu um erro..." + error);
