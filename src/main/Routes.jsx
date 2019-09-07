@@ -138,6 +138,14 @@ class Login extends Component {
           });
       } else if (error.request) {
         console.log(error.request);
+        toast.error('Ocorreu um erro interno ao tentar efetuar o login...', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+          });
       } else {
         console.log('Error codigo...', error.message);
       }

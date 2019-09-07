@@ -34,7 +34,8 @@ export default class HomeList
                 headers: {'Authorization': localStorage.getItem('token')}
             };
             axios.get(apiBaseUrl, config).then(resp => {
-                this.setState({ list: resp.data.users.membros })
+                console.log(resp.data.membros)
+                this.setState({ list: resp.data.membros.membros })
             });
         }
     }
@@ -43,10 +44,10 @@ export default class HomeList
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros/?_sort=name&amp;_order=asc'
+            return 'http://localhost:3001/membros?_sort=name&_order=asc'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros/?_sort=name&amp;_order=asc'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros?_sort=name&_order=asc'
         }
     }
 

@@ -16,7 +16,7 @@ const initialState = {
     user: { name: '', email: '', cep: '', endereco: '', bairro: '',
             cidade: '', telefone: '', dataNascimento: '', numero: '',
             uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
-            escolaridade: '', profissao: ''},
+            escolaridade: '', profissao: '', ativo: true},
     list: []
 }
 
