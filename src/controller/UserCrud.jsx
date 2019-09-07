@@ -54,7 +54,7 @@ export default class UserCrud extends Component {
             return 'http://localhost:3001/membros';
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'+ e;
+            return 'https://cadastromembrosibbback.herokuapp.com/membros';
         }
     }
 
