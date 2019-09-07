@@ -4,6 +4,7 @@ import MaskedInput from 'react-text-mask';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from '../components/template/Main';
+import ToastMessage from '../components/ToastMessage';
 
 const headerProps = {
     icon: 'address-card',
@@ -66,17 +67,16 @@ export default class UserCrud extends Component {
             const url = user.id ? `${baseURL}/${user.id}` : baseURL
             axios[method](url, user, config)
                 .then(resp => {
-                    const list = this.getUpdatedList(resp.data)
-                    this.setState({ user: initialState.user, list })    
+                    this.setState({ user: initialState.user })    
+                    toast.success('Membro cadastrado com sucesso! ', {
+                        position: "top-right",
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    });
                 })
-            toast.success('Membro cadastrado com sucesso! ', {
-                position: "top-right",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-            });
         }
     }
 
@@ -92,15 +92,45 @@ export default class UserCrud extends Component {
     buscarCEP() {
         const cep  = this.state.user.cep
         axios("https://viacep.com.br/ws/" + cep+"/json").then(resp => {
-                console.log(resp.data.logradouro)
-                var user = { ...this.state.user }
-                user['endereco'] = resp.data.logradouro
-                user['bairro'] = resp.data.bairro
-                user['cidade'] = resp.data.localidade
-                user['uf'] = resp.data.uf
-                user['complemento'] = resp.data.complemento
-                this.setState({ user })
+            console.log(resp.data.erro)
+                if(resp.data.erro){
+                    toast.error('Cep inexistente! ', {
+                        position: "top-right",
+                        autoClose: 6000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    });
+                }else{
+                    var user = { ...this.state.user }
+                    user['endereco'] = resp.data.logradouro
+                    user['bairro'] = resp.data.bairro
+                    user['cidade'] = resp.data.localidade
+                    user['uf'] = resp.data.uf
+                    user['complemento'] = resp.data.complemento
+                    this.setState({ user })
+                }
         })
+        .catch(error => {
+          console.log("Ocorreu um erro ao buscar o CEP" + error);
+    
+          if (error.response) {
+            console.log('Retorno 500...');
+            toast.error(error.response.data, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true
+              });
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error codigo...', error.message);
+          }
+        });
     }
 
     /**
@@ -108,11 +138,11 @@ export default class UserCrud extends Component {
      * Removo usuario da lista e adiciono o novo criando uma lista nova
      * @param user 
      */
-    getUpdatedList(user, add = true) {
-        const list = this.state.list.filter(u => u.id !== user.id)
-        if(add) list.unshift(user)
-        return list
-    }
+    // getUpdatedList(user, add = true) {
+    //     const list = this.state.list.filter(u => u.id !== user.id)
+    //     if(add) list.unshift(user)
+    //     return list
+    // }
 
     validarDados(user) {
         var erro = false
@@ -244,7 +274,7 @@ export default class UserCrud extends Component {
                 </div>
                 
                 <div className="row">
-                    <div className="col-2 col-md-2">
+                    <div className="col-2 col-md-">
                         <div className="form-group">
                             <label>CEP</label>
                             <MaskedInput
@@ -255,12 +285,20 @@ export default class UserCrud extends Component {
                             value={this.state.user.cep}
                             name="cep"
                             onChange={e => this.updateAdress(e)}/>
-                             <button className="btn btn-warning"
-                                onClick={() => this.buscarCEP()}>
-                                <i className="fa fa-search"></i>
-                            </button    >
+                           
                         </div>
                     </div>
+
+                    <div className="col-1 col-md-1">
+                        <div className="form-group">
+                            <label>Consultar</label>
+                            <button className="btn btn-warning"
+                                onClick={() => this.buscarCEP()}>
+                                <i className="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
                 
                 <div className="row">

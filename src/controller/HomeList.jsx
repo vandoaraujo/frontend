@@ -42,10 +42,10 @@ export default class HomeList
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros'
+            return 'http://localhost:3001/membros/?_sort=name&amp;_order=asc'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros/?_sort=name&amp;_order=asc'
         }
     }
     /**
