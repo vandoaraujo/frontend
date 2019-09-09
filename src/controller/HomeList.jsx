@@ -25,7 +25,6 @@ export default class HomeList
     state = { ...homeList, edicaoMembro: false }
 
     componentWillMount() {
-        console.log('Invocou o componentwillmount...')
         var apiBaseUrl = undefined;
         apiBaseUrl = this.retornarURLLoad();
 
@@ -35,19 +34,33 @@ export default class HomeList
             };
             axios.get(apiBaseUrl, config).then(resp => {
                 console.log(resp.data.membros)
-                this.setState({ list: resp.data.membros.membros })
+                this.setState({ list: resp.data.membros.membros.sort(this.compare) })
             });
         }
     }
+
+    compare(a, b) {
+        // Use toUpperCase() to ignore character casing
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+      
+        let comparison = 0;
+        if (nameA > nameB) {
+          comparison = 1;
+        } else if (nameA < nameB) {
+          comparison = -1;
+        }
+        return comparison;
+      }
 
     retornarURLLoad(e){
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros?_sort=name&_order=asc'
+            return 'http://localhost:3001/membros?sort=name&order=DESC'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros?_sort=name&_order=asc'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros?sort=name&order=DESC'
         }
     }
 
@@ -174,7 +187,9 @@ export default class HomeList
         var config = {
             headers: {'Authorization': localStorage.getItem('token')}
         };
-        axios.put(`${baseURL}/${user.id}`, config).then(resp => {
+        console.log(config)
+        user['ativo'] = 0;
+        axios['put'](`${baseURL}/${user.id}`, config).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
             toast.success('Membro ' + user.name  + ' desvinculado com sucesso! ', {
