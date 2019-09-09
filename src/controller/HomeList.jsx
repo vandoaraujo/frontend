@@ -184,12 +184,12 @@ export default class HomeList
     transferir(user){
         var baseURL = undefined;
         baseURL = this.retornarURL();
-        var config = {
-            headers: {'Authorization': localStorage.getItem('token')}
-        };
-        console.log(config)
+        // var config = {
+        //     headers: {'Authorization': localStorage.getItem('token')}
+        // };
+        // console.log(config)
         user['ativo'] = 0;
-        axios['put'](`${baseURL}/${user.id}`, config).then(resp => {
+        axios.put(`${baseURL}/${user.id}`).then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
             toast.success('Membro ' + user.name  + ' desvinculado com sucesso! ', {
