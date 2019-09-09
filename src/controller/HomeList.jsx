@@ -26,14 +26,13 @@ export default class HomeList
 
     componentWillMount() {
         var apiBaseUrl = undefined;
-        apiBaseUrl = this.retornarURLLoad();
+        apiBaseUrl = this.retornarURL();
 
         if(localStorage.getItem('token') != null){
             var config = {
                 headers: {'Authorization': localStorage.getItem('token')}
             };
             axios.get(apiBaseUrl, config).then(resp => {
-                console.log(resp.data.membros)
                 this.setState({ list: resp.data.membros.membros.sort(this.compare) })
             });
         }
@@ -53,25 +52,14 @@ export default class HomeList
         return comparison;
       }
 
-    retornarURLLoad(e){
-        var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
-            console.log('localhost')
-            return 'http://localhost:3001/membros?sort=name&order=DESC'
-        }else{
-            console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros?sort=name&order=DESC'
-        }
-    }
-
     retornarURL(e){
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros'
+            return 'http://localhost:3001/membros?ativo=1'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros?ativo=1'
         }
     }
     /**
@@ -181,15 +169,22 @@ export default class HomeList
 
     }
 
-    transferir(user){
+    obterApi() {
         var baseURL = undefined;
         baseURL = this.retornarURL();
-        // var config = {
-        //     headers: {'Authorization': localStorage.getItem('token')}
-        // };
-        // console.log(config)
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        return { baseURL, config };
+    }
+
+    transferir(user){
+        var { baseURL, config } = this.obterApi();
+        const method = 'put'
+        const url = user.id ? `${baseURL}/${user.id}` : baseURL
         user['ativo'] = 0;
-        axios.put(`${baseURL}/${user.id}`).then(resp => {
+        axios[method](url, user, config)
+        .then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
             toast.success('Membro ' + user.name  + ' desvinculado com sucesso! ', {
