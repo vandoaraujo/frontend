@@ -4,6 +4,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Redirect } from 'react-router-dom'
+const fetch = require("node-fetch");
 
 const headerProps = {
     icon: 'users',
@@ -32,9 +33,20 @@ export default class HomeList
             var config = {
                 headers: {'Authorization': localStorage.getItem('token')}
             };
-            axios.get(apiBaseUrl, config).then(resp => {
-                this.setState({ list: resp.data.membros.membros.sort(this.compare) })
-            });
+
+            // axios.get(apiBaseUrl, config).then(resp => {
+            //     this.setState({ list: resp.data.membros.membros.sort(this.compare) })
+            // });
+            (async () => {
+                const result = await fetch(
+                    apiBaseUrl,
+                    {
+                    method: 'GET',
+                    headers: { 'Authorization': localStorage.getItem('token') }
+                    },
+                ).then(res => res.json())
+                .then(json => this.setState({ list: json.membros }));
+            })()
         }
     }
 
@@ -56,10 +68,10 @@ export default class HomeList
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros?ativo=1'
+            return 'http://localhost:3001/membros'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros?ativo=1'
+            return 'https://cadastromembrosibbback.herokuapp.com/membros'
         }
     }
     /**
@@ -219,7 +231,7 @@ export default class HomeList
     }
 
     renderRows(){
-        return this.state.list.map(user => {
+        return  this.state.list ? this.state.list.map(user => {
             return (
                 <tr key={user.id}>
                     <td>{user.name}</td>
@@ -242,15 +254,22 @@ export default class HomeList
                     </td>   
                 </tr>
             )
-        })
+        }) : 'Não há membros cadastrados...'
     }
+
+    quantidadeMembros(){
+        if(this.state.list && this.state.list.length > 0 )
+            return this.state.list.length
+        else return 0;
+    }
+    
 
     render() {
         return (
             <Main {...headerProps}>
                 <div className="form-group">
                     <label>Quantidade de membros: </label>
-                    <h3>{this.state.list.length}</h3>
+                    <h3>{this.quantidadeMembros()}</h3>
                 </div>
                 {this.renderTable()} 
             </Main>
