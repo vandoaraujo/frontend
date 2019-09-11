@@ -45,7 +45,7 @@ export default class HomeList
                     headers: { 'Authorization': localStorage.getItem('token') }
                     },
                 ).then(res => res.json())
-                .then(json => this.setState({ list: json.membros }));
+                .then(json => this.setState({ list: json.membros.sort(this.compare) }));
             })()
         }
     }
