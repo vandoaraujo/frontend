@@ -39,7 +39,7 @@ export default class HomeList
             // });
             (async () => {
                 const result = await fetch(
-                    apiBaseUrl,
+                    apiBaseUrl+'membros',
                     {
                     method: 'GET',
                     headers: { 'Authorization': localStorage.getItem('token') }
@@ -68,10 +68,10 @@ export default class HomeList
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros'
+            return 'http://localhost:3001/'
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros'
+            return 'https://cadastromembrosibbback.herokuapp.com/'
         }
     }
     /**
@@ -134,7 +134,7 @@ export default class HomeList
         var config = {
             headers: {'Authorization': localStorage.getItem('token')}
         };
-        axios.delete(`${baseURL}/${user.id}`, config).then(resp => {
+        axios.delete(`${baseURL}membros/${user.id}`, config).then(resp => {
             console.log(resp)
             if(resp.status > 200){
                 toast.error('Ocorreu um erro ao remover o membro...', {
@@ -192,10 +192,8 @@ export default class HomeList
 
     transferir(user){
         var { baseURL, config } = this.obterApi();
-        const method = 'put'
-        const url = user.id ? `${baseURL}/${user.id}` : baseURL
         user['ativo'] = 0;
-        axios[method](url, user, config)
+        axios['put'](baseURL+'membros/'+user.id, user, config)
         .then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
@@ -207,6 +205,17 @@ export default class HomeList
                 pauseOnHover: true,
                 draggable: true
             });
+            //Tentando resolver o bug do CACHE com o lowDB
+            (async () => {
+                const result = await fetch(
+                    baseURL+'membrosUpdated',
+                    {
+                    method: 'GET',
+                    headers: { 'Authorization': localStorage.getItem('token') }
+                    },
+                ).then(res => res.json())
+                .then(json => this.setState({ newList: json.membros.membros }));
+            })()
         })
         .catch(error => {
             console.log("Ocorreu um erro..." + error);

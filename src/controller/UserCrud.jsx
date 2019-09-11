@@ -34,7 +34,7 @@ export default class UserCrud extends Component {
     buscarMembro() {
         if (this.props.location.state && this.props.location.state.userLoad) {
             var { baseURL, config } = this.obterApi();
-            const url = `${baseURL}/${this.props.location.state.userLoad.id}`
+            const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
             console.log(url)
             axios['get'](url, config)
                 .then(resp => {
@@ -52,10 +52,10 @@ export default class UserCrud extends Component {
         var url = window.location.href;
         if(url.includes('http://localhost:3000/')){
             console.log('localhost')
-            return 'http://localhost:3001/membros';
+            return 'http://localhost:3001/';
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/membros';
+            return 'https://cadastromembrosibbback.herokuapp.com/';
         }
     }
 
@@ -64,7 +64,7 @@ export default class UserCrud extends Component {
         if(this.validarDados(user)){
             var { baseURL, config } = this.obterApi();
             const method = user.id ? 'put' : 'post'
-            const url = user.id ? `${baseURL}/${user.id}` : baseURL
+            const url = user.id ? `${baseURL}membros/${user.id}` : baseURL+'membros'
             axios[method](url, user, config)
                 .then(resp => {
                     this.setState({ user: initialState.user })    
@@ -76,6 +76,17 @@ export default class UserCrud extends Component {
                         pauseOnHover: true,
                         draggable: true
                     });
+                    //Tentando resolver o bug do CACHE com o lowDB
+                    (async () => {
+                        const result = await fetch(
+                            baseURL+'membrosUpdated',
+                            {
+                            method: 'GET',
+                            headers: { 'Authorization': localStorage.getItem('token') }
+                            },
+                        ).then(res => res.json())
+                        .then(json => this.setState({ list: json.membros.membros }));
+                    })()
                 })
         }
     }
