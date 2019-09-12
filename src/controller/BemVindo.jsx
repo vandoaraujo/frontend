@@ -57,22 +57,4 @@ export default class BemVindo
             </Main>
         )
     }
-
-    buscar() {
-        const user  = this.state.user
-        if(this.validarDados(user)){
-            var baseURL = undefined;
-            //baseURL = this.retornarURL();
-            var config = {
-                headers: {'Authorization': localStorage.getItem('token')}
-            };
-            
-            const url = user.id ? `${baseURL}/${user.id}` : baseURL
-            axios['get'](url, user, config)
-                .then(resp => {
-                    //const list = this.getUpdatedList(resp.data)
-                    //this.setState({ user: initialState.user, list })    
-                })
-        }
-    }
 }

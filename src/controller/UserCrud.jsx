@@ -35,7 +35,6 @@ export default class UserCrud extends Component {
         if (this.props.location.state && this.props.location.state.userLoad) {
             var { baseURL, config } = this.obterApi();
             const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
-            console.log(url)
             axios['get'](url, config)
                 .then(resp => {
                     console.log('usuario banco' + resp.data)
