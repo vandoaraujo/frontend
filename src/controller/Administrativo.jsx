@@ -19,7 +19,6 @@ export default class Administrativo
     }
 
     obterApi() {
-        console.log('ObterAPI TK ' + localStorage.getItem('token'))
         var config = {
             headers: { 'Authorization': localStorage.getItem('token')  }
         };
@@ -45,7 +44,8 @@ export default class Administrativo
 
         axios['get'](this.state.baseURL, config)
             .then(resp => {
-                console.log('Arquivo obtido com sucesso' + resp.backup)
+                this.setState({ backup: resp.data.backup })
+                console.log(resp.data.backup)
                 toast.success('Arquivo obtido com sucesso! ', {
                     position: "top-right",
                     autoClose: 6000,
@@ -86,8 +86,13 @@ export default class Administrativo
             });
     }
 
+        // quantidadeMembros(){
+        //     if(this.state.backup && this.state.backup.length > 0 )
+        //         return this.state.list
+        //     else return 0;
+        // }
+
         render() {
-            console.log('Usuario' + this.state.user)
             return (
                 <Main {...headerProps}>
                     <div className="form-group">
@@ -96,6 +101,8 @@ export default class Administrativo
                                 onClick={() => this.efetuarBackup(this.state.user)}>
                                 <i className="fa fa-database"></i>
                         </button>
+                        <div></div>
+                        {this.state.backup ?  this.state.backup : <div></div>}
                     </div>
                 </Main>
             )
