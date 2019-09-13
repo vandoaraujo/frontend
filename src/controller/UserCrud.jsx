@@ -22,7 +22,7 @@ const initialState = {
 
 export default class UserCrud extends Component {
 
-    state = { ...initialState }
+    state = { ...initialState, selectedFile: null }
 
     componentWillMount() {
         this.setState({ list: undefined })
@@ -143,17 +143,6 @@ export default class UserCrud extends Component {
         });
     }
 
-    /**
-     * 
-     * Removo usuario da lista e adiciono o novo criando uma lista nova
-     * @param user 
-     */
-    // getUpdatedList(user, add = true) {
-    //     const list = this.state.list.filter(u => u.id !== user.id)
-    //     if(add) list.unshift(user)
-    //     return list
-    // }
-
     validarDados(user) {
         var erro = false
         if(!user.name){
@@ -267,10 +256,37 @@ export default class UserCrud extends Component {
         user[event.target.name] = event.target.value
         this.setState({ user })
     }
+    
+    fileSelectedHandler = event =>{
+        console.log(event.target.files[0])
+        this.setState({
+            selectedFile: event.target.files[0]
+        })
+    }
+
+    fileUploadHandler = () => {
+     const fd = new FormData();
+     fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
+     axios.post('', fd).then( res => console.log())
+    }
 
     renderForm() {
         return (
             <div className="form">
+
+                <div className="row">
+                    <div className="col-8 col-md-8">
+                        <div className="form-group">
+                            <label>Foto</label>
+                            <input type="file" className="form-control"
+                                name="foto" 
+                                onChange={this.fileSelectedHandler}
+                                placeholder="Selecione a foto..."/>
+                            <button onClick={this.fileUploadHandler}>Upload</button>    
+                        </div>
+                    </div>
+                </div>
+
                 <div className="row">
                     <div className="col-8 col-md-8">
                         <div className="form-group">
