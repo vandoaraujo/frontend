@@ -28,7 +28,6 @@ export default class UserCrud extends Component {
         this.setState({ list: undefined })
         //obter no load do componente HomeList o usar passado.
         this.buscarMembro();
-        
     }
 
     buscarMembro() {
@@ -67,14 +66,7 @@ export default class UserCrud extends Component {
             axios[method](url, user, config)
                 .then(resp => {
                     this.setState({ user: initialState.user })    
-                    toast.success('Membro cadastrado com sucesso! ', {
-                        position: "top-right",
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true
-                    });
+                    this.emitirToastSucesso('Membro cadastrado com sucesso! ');
                     //Tentando resolver o bug do CACHE com o lowDB
                     (async () => {
                         const result = await fetch(
@@ -88,6 +80,17 @@ export default class UserCrud extends Component {
                     })()
                 })
         }
+    }
+
+    emitirToastSucesso(mensagem) {
+        toast.success(mensagem, {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
     }
 
     obterApi() {
@@ -104,14 +107,7 @@ export default class UserCrud extends Component {
         axios("https://viacep.com.br/ws/" + cep+"/json").then(resp => {
             console.log(resp.data.erro)
                 if(resp.data.erro){
-                    toast.error('Cep inexistente! ', {
-                        position: "top-right",
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true
-                    });
+                    this.emitirToastErro('Cep inexistente! ')
                 }else{
                     var user = { ...this.state.user }
                     user['endereco'] = resp.data.logradouro
@@ -127,14 +123,7 @@ export default class UserCrud extends Component {
     
           if (error.response) {
             console.log('Retorno 500...');
-            toast.error(error.response.data, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true
-              });
+            this.emitirToastErro(error.response.data)
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -146,63 +135,23 @@ export default class UserCrud extends Component {
     validarDados(user) {
         var erro = false
         if(!user.name){
-            toast.error('O campo nome não pode ficar vazio...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
+            erro = this.emitirToastErro('O campo nome não pode ficar vazio...');
          }
 
          if(!user.cep){
-            toast.error('O campo cep não pode ficar vazio...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
+            erro = this.emitirToastErro('O campo cep não pode ficar vazio...');
          }
 
          if(!user.sexo){
-            toast.error('O campo Sexo não pode ficar vazio...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
+            erro = this.emitirToastErro('O campo Sexo não pode ficar vazio...');
          }
 
          if(!user.uf){
-            toast.error('Favor informar a UF(estado)...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
+            erro = this.emitirToastErro('Favor informar a UF(estado)...');
          }
 
          if(!user.estadoCivil){
-            toast.error('O campo Estado Civil não pode ficar vazio...', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
-                erro = true
+            erro = this.emitirToastErro('O campo Estado Civil não pode ficar vazio...');
          }
 
          if(user.email){
@@ -210,15 +159,7 @@ export default class UserCrud extends Component {
             let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (! re.test(user.email) ) {
-                toast.error('O campo email inválido...', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                    });
-                    erro = true
+                erro = this.emitirToastErro('O campo email inválido...');
             }
          }
 
@@ -226,6 +167,19 @@ export default class UserCrud extends Component {
             return false;
         
         return true
+    }
+
+    emitirToastErro(erro) {
+        toast.error(erro, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+        erro = true;
+        return erro;
     }
 
     /**

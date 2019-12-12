@@ -135,7 +135,8 @@ export default class HomeList extends Component {
             }else{
                 const list = this.getUpdatedList(user, false)
                 this.setState({list})
-                this.emitirToastSucesso('Membro ' + user.name + ' removido com sucesso! ');    
+                this.emitirToastSucesso('Membro ' + user.name + ' removido com sucesso! ');
+                this.refreshListaMembros(baseURL);    
             }
             
         })
@@ -151,6 +152,16 @@ export default class HomeList extends Component {
           });
 
 
+    }
+
+    refreshListaMembros(baseURL) {
+        (async () => {
+            const result = await fetch(baseURL + 'membrosUpdated', {
+                method: 'GET',
+                headers: { 'Authorization': localStorage.getItem('token') }
+            }).then(res => res.json())
+                .then(json => this.setState({ newList: json.membros.membros }));
+        })();
     }
 
     emitirToastSucesso(mensagem) {
@@ -193,16 +204,7 @@ export default class HomeList extends Component {
             this.setState({list})
             this.emitirToastSucesso('Membro ' + user.name  + ' desvinculado com sucesso! ');    
             //Tentando resolver o bug do CACHE com o lowDB
-            (async () => {
-                const result = await fetch(
-                    baseURL+'membrosUpdated',
-                    {
-                    method: 'GET',
-                    headers: { 'Authorization': localStorage.getItem('token') }
-                    },
-                ).then(res => res.json())
-                .then(json => this.setState({ newList: json.membros.membros }));
-            })()
+            this.refreshListaMembros(baseURL); 
         })
         .catch(error => {
             console.log("Ocorreu um erro..." + error);
