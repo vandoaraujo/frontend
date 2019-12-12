@@ -20,8 +20,7 @@ const homeList = {
     list: []
 }
 
-export default class HomeList
- extends Component {
+export default class HomeList extends Component {
     
     state = { ...homeList, edicaoMembro: false }
 
@@ -33,10 +32,6 @@ export default class HomeList
             var config = {
                 headers: {'Authorization': localStorage.getItem('token')}
             };
-
-            // axios.get(apiBaseUrl, config).then(resp => {
-            //     this.setState({ list: resp.data.membros.membros.sort(this.compare) })
-            // });
             (async () => {
                 const result = await fetch(
                     apiBaseUrl+'membros',
@@ -97,7 +92,6 @@ export default class HomeList
     }
 
     renderEdicaoMembro () {
-        
         if (this.state.edicaoMembro) {
           return <Redirect to={{
             pathname: '/cadastro',
@@ -110,7 +104,6 @@ export default class HomeList
         return(
             <div>
                 {this.renderEdicaoMembro()}
-            
                 <table className="table mt-4">
                     <thead>
                         <tr>
@@ -137,40 +130,19 @@ export default class HomeList
         axios.delete(`${baseURL}membros/${user.id}`, config).then(resp => {
             console.log(resp)
             if(resp.status > 200){
-                toast.error('Ocorreu um erro ao remover o membro...', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                    });
+                this.emitirToastErro('Ocorreu um erro ao remover o membro...');
+                //recarregar a lista de usuarios...
             }else{
                 const list = this.getUpdatedList(user, false)
                 this.setState({list})
-                toast.success('Membro ' + user.name  + ' removido com sucesso! ', {
-                position: "top-right",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-            });    
+                this.emitirToastSucesso('Membro ' + user.name + ' removido com sucesso! ');    
             }
             
         })
         .catch(error => {
             console.log("Ocorreu um erro..." + error);
-      
             if (error.response) {
-              toast.error(error.response.data, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
+              this.emitirToastErro(error.response.data);
             } else if (error.request) {
               console.log(error.request);
             } else {
@@ -179,6 +151,28 @@ export default class HomeList
           });
 
 
+    }
+
+    emitirToastSucesso(mensagem) {
+        toast.success(mensagem, {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+    }
+
+    emitirToastErro(mensagem) {
+        toast.error(mensagem, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
     }
 
     obterApi() {
@@ -197,14 +191,7 @@ export default class HomeList
         .then(resp => {
             const list = this.getUpdatedList(user, false)
             this.setState({list})
-            toast.success('Membro ' + user.name  + ' desvinculado com sucesso! ', {
-                position: "top-right",
-                autoClose: 6000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-            });
+            this.emitirToastSucesso('Membro ' + user.name  + ' desvinculado com sucesso! ');    
             //Tentando resolver o bug do CACHE com o lowDB
             (async () => {
                 const result = await fetch(
@@ -221,14 +208,7 @@ export default class HomeList
             console.log("Ocorreu um erro..." + error);
       
             if (error.response) {
-              toast.error(error.response.data, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true
-                });
+                this.emitirToastErro(error.response.data);
             } else if (error.request) {
               console.log(error.request);
             } else {
