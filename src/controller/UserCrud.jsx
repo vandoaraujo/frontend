@@ -4,6 +4,7 @@ import MaskedInput from 'react-text-mask';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from '../components/template/Main';
+import { Redirect } from 'react-router-dom'
 import ToastMessage from '../components/ToastMessage';
 
 const headerProps = {
@@ -13,10 +14,12 @@ const headerProps = {
 }
 
 const initialState = {
-    user: { name: '', email: '', cep: '', endereco: '', bairro: '',
-            cidade: '', telefone: '', dataNascimento: '', numero: '',
-            uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
-            escolaridade: '', profissao: '', ativo: 1},
+    user: {
+        name: '', email: '', cep: '', endereco: '', bairro: '',
+        cidade: '', telefone: '', dataNascimento: '', numero: '',
+        uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
+        escolaridade: '', profissao: '', ativo: 1
+    },
     list: []
 }
 
@@ -31,6 +34,7 @@ export default class UserCrud extends Component {
     }
 
     buscarMembro() {
+
         if (this.props.location.state && this.props.location.state.userLoad) {
             var { baseURL, config } = this.obterApi();
             const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
@@ -38,47 +42,83 @@ export default class UserCrud extends Component {
                 .then(resp => {
                     console.log('usuario banco' + resp.data)
                     this.setState({ user: resp.data });
+                    this.habilitarNomeConjuge(resp);
                 });
+            
         }
     }
 
-    clear() {
-        this.setState( { user: initialState.user} )
+    habilitarNomeConjuge(resp) {
+        if (resp.data.estadoCivil === 'Casado') {
+            this.setState({ showConjuge: true });
+        }else{
+            this.setState({ showConjuge: false });
+        }
+        
     }
 
-    retornarURL(e){
+    clear() {
+        this.setState({ user: initialState.user })
+    }
+
+    retornarListaMembros() {
+        this.setState({ retornarTelaMembros: true })
+    }
+
+    voltarTelaMembros() {
+        if (this.state.retornarTelaMembros) {
+            return <Redirect to={{
+              pathname: '/membros',
+              state: { user: undefined }
+          }}  />
+          }
+
+    }
+
+    retornarURL(e) {
         var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
+        if (url.includes('http://localhost:3000/')) {
             console.log('localhost')
             return 'http://localhost:3001/';
-        }else{
+        } else {
             console.log('cadastro membros')
             return 'https://cadastromembrosibbback.herokuapp.com/';
         }
     }
 
     save() {
-        const user  = this.state.user
-        if(this.validarDados(user)){
+        const user = this.state.user
+        if (this.validarDados(user)) {
             var { baseURL, config } = this.obterApi();
             const method = user.id ? 'put' : 'post'
-            const url = user.id ? `${baseURL}membros/${user.id}` : baseURL+'membros'
+            console.log(method)
+            const url = user.id ? `${baseURL}membros/${user.id}` : baseURL + 'membros'
+            console.log(url)
             axios[method](url, user, config)
                 .then(resp => {
-                    this.setState({ user: initialState.user })    
+                    this.setState({ user: initialState.user })
                     this.emitirToastSucesso('Membro cadastrado com sucesso! ');
                     //Tentando resolver o bug do CACHE com o lowDB
                     (async () => {
                         const result = await fetch(
-                            baseURL+'membrosUpdated',
+                            baseURL + 'membrosUpdated',
                             {
-                            method: 'GET',
-                            headers: { 'Authorization': localStorage.getItem('token') }
+                                method: 'GET',
+                                headers: { 'Authorization': localStorage.getItem('token') }
                             },
                         ).then(res => res.json())
-                        .then(json => this.setState({ list: json.membros.membros }));
+                            .then(json => this.setState({ list: json.membros.membros }));
                     })()
-                })
+                }).catch(error => {
+                    console.log("Ocorreu um erro..." + error);
+                    if (error.response) {
+                        this.emitirToastErro(error.response.data);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error codigo...', error.message);
+                    }
+                });
         }
     }
 
@@ -103,69 +143,59 @@ export default class UserCrud extends Component {
     }
 
     buscarCEP() {
-        const cep  = this.state.user.cep
-        axios("https://viacep.com.br/ws/" + cep+"/json").then(resp => {
+        const cep = this.state.user.cep
+        axios("https://viacep.com.br/ws/" + cep + "/json").then(resp => {
             console.log(resp.data.erro)
-                if(resp.data.erro){
-                    this.emitirToastErro('Cep inexistente! ')
-                }else{
-                    var user = { ...this.state.user }
-                    user['endereco'] = resp.data.logradouro
-                    user['bairro'] = resp.data.bairro
-                    user['cidade'] = resp.data.localidade
-                    user['uf'] = resp.data.uf
-                    user['complemento'] = resp.data.complemento
-                    this.setState({ user })
-                }
+            if (resp.data.erro) {
+                this.emitirToastErro('Cep inexistente! ')
+            } else {
+                var user = { ...this.state.user }
+                user['endereco'] = resp.data.logradouro
+                user['bairro'] = resp.data.bairro
+                user['cidade'] = resp.data.localidade
+                user['uf'] = resp.data.uf
+                user['complemento'] = resp.data.complemento
+                this.setState({ user })
+            }
         })
-        .catch(error => {
-          console.log("Ocorreu um erro ao buscar o CEP" + error);
-    
-          if (error.response) {
-            console.log('Retorno 500...');
-            this.emitirToastErro(error.response.data)
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log('Error codigo...', error.message);
-          }
-        });
+            .catch(error => {
+                console.log("Ocorreu um erro ao buscar o CEP" + error);
+                if (error.response) {
+                    console.log('Retorno 500...');
+                    this.emitirToastErro(error.response.data)
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error codigo...', error.message);
+                }
+            });
     }
 
     validarDados(user) {
         var erro = false
-        if(!user.name){
+        if (!user.name) {
             erro = this.emitirToastErro('O campo nome não pode ficar vazio...');
-         }
-
-         if(!user.cep){
+        }
+        if (!user.cep) {
             erro = this.emitirToastErro('O campo cep não pode ficar vazio...');
-         }
-
-         if(!user.sexo){
+        }
+        if (!user.sexo) {
             erro = this.emitirToastErro('O campo Sexo não pode ficar vazio...');
-         }
-
-         if(!user.uf){
+        }
+        if (!user.uf) {
             erro = this.emitirToastErro('Favor informar a UF(estado)...');
-         }
-
-         if(!user.estadoCivil){
+        }
+        if (!user.estadoCivil) {
             erro = this.emitirToastErro('O campo Estado Civil não pode ficar vazio...');
-         }
-
-         if(user.email){
-
+        }
+        if (user.email) {
             let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-            if (! re.test(user.email) ) {
+            if (!re.test(user.email)) {
                 erro = this.emitirToastErro('O campo email inválido...');
             }
-         }
-
-         if(erro)
+        }
+        if (erro)
             return false;
-        
         return true
     }
 
@@ -186,32 +216,32 @@ export default class UserCrud extends Component {
      * Interessante evoluir o estado e nao atualizá-lo diretamente
      * @param {event}
      */
-    updateField(event){
+    updateField(event) {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
-        if(event.target.name === 'estadoCivil'){
-            if(event.target.value === 'Casado'){
+        if (event.target.name === 'estadoCivil') {
+            if (event.target.value === 'Casado') {
                 this.setState({ showConjuge: true })
-            } else{
+            } else {
                 this.setState({ showConjuge: false })
                 user['conjuge'] = '';
                 this.setState({ user })
-            }    
+            }
         }
     }
 
-        /**
-     * Interessante evoluir o estado e nao atualizá-lo diretamente
-     * @param {event}
-     */
-    updateAdress(event){
+    /**
+ * Interessante evoluir o estado e nao atualizá-lo diretamente
+ * @param {event}
+ */
+    updateAdress(event) {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
         this.setState({ user })
     }
-    
-    fileSelectedHandler = event =>{
+
+    fileSelectedHandler = event => {
         console.log(event.target.files[0])
         this.setState({
             selectedFile: event.target.files[0]
@@ -219,24 +249,24 @@ export default class UserCrud extends Component {
     }
 
     fileUploadHandler = () => {
-     const fd = new FormData();
-     fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
-     axios.post('', fd).then( res => console.log())
+        const fd = new FormData();
+        fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
+        axios.post('', fd).then(res => console.log())
     }
 
     renderForm() {
         return (
             <div className="form">
-
+                {this.voltarTelaMembros()}
                 <div className="row">
                     <div className="col-8 col-md-8">
                         <div className="form-group">
                             <label>Foto</label>
                             <input type="file" className="form-control"
-                                name="foto" 
+                                name="foto"
                                 onChange={this.fileSelectedHandler}
-                                placeholder="Selecione a foto..."/>
-                            <button onClick={this.fileUploadHandler}>Upload</button>    
+                                placeholder="Selecione a foto..." />
+                            <button onClick={this.fileUploadHandler}>Upload</button>
                         </div>
                     </div>
                 </div>
@@ -248,24 +278,24 @@ export default class UserCrud extends Component {
                             <input type="text" className="form-control"
                                 name="name" value={this.state.user.name}
                                 onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                placeholder="Digite o nome..." />
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="row">
                     <div className="col-2 col-md-">
                         <div className="form-group">
                             <label>CEP</label>
                             <MaskedInput
-                            mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-                            className="form-control"
-                            placeholder="Enter cep"
-                            guide={false}
-                            value={this.state.user.cep}
-                            name="cep"
-                            onChange={e => this.updateAdress(e)}/>
-                           
+                                mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                className="form-control"
+                                placeholder="Enter cep"
+                                guide={false}
+                                value={this.state.user.cep}
+                                name="cep"
+                                onChange={e => this.updateAdress(e)} />
+
                         </div>
                     </div>
 
@@ -280,15 +310,15 @@ export default class UserCrud extends Component {
                     </div>
 
                 </div>
-                
+
                 <div className="row">
                     <div className="col-6 col-md-6">
                         <div className="form-group">
                             <label>Endereço</label>
                             <input type="text" className="form-control"
-                            name="endereco" 
-                            value={this.state.user.endereco}
-                            onChange={e => this.updateField(e)}
+                                name="endereco"
+                                value={this.state.user.endereco}
+                                onChange={e => this.updateField(e)}
                             />
                         </div>
                     </div>
@@ -299,7 +329,7 @@ export default class UserCrud extends Component {
                             <input type="text" className="form-control"
                                 name="numero" value={this.state.user.numero}
                                 onChange={e => this.updateField(e)}
-                                />
+                            />
                         </div>
                     </div>
 
@@ -309,7 +339,7 @@ export default class UserCrud extends Component {
                             <input type="text" className="form-control"
                                 name="bairro" value={this.state.user.bairro}
                                 onChange={e => this.updateField(e)}
-                                />
+                            />
                         </div>
                     </div>
                 </div>
@@ -319,9 +349,9 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Complemento</label>
                             <input type="text" className="form-control"
-                            name="complemento" 
-                            value={this.state.user.complemento}
-                            onChange={e => this.updateField(e)}
+                                name="complemento"
+                                value={this.state.user.complemento}
+                                onChange={e => this.updateField(e)}
                             />
                         </div>
                     </div>
@@ -330,8 +360,8 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>UF</label>
                             <select className="form-control" name="uf"
-                            value={this.state.user.uf} 
-                            onChange={e => this.updateField(e)} >
+                                value={this.state.user.uf}
+                                onChange={e => this.updateField(e)} >
                                 <option value="">Selecione...</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -371,7 +401,7 @@ export default class UserCrud extends Component {
                             <input type="text" className="form-control"
                                 name="cidade" value={this.state.user.cidade}
                                 onChange={e => this.updateField(e)}
-                                />
+                            />
                         </div>
                     </div>
                 </div>
@@ -382,13 +412,13 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Celular</label>
                             <MaskedInput
-                            mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                            className="form-control"
-                            placeholder="Digite o celular"
-                            guide={false}
-                            value={this.state.user.telefone}
-                            name="telefone"
-                            onChange={e => this.updateAdress(e)}/>
+                                mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                                className="form-control"
+                                placeholder="Digite o celular"
+                                guide={false}
+                                value={this.state.user.telefone}
+                                name="telefone"
+                                onChange={e => this.updateAdress(e)} />
 
                         </div>
                     </div>
@@ -397,10 +427,10 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>E-mail</label>
                             <input type="email" className="form-control"
-                            name="email" 
-                            value={this.state.user.email}
-                            onChange={e => this.updateField(e)}
-                            placeholder="Digite o email..."
+                                name="email"
+                                value={this.state.user.email}
+                                onChange={e => this.updateField(e)}
+                                placeholder="Digite o email..."
                             />
                         </div>
                     </div>
@@ -411,7 +441,7 @@ export default class UserCrud extends Component {
                             <input type="date" className="form-control"
                                 name="dataNascimento" value={this.state.user.dataNascimento}
                                 onChange={e => this.updateField(e)}
-                                placeholder="Digite a Data de nascimento..."/>
+                                placeholder="Digite a Data de nascimento..." />
                         </div>
                     </div>
 
@@ -428,7 +458,7 @@ export default class UserCrud extends Component {
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
                             </select>
-                            
+
                         </div>
                     </div>
 
@@ -436,7 +466,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Estado Civil</label>
                             <select className="form-control" name="estadoCivil"
-                             value={this.state.user.estadoCivil}
+                                value={this.state.user.estadoCivil}
                                 onChange={e => this.updateField(e)} >
                                 <option value="">Informe...</option>
                                 <option value="Solteiro">Solteiro</option>
@@ -449,26 +479,26 @@ export default class UserCrud extends Component {
                         </div>
                     </div>
                 </div>
-                
-                { this.state.showConjuge ? 
-                
-                <div className="row" >
-                    <div className="col-8 col-md-8">
-                        <div className="form-group">
-                            <label>Nome Cônjuge</label>
-                            <input type="text" className="form-control"
-                            name="conjuge" 
-                            value={this.state.user.conjuge}
-                            onChange={e => this.updateField(e)}
-                            placeholder="Digite o nome do conjuge..."
-                            />
-                        </div>
-                    </div>  
-                </div>
-                
-                : null }
 
-                
+                {this.state.showConjuge ?
+
+                    <div className="row" >
+                        <div className="col-8 col-md-8">
+                            <div className="form-group">
+                                <label>Nome Cônjuge</label>
+                                <input type="text" className="form-control"
+                                    name="conjuge"
+                                    value={this.state.user.conjuge}
+                                    onChange={e => this.updateField(e)}
+                                    placeholder="Digite o nome do conjuge..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    : null}
+
+
                 <div className="row">
                     <div className="col-3 col-md-3">
                         <div className="form-group">
@@ -491,9 +521,9 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Profissão</label>
                             <input type="text" className="form-control"
-                            name="profissao" 
-                            value={this.state.user.profissao}
-                            onChange={e => this.updateField(e)}
+                                name="profissao"
+                                value={this.state.user.profissao}
+                                onChange={e => this.updateField(e)}
                             />
                         </div>
                     </div>
@@ -503,17 +533,22 @@ export default class UserCrud extends Component {
                     <div className="col-12 d-flex justify-content-start">
                         <button className="btn btn-primary"
                             onClick={e => this.save(e)}>
-                            Salvar
+                            {this.state.user ? 'Alterar' : 'Salvar'}
                         </button>
-
-                        <button className="btn btn-secondary ml-2"
-                            onClick={e => this.clear(e)}>
-                            Cancelar
-                        </button>
-                    </div>   
-                </div>  
+                        {this.state.user ? 
+                            <button className="btn btn-secondary ml-2"
+                                onClick={e => this.retornarListaMembros(e)}>
+                                Retornar
+                            </button> :
+                            <button className="btn btn-secondary ml-2"
+                                onClick={e => this.clear(e)}>
+                                Cancelar
+                            </button>
+                        }
+                    </div>
+                </div>
             </div>
-            
+
         )
     }
 

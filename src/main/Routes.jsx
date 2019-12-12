@@ -108,50 +108,38 @@ class Login extends Component {
           localStorage.setItem('token', response.data.token);
         });
       }
-      else if (response.status === 204) {
-        
-        toast.error('Usuario e Senha não conferem', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-          });
-      }
+      // else if (response.status === 204) {
+      //   this.emitirToasterErro('Usuario e Senha não conferem');
+      // }
       else {
-        alert("Usuário não existe...")
+        this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
       }
     })
     .catch(error => {
-      console.log("Ocorreu um erro...500" + error);
-
+      console.log("Ocorreu um erro... " + error);
       if (error.response) {
         console.log('Retorno 500...');
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-          });
+        this.emitirToasterErro(error.response.data);
       } else if (error.request) {
         console.log(error.request);
-        toast.error('Ocorreu um erro interno ao tentar efetuar o login...', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-          });
+        this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
       } else {
         console.log('Error codigo...', error.message);
       }
     });
         
   };
+
+  emitirToasterErro(mensagem) {
+    toast.error(mensagem, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    });
+  }
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };

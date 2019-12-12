@@ -150,8 +150,6 @@ export default class HomeList extends Component {
               console.log('Error codigo...', error.message);
             }
           });
-
-
     }
 
     refreshListaMembros(baseURL) {
@@ -208,7 +206,6 @@ export default class HomeList extends Component {
         })
         .catch(error => {
             console.log("Ocorreu um erro..." + error);
-      
             if (error.response) {
                 this.emitirToastErro(error.response.data);
             } else if (error.request) {
