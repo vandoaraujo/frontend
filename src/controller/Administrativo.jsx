@@ -46,37 +46,15 @@ export default class Administrativo
             .then(resp => {
                 this.setState({ backup: resp.data.backup })
                 console.log(resp.data.backup)
-                toast.success('Arquivo obtido com sucesso! ', {
-                    position: "top-right",
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                });
+                this.emitirToastError('success', 'Arquivo obtido com sucesso! ');
             })
             .catch(error => {
                 console.log("Ocorreu um erro..." + error);
-            
                 if (error.response) {
                     if(error.response.status == 500){
-                        toast.error('Ocorreu um erro interno, contate o administrador!', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true
-                            });
+                        this.emitirToastError('error', 'Ocorreu um erro interno, contate o administrador!');
                     }else{
-                        toast.error('Acesso não autorizado!', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true
-                            });
+                        this.emitirToastError('error', 'Acesso não autorizado!');
                     }
                 } else if (error.request) {
                     console.log(error.request);
@@ -86,11 +64,16 @@ export default class Administrativo
             });
     }
 
-        // quantidadeMembros(){
-        //     if(this.state.backup && this.state.backup.length > 0 )
-        //         return this.state.list
-        //     else return 0;
-        // }
+    emitirToastError(action, mensagem) {
+        toast[action](mensagem, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+    }
 
         render() {
             return (
