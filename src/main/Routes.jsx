@@ -13,6 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 //import Logo from '../components/template/Logo'
 import logo from '../assets/imgs/imgs.png'
+import logoSistema from '../assets/imgs/logoSistema.png'
 
 toast.configure()
 
@@ -154,12 +155,6 @@ class Login extends Component {
             {/* <img src={logo} alt="logo" /> */}
         </Link>
           <br />
-          <br />
-          <div className="form-group">
-                    <h3>Cadastro de membros</h3>
-                </div>
-          <br />
-          <br />
           <form>
             <div className="row">
               <div className="col-12 col-md-6">
@@ -193,6 +188,8 @@ class Login extends Component {
           <ToastContainer />
         </div>
         <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
+        <div>
+      </div>
       </div>
     );
   }
@@ -203,14 +200,6 @@ function AuthExample() {
     <Router>
       <div>
         <AuthButton />
-        <ul>
-          <li>
-            <Link to="/public">Manual de Uso</Link>
-          </li>
-          <li>
-            <Link to="/protected">Acessar</Link>
-          </li>
-        </ul>
         <Route path="/public" component={Public} />
         <Route path="/login" component={Login} />
         <PrivateRoute path="/protected" component={App} />
@@ -234,7 +223,19 @@ const AuthButton = withRouter(
       </div>
     ) : (
         <p>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site</a>
+          {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site</a> */}
+          <br></br>
+          {/* <Link to="/public">Manual de Uso</Link> */}
+          <div className="col-12 d-flex justify-content-start">
+            <Link to="/protected" className="btn btn-dark">Acessar</Link>
+          </div>
+          <h1 className="centerLogin">Bem-vindo ao SISCAD</h1>
+
+          {/* <div className="col-12 d-flex justify-content-start">
+            <img src={logoSistema} alt="logo" className="centerLogin" />
+          </div> */}
+
+          <p className="centerLogin">Clique no botão acessar para usar o sistema...</p>
         </p>
       )
 );
