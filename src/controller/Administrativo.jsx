@@ -15,7 +15,7 @@ export default class Administrativo
 
     componentWillMount() {
         this.setState({ baseURL: this.retornarURL(),  config: this.obterApi() ,
-            user : localStorage.getItem('userLogado') });
+            user : localStorage.getItem('userLogado') }) 
     }
 
     obterApi() {
