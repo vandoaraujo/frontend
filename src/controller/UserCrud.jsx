@@ -23,6 +23,8 @@ const initialState = {
     list: []
 }
 
+const CASADO = 'Casado';
+
 export default class UserCrud extends Component {
 
     state = { ...initialState, selectedFile: null }
@@ -44,17 +46,15 @@ export default class UserCrud extends Component {
                     this.setState({ user: resp.data });
                     this.habilitarNomeConjuge(resp);
                 });
-            
         }
     }
 
     habilitarNomeConjuge(resp) {
-        if (resp.data.estadoCivil === 'Casado') {
+        if (resp.data.estadoCivil === CASADO) {
             this.setState({ showConjuge: true });
         }else{
             this.setState({ showConjuge: false });
         }
-        
     }
 
     clear() {

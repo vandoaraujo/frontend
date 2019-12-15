@@ -30,7 +30,7 @@ export default class BemVindo
         this.setState({ list: undefined })
     }
 
-    renderFormConsulta() {
+    renderMensagemBemVindo() {
         return (
             <div className="form">
                 <div className="row">
@@ -53,7 +53,7 @@ export default class BemVindo
     render() {
         return (
             <Main {...headerProps}>
-                 {this.renderFormConsulta()} 
+                 {this.renderMensagemBemVindo()} 
             </Main>
         )
     }
