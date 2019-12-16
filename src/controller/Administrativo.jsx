@@ -112,6 +112,22 @@ export default class Administrativo extends Component {
         return { baseURL, config };
     }
 
+    obterApiNovoUsuario() {
+        var baseURL = undefined;
+        var url = window.location.href;
+        if (url.includes('http://localhost:3000/')) {
+            console.log('localhost')
+            baseURL = 'http://localhost:3001/users';
+        } else {
+            console.log('cadastro membros')
+            baseURL = 'https://cadastromembrosibbback.herokuapp.com/users';
+        }
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        return { baseURL, config };
+    }
+
 
     validarDados(novoUsuario) {
         console.log(novoUsuario)
@@ -155,19 +171,17 @@ export default class Administrativo extends Component {
 
 
     inserir() {
+
         var payload = {
             email: this.state.formControlsUser.email.value,
             userName: this.state.formControlsUser.userName.value,
             password: this.state.formControlsUser.passwordUser.value
         }
 
-        console.log(payload)
-
         if (this.validarDados(payload)) {
-            var { baseURL, config } = this.obterApi();
-            const url = baseURL + 'users'
-            console.log(url)
-            axios.post(url, payload, config)
+            var { baseURL, config } = this.obterApiNovoUsuario();
+            console.log(baseURL)
+            axios.post(baseURL, payload, config)
                 .then(resp => {
                     console.log(resp)
                     // this.setState({ user: initialState.user })
@@ -193,7 +207,6 @@ export default class Administrativo extends Component {
                 onClick={() => this.exibirUsuarioSenha()}>
                 <i className="fa fa-database"></i>
             </button>
-            <form>
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -239,7 +252,6 @@ export default class Administrativo extends Component {
                     Incluir
                 </button>
                 <hr />
-            </form>
         </div>
         )
     }

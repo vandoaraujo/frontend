@@ -31,12 +31,11 @@ export default class UserCrud extends Component {
 
     componentWillMount() {
         this.setState({ list: undefined })
-        //obter no load do componente HomeList o usar passado.
+        //obter no load do componente HomeList o user passado.
         this.buscarMembro();
     }
 
     buscarMembro() {
-
         if (this.props.location.state && this.props.location.state.userLoad) {
             var { baseURL, config } = this.obterApi();
             const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
@@ -72,7 +71,6 @@ export default class UserCrud extends Component {
               state: { user: undefined }
           }}  />
           }
-
     }
 
     retornarURL(e) {
@@ -91,9 +89,7 @@ export default class UserCrud extends Component {
         if (this.validarDados(user)) {
             var { baseURL, config } = this.obterApi();
             const method = user.id ? 'put' : 'post'
-            console.log(method)
             const url = user.id ? `${baseURL}membros/${user.id}` : baseURL + 'membros'
-            console.log(url)
             axios[method](url, user, config)
                 .then(resp => {
                     this.setState({ user: initialState.user })
