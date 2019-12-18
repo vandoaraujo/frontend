@@ -1,19 +1,11 @@
+import axios from 'axios';
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from "react-router-dom";
-import App from '../main/App';
-import Public from '../main/Public'
-import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify';
+import { BrowserRouter as Router, Link, Redirect, Route, withRouter } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//import Logo from '../components/template/Logo'
-import logo from '../assets/imgs/imgs.png'
-import logoSistema from '../assets/imgs/logoSistema.png'
+import logoSistema from '../assets/imgs/church.jpg';
+import App from '../main/App';
+import Public from '../main/Public';
 
 toast.configure()
 
@@ -86,50 +78,66 @@ class Login extends Component {
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     var url = window.location.href;
-    var apiBaseUrl;
-    if(url.includes('http://localhost:3000/')){
-      console.log('localhost')
-      apiBaseUrl = 'http://localhost:3001/api-token-auth'
-    }else{
-      console.log('cadastro membros')
-      apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth'
+    var apiBaseUrl = this.obterApiLogin(url);
+    if(this.validarEmail(this.state.formControls.email.value)){
+      var payload = {
+        email: this.state.formControls.email.value,
+        password: this.state.formControls.password.value
+      }
+  
+      axios.post(apiBaseUrl, payload)
+      .then(response => {
+        if (response.status === 200) {
+          fakeAuth.authenticate(() => {
+            this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
+            localStorage.setItem('userLogado', response.data.user.username);
+            localStorage.setItem('token', response.data.token);
+          });
+        }
+        else {
+          this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
+        }
+      })
+      .catch(error => {
+        console.log("Ocorreu um erro... " + error);
+        if (error.response) {
+          console.log('Retorno 500...');
+          this.emitirToasterErro(error.response.data);
+        } else if (error.request) {
+          console.log(error.request);
+          this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
+        } else {
+          console.log('Error codigo...', error.message);
+        }
+      });
     }
-        
-    var payload = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value
-    }
-
-    axios.post(apiBaseUrl, payload)
-    .then(response => {
-      if (response.status === 200) {
-        fakeAuth.authenticate(() => {
-          this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
-          localStorage.setItem('userLogado', response.data.user.username);
-          localStorage.setItem('token', response.data.token);
-        });
-      }
-      // else if (response.status === 204) {
-      //   this.emitirToasterErro('Usuario e Senha não conferem');
-      // }
-      else {
-        this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
-      }
-    })
-    .catch(error => {
-      console.log("Ocorreu um erro... " + error);
-      if (error.response) {
-        console.log('Retorno 500...');
-        this.emitirToasterErro(error.response.data);
-      } else if (error.request) {
-        console.log(error.request);
-        this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
-      } else {
-        console.log('Error codigo...', error.message);
-      }
-    });
-        
   };
+
+  validarEmail(email){
+    if (email) {
+      let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!re.test(email)) {
+          this.emitirToasterErro('Favor preencher o email no formato válido...');
+          return false;
+      }
+      return true;
+    }
+    return false;
+  }        
+
+
+  obterApiLogin(url) {
+    var apiBaseUrl;
+    if (url.includes('http://localhost:3000/')) {
+      console.log('localhost');
+      apiBaseUrl = 'http://localhost:3001/api-token-auth';
+    }
+    else {
+      console.log('cadastro membros');
+      apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth';
+    }
+    return apiBaseUrl;
+  }
 
   emitirToasterErro(mensagem) {
     toast.error(mensagem, {
