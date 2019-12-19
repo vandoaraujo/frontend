@@ -36,7 +36,7 @@ export default class BemVindo
                 <div className="row">
                     <div className="col-8 col-md-8">
                         <div className="form-group">
-                                <h3>Bem-vindo, {localStorage.getItem('userLogado')}! </h3>
+                                <h3>Bem-vindo, {localStorage.getItem('usuarioLogado')}! </h3>
                         </div>
                         <div className="form-group">
                             <label>Avisos: </label>

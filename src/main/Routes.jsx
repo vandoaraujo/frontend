@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, Redirect, Route, withRouter } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import logoSistema from '../assets/imgs/church.jpg';
+import logoSistema from '../assets/imgs/churchA.jpg';
 import App from '../main/App';
 import Public from '../main/Public';
 
@@ -91,6 +91,7 @@ class Login extends Component {
           fakeAuth.authenticate(() => {
             this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
             localStorage.setItem('userLogado', response.data.user.username);
+            localStorage.setItem('usuarioLogado', response.data.user.username);
             localStorage.setItem('token', response.data.token);
           });
         }
@@ -231,18 +232,16 @@ const AuthButton = withRouter(
       </div>
     ) : (
         <div>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a>
-          
           {/* <Link to="/public">Manual de Uso</Link> */}
           <div className="col-12 d-flex justify-content-start">
             <Link to="/protected" className="btn btn-dark">Acessar</Link>
           </div>
+          {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a> */}
           <hr/>
-          <h1 className="centerLogin">Bem-vindo ao SISCAD</h1>
+          <h1 className="centerLogin">SISCAD</h1>
           <div className="col-12 d-flex justify-content-start">
-            <img src={logoSistema} alt="logo" className="centerLogin" />
+            <img src={logoSistema} alt="logo" className="centerImagem"  />
           </div>
-          <p className="centerLogin">Clique no botão acessar para usar o sistema...</p>
         </div>
       )
 );
