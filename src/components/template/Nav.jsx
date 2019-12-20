@@ -19,8 +19,7 @@ export default props =>
             <NavItem rota="/membros" icon="fa fa-table" title="Membros" />
             <NavItem rota="/consulta" icon="fa fa-search" title="Consulta" />
             <NavItem rota="/cadastro"  icon="fa fa-users" title="Cadastro" />
-            {this.state.user ?
-            <NavItem rota="/administrativo"  icon="fa fa-gear" title="Administrativo" /> : <div></div>}
+            <NavItem rota="/administrativo"  icon="fa fa-gear" title="Administrativo" />
             
         </nav>
     </aside>
