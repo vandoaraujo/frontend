@@ -84,7 +84,7 @@ class Login extends Component {
         email: this.state.formControls.email.value,
         password: this.state.formControls.password.value
       }
-  
+      console.log('Api Base ' + apiBaseUrl)
       axios.post(apiBaseUrl, payload)
       .then(response => {
         if (response.status === 200) {
@@ -187,11 +187,12 @@ class Login extends Component {
                   />
                 </div>
               </div>
-              <div className="col-4 col-md-4">
-                  <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
-              </div>
+
             </div>
           </form>
+          <div className="col-4 col-md-4">
+                  <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
+              </div>
           <ToastContainer />
         </div>
         <div>
@@ -236,9 +237,9 @@ const AuthButton = withRouter(
           {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a> */}
           <hr/>
           <h1 className="centerLogin">SISCAD</h1>
-          <div className="col-12 d-flex justify-content-start">
+          {/* <div className="col-12 d-flex justify-content-start">
             <img src={logoSistema} alt="logo" className="centerImagem"  />
-          </div>
+          </div> */}
         </div>
       )
 );

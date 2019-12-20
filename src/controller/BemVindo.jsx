@@ -23,7 +23,7 @@ export default class BemVindo
     render() {
         return (
             <Main {...headerProps}>
-                <BoasVindas/>
+                <BoasVindas headerProps />
             </Main>
         )
     }
