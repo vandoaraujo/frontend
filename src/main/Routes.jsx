@@ -90,6 +90,7 @@ class Login extends Component {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
             this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
+            console.log("UserName " + response.data.user.username);
             localStorage.setItem('userLogado', response.data.user.username);
             localStorage.setItem('usuarioLogado', response.data.user.username);
             localStorage.setItem('token', response.data.token);
@@ -98,8 +99,7 @@ class Login extends Component {
         else {
           this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
         }
-      })
-      .catch(error => {
+      }).catch(error => {
         console.log("Ocorreu um erro... " + error);
         if (error.response) {
           console.log('Retorno 500...');
@@ -166,7 +166,7 @@ class Login extends Component {
           <br />
           <form>
             <div className="row">
-              <div className="col-12 col-md-6">
+              <div className="col-4 col-md-4">
                 <div className="form-group">
                   <label>E-mail</label>
                   <input type="email"
@@ -177,9 +177,7 @@ class Login extends Component {
                     onChange={this.changeHandler} />
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-12 col-md-6">
+              <div className="col-4 col-md-4">
                 <div className="form-group">
                   <label>Password</label>
                   <input type="password"
@@ -191,12 +189,13 @@ class Login extends Component {
                   />
                 </div>
               </div>
+              <div className="col-4 col-md-4">
+                  <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
+              </div>
             </div>
-            <hr />
           </form>
           <ToastContainer />
         </div>
-        <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
         <div>
       </div>
       </div>
