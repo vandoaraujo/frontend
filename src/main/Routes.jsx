@@ -90,8 +90,8 @@ class Login extends Component {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
             this.setState({ ...this.state, redirectToReferrer: true, userLogado: response.data.user });
-            localStorage.setItem('userLogado', response.data.user.username);
-            localStorage.setItem('usuarioLogado', response.data.user.username);
+            localStorage.setItem('usuarioLogado', response.data.user);
+            localStorage.setItem('nomeUsuario', response.data.user.userName);
             localStorage.setItem('token', response.data.token);
           });
         }

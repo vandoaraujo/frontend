@@ -10,33 +10,53 @@ const headerProps = {
     subtitle: 'Sistema para cadastrar a família IBB...'
 }
 
-const consultaState = {
-    user: { name: ''},
-}
+// const consultaState = {
+//     user: { name: ''},
+// }
 
 
 export default class BemVindo
  extends Component {
 
-    state = { ...consultaState }
+    state = {}
 
-   updateField(event){
-       const user = { ...this.state.user }
-       user[event.target.name] = event.target.value
-       this.setState({ user })
-   }
+    // state = { ...consultaState }
+
+//    updateField(event){
+//        const user = { ...this.state.user }
+//        user[event.target.name] = event.target.value
+//        this.setState({ user })
+//    }
 
     componentWillMount() {
-        this.setState({ list: undefined })
+        // this.setState({ list: undefined })
+        this.setState({userLogado: this.state.userLogado})
     }
 
-    renderMensagemBemVindo() {
+    
+    // componentWillMount() {
+    //     this.setState({ user: localStorage.getItem('userLogado') })
+    //     console.log('User Will Mount' + this.state.user)
+    // }
+
+    render() {
+        return (
+            <Main {...headerProps}>
+                <BoasVindas headerProp />
+            </Main>
+        )
+    }
+}
+
+class BoasVindas extends Component {
+
+    render() {
         return (
             <div className="form">
                 <div className="row">
                     <div className="col-8 col-md-8">
                         <div className="form-group">
-                                <h3>Bem-vindo, {localStorage.getItem('usuarioLogado')}! </h3>
+                        <h3>{this.exibeMensagemBoasVindas()}</h3>
                         </div>
                         <div className="form-group">
                             <label>Avisos: </label>
@@ -47,14 +67,10 @@ export default class BemVindo
                 </div>
                 <hr />
             </div>
-        )
+        )    }
+    
+    exibeMensagemBoasVindas(){
+        return 'Bem vindo, ' + localStorage.getItem('nomeUsuario')
     }
 
-    render() {
-        return (
-            <Main {...headerProps}>
-                 {this.renderMensagemBemVindo()} 
-            </Main>
-        )
-    }
 }
