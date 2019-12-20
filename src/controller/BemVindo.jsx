@@ -10,39 +10,20 @@ const headerProps = {
     subtitle: 'Sistema para cadastrar a família IBB...'
 }
 
-// const consultaState = {
-//     user: { name: ''},
-// }
-
-
 export default class BemVindo
  extends Component {
 
     state = {}
-
-    // state = { ...consultaState }
-
-//    updateField(event){
-//        const user = { ...this.state.user }
-//        user[event.target.name] = event.target.value
-//        this.setState({ user })
-//    }
 
     componentWillMount() {
         // this.setState({ list: undefined })
         this.setState({userLogado: this.state.userLogado})
     }
 
-    
-    // componentWillMount() {
-    //     this.setState({ user: localStorage.getItem('userLogado') })
-    //     console.log('User Will Mount' + this.state.user)
-    // }
-
     render() {
         return (
             <Main {...headerProps}>
-                <BoasVindas headerProp />
+                <BoasVindas/>
             </Main>
         )
     }
