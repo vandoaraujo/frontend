@@ -17,7 +17,7 @@ export default class BemVindo
 
     componentWillMount() {
         // this.setState({ list: undefined })
-        this.setState({userLogado: this.state.userLogado})
+        this.setState({...this.state, userLogado: this.state.usuarioLogado})
     }
 
     render() {
@@ -51,7 +51,7 @@ class BoasVindas extends Component {
         )    }
     
     exibeMensagemBoasVindas(){
-        return 'Bem vindo, ' + localStorage.getItem('nomeUsuario')
+        return 'Bem vindo, ' + localStorage.getItem('nomeUsuario') 
     }
 
 }

@@ -17,6 +17,9 @@ const fakeAuth = {
   },
   signout(cb) {
     this.isAuthenticated = false;
+    localStorage.removeItem('usuarioLogado')
+    localStorage.removeItem('nomeUsuario')
+
     setTimeout(cb, 100);
   }
 };
@@ -89,8 +92,12 @@ class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
-            this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user });
+            this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
+            localStorage.removeItem('usuarioLogado')
+            localStorage.removeItem('nomeUsuario')
+            console.log(response.data.user.userName)
             localStorage.setItem('usuarioLogado', response.data.user);
+            localStorage.setItem('nomeUsuario', response.data.user.userName);
             localStorage.setItem('token', response.data.token);
           });
         }
@@ -151,10 +158,23 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
-    let { redirectToReferrer } = this.state;
+    // let { redirectToReferrer } = this.state;
 
-    if (redirectToReferrer) return <Redirect to={from}  />;
+    console.log('Render Routes From' + from)
+    console.log('Usuario Logado' + this.state.usuarioLogado)
 
+    if(this.state.usuarioLogado){
+      let {telaLogin} = {
+        pathname: this.props.location.state,
+        state: { usuarioLogado: this.state.usuarioLogado }
+      }
+
+     return <Redirect to={from}  />;
+  
+    } 
+    
+    // if (redirectToReferrer) return <Redirect to={from}  />;
+  
     return (
       <div className="centerLogin">
         <div className="login-box">
@@ -187,7 +207,6 @@ class Login extends Component {
                   />
                 </div>
               </div>
-
             </div>
           </form>
           <div className="col-4 col-md-4">
@@ -225,6 +244,7 @@ const AuthButton = withRouter(
           onClick={() => {
             fakeAuth.signout(() => history.push("/"));
           }}
+          
         > <i className="fa fa-sign-out" aria-hidden="true">Sair</i>
         </button>
       </div>
