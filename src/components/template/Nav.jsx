@@ -20,7 +20,6 @@ export default props =>
             <NavItem rota="/consulta" icon="fa fa-search" title="Consulta" />
             <NavItem rota="/cadastro"  icon="fa fa-users" title="Cadastro" />
             <NavItem rota="/administrativo"  icon="fa fa-gear" title="Administrativo" />
-            
         </nav>
     </aside>
     <Route path="/protected" component={BemVindo} />

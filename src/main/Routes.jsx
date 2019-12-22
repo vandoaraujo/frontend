@@ -93,10 +93,9 @@ class Login extends Component {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
             this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
-            localStorage.removeItem('usuarioLogado')
+            localStorage.removeItem('userLogado')
             localStorage.removeItem('nomeUsuario')
-            console.log(response.data.user.userName)
-            localStorage.setItem('usuarioLogado', response.data.user);
+            localStorage.setItem('userLogado', response.data.user);
             localStorage.setItem('nomeUsuario', response.data.user.userName);
             localStorage.setItem('token', response.data.token);
           });
@@ -160,8 +159,8 @@ class Login extends Component {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
     // let { redirectToReferrer } = this.state;
 
-    console.log('Render Routes From' + from)
-    console.log('Usuario Logado' + this.state.usuarioLogado)
+    console.log('Render Routes From ' + from)
+    console.log('Usuario Logado ' + this.state.usuarioLogado)
 
     if(this.state.usuarioLogado){
       let {telaLogin} = {

@@ -34,6 +34,9 @@ export default class Administrativo extends Component {
             baseURL: this.retornarURLBackup(), config: this.obterApi(),
             user: localStorage.getItem('userLogado')
         })
+        if (localStorage.getItem('nomeUsuario') === 'vandoaraujo') {
+            this.setState({ ...this.state, admin: true });
+        }
     }
 
     retornarURLBackup(e) {
@@ -87,6 +90,7 @@ export default class Administrativo extends Component {
             pauseOnHover: true,
             draggable: true
         });
+        return true;
     }
 
     changeHandler = event => {
@@ -155,58 +159,22 @@ export default class Administrativo extends Component {
         return true
     }
 
-    renderBackup(){
+    renderAdmin() {
         return (
             <div className="form-group">
                 <label>Backup Base</label>
                 <button className="btn btn-warning ml-2"
-                    onClick={() => this.efetuarBackup(this.state.user)}>
+                    onClick={() => this.efetuarBackup(localStorage.getItem('nomeUsuario'))}>
                     <i className="fa fa-database"></i>
                 </button>
                 <div></div>
                 {this.state.backup ? this.state.backup : <div></div>}
-            </div>
-        )
-    }
-
-
-    inserir() {
-
-        var payload = {
-            email: this.state.formControlsUser.email.value,
-            userName: this.state.formControlsUser.userName.value,
-            password: this.state.formControlsUser.passwordUser.value
-        }
-
-        if (this.validarDados(payload)) {
-            var { baseURL, config } = this.obterApiNovoUsuario();
-            console.log(baseURL)
-            axios.post(baseURL, payload, config)
-                .then(resp => {
-                    console.log(resp)
-                    // this.setState({ user: initialState.user })
-                    this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
-                }).catch(error => {
-                    console.log("Ocorreu um erro..." + error);
-                    if (error.response) {
-                        this.emitirToast('error', error.response.data);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log('Error codigo...', error.message);
-                    }
-                });
-        }
-    }
-
-    renderFormNovoUsuario(){
-        return (
-            <div className="form-group">
-            <label>Incluir Novo Usuário</label>
-            <button className="btn btn-warning ml-2"
-                onClick={() => this.exibirUsuarioSenha()}>
-                <i className="fa fa-database"></i>
-            </button>
+                <hr></hr>
+                <label>Incluir Novo Usuário</label>
+                <button className="btn btn-warning ml-2"
+                    onClick={() => this.exibirUsuarioSenha()}>
+                    <i className="fa fa-database"></i>
+                </button>
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -251,17 +219,45 @@ export default class Administrativo extends Component {
                     onClick={e => this.inserir(e)}>
                     Incluir
                 </button>
-                <hr />
-        </div>
+            </div>
         )
+
+    }
+
+
+    inserir() {
+
+        var payload = {
+            email: this.state.formControlsUser.email.value,
+            userName: this.state.formControlsUser.userName.value,
+            password: this.state.formControlsUser.passwordUser.value
+        }
+
+        if (this.validarDados(payload)) {
+            var { baseURL, config } = this.obterApiNovoUsuario();
+            console.log(baseURL)
+            axios.post(baseURL, payload, config)
+                .then(resp => {
+                    console.log(resp)
+                    // this.setState({ user: initialState.user })
+                    this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
+                }).catch(error => {
+                    console.log("Ocorreu um erro..." + error);
+                    if (error.response) {
+                        this.emitirToast('error', error.response.data);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error codigo...', error.message);
+                    }
+                });
+        }
     }
 
     render() {
         return (
             <Main {...headerProps}>
-                {this.renderBackup()} 
-                <hr />
-                {this.renderFormNovoUsuario()}
+                {this.state.admin ? this.renderAdmin() : <h3>Funcionalidade exclusiva para administradores...</h3>}
             </Main>
         )
     }
