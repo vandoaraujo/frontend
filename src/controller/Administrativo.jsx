@@ -3,6 +3,7 @@ import Main from '../components/template/Main'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import constantes from '../common/constants'
 
 const headerProps = {
     icon: 'users',
@@ -29,16 +30,24 @@ export default class Administrativo extends Component {
         }
     }
 
+    getURLUsers() {
+        var baseURL = undefined;
+        var url = window.location.href;
+        url.includes(constantes.API_BASE_LOCAL) == true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
+        baseURL = constantes.API_BASE_BACKEND_SERVER+'users';
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        return { baseURL, config };
+    }
+
     componentWillMount() {
-        this.setState({
-            baseURL: this.retornarURLBackup(), config: this.obterApi()
-        })
-        var { baseURL, config } = this.obterApiNovoUsuario();
+
+        var { baseURL, config } = this.getURLUsers();
         const url = `${baseURL}/`+localStorage.getItem('user_id')
         axios['get'](url, config)
             .then(resp => {
-                const admin = 777;
-                if (admin == resp.data.perfil ) {
+                if (constantes.PERFIL_SUPER_USER == resp.data.perfil ) {
                     this.setState({ ...this.state, admin: true });
                 }
             });
@@ -46,10 +55,10 @@ export default class Administrativo extends Component {
 
     retornarURLBackup(e) {
         var url = window.location.href;
-        if (url.includes('http://localhost:3000/')) {
-            return 'http://localhost:3001/930dca47b14ba687cdcb62469a3c95b5';
+        if (url.includes(constantes.API_BASE_LOCAL)) {
+            return constantes.API_BASE_BACKEND+constantes.APP_SECRET_KEY;
         } else {
-            return 'https://cadastromembrosibbback.herokuapp.com/930dca47b14ba687cdcb62469a3c95b5';
+            return constantes.API_BASE_BACKEND_SERVER+constantes.APP_SECRET_KEY
         }
     }
 
@@ -62,7 +71,7 @@ export default class Administrativo extends Component {
             headers: { 'Authorization': localStorage.getItem('token'), 'nickname': user }
         };
 
-        axios['get'](this.state.baseURL, config)
+        axios['get'](this.retornarURLBackup(), config)
             .then(resp => {
                 this.setState({ backup: resp.data.backup })
                 console.log(resp.data.backup)
@@ -110,29 +119,7 @@ export default class Administrativo extends Component {
         });
     }
 
-    obterApi() {
-        var baseURL = undefined;
-        baseURL = this.retornarURLBackup();
-        var config = {
-            headers: { 'Authorization': localStorage.getItem('token') }
-        };
-        return { baseURL, config };
-    }
-
-    obterApiNovoUsuario() {
-        var baseURL = undefined;
-        var url = window.location.href;
-        url.includes('http://localhost:3000/') == true ? baseURL = 'http://localhost:3001/users' : 
-        baseURL = 'https://cadastromembrosibbback.herokuapp.com/users';
-        var config = {
-            headers: { 'Authorization': localStorage.getItem('token') }
-        };
-        return { baseURL, config };
-    }
-
-
     validarDados(novoUsuario) {
-        console.log(novoUsuario)
         var erro = false
         if (!novoUsuario.userName) {
             erro = this.emitirToast('error', 'O campo nome não pode ficar vazio...');
@@ -147,8 +134,7 @@ export default class Administrativo extends Component {
         }
 
         if (novoUsuario.email) {
-            let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!re.test(novoUsuario.email)) {
+            if (!constantes.EMAIL_VALIDO.test(novoUsuario.email)) {
                 erro = this.emitirToast('error', 'Email inválido...');
             }
         }
@@ -219,12 +205,9 @@ export default class Administrativo extends Component {
                 </button>
             </div>
         )
-
     }
 
-
     inserir() {
-
         var payload = {
             email: this.state.formControlsUser.email.value,
             userName: this.state.formControlsUser.userName.value,
@@ -232,12 +215,9 @@ export default class Administrativo extends Component {
         }
 
         if (this.validarDados(payload)) {
-            var { baseURL, config } = this.obterApiNovoUsuario();
-            console.log(baseURL)
+            var { baseURL, config } = this.getURLUsers();
             axios.post(baseURL, payload, config)
                 .then(resp => {
-                    console.log(resp)
-                    // this.setState({ user: initialState.user })
                     this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
                 }).catch(error => {
                     console.log("Ocorreu um erro..." + error);
@@ -255,7 +235,7 @@ export default class Administrativo extends Component {
     render() {
         return (
             <Main {...headerProps}>
-                {this.state.admin ? this.renderAdmin() : <h3>Funcionalidade exclusiva para administradores...</h3>}
+                {this.state.admin ? this.renderAdmin() : <h4>Funcionalidade exclusiva para administradores...</h4>}
             </Main>
         )
     }

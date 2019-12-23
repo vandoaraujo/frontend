@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import logoSistema from '../assets/imgs/churchA.jpg';
 import App from '../main/App';
 import Public from '../main/Public';
+import constantes from '../common/constants'
 
 toast.configure()
 
@@ -86,7 +87,7 @@ class Login extends Component {
         email: this.state.formControls.email.value,
         password: this.state.formControls.password.value
       }
-      axios.post(apiBaseUrl, payload)
+      axios.post(apiBaseUrl.concat('api-token-auth'), payload)
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
@@ -118,8 +119,7 @@ class Login extends Component {
 
   validarEmail(email){
     if (email) {
-      let re = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!re.test(email)) {
+      if (!constantes.EMAIL_VALIDO.test(email)) {
           this.emitirToasterErro('Favor preencher o email no formato válido...');
           return false;
       }
@@ -128,12 +128,11 @@ class Login extends Component {
     return false;
   }        
 
-
   obterApiLogin(url) {
     var apiBaseUrl;
-    url.includes('http://localhost:3000/') == true
-     ? apiBaseUrl = 'http://localhost:3001/api-token-auth' : 
-     apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth';
+    url.includes(constantes.API_BASE_LOCAL) == true
+     ? apiBaseUrl = constantes.API_BASE_BACKEND : 
+     apiBaseUrl = constantes.API_BASE_BACKEND_SERVER;
     return apiBaseUrl;
   }
 

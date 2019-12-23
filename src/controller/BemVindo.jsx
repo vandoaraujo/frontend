@@ -15,10 +15,6 @@ export default class BemVindo
 
     state = {}
 
-    componentWillMount() {
-        // this.setState({ list: undefined })
-    }
-
     render() {
         return (
             <Main {...headerProps}>
