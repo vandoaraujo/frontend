@@ -130,7 +130,7 @@ class Login extends Component {
 
   obterApiLogin(url) {
     var apiBaseUrl;
-    url.includes(constantes.API_BASE_LOCAL) == true
+    url.includes(constantes.API_BASE_LOCAL) === true
      ? apiBaseUrl = constantes.API_BASE_BACKEND : 
      apiBaseUrl = constantes.API_BASE_BACKEND_SERVER;
     return apiBaseUrl;
@@ -234,7 +234,7 @@ const AuthButton = withRouter(
           </div>
           {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a> */}
           <hr/>
-          <h1 className="centerLogin">SISCAD</h1>
+          {/* <h1 className="centerLogin">SISCAD</h1> */}
           {/* <div className="col-12 d-flex justify-content-start">
             <img src={logoSistema} alt="logo" className="centerImagem"  />
           </div> */}

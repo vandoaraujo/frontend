@@ -46,7 +46,12 @@ class BoasVindas extends Component {
         )    }
     
     exibeMensagemBoasVindas(){
-        return 'Bem vindo, ' + localStorage.getItem('nomeUsuario') 
+        if(localStorage.getItem('nomeUsuario')){
+            return 'Bem vindo, ' + localStorage.getItem('nomeUsuario')
+        }else{
+            return 'Olá, Bem vindo ao SISCAD!'
+        }
+        
     }
 
 }

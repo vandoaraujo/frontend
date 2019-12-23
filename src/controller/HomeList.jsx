@@ -27,11 +27,7 @@ export default class HomeList extends Component {
     componentWillMount() {
         var apiBaseUrl = undefined;
         apiBaseUrl = this.retornarURL();
-
         if(localStorage.getItem('token') != null){
-            var config = {
-                headers: {'Authorization': localStorage.getItem('token')}
-            };
             (async () => {
                 const result = await fetch(
                     apiBaseUrl+'membros',

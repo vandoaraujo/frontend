@@ -25,32 +25,35 @@ export default class Administrativo extends Component {
                 },
                 passwordUser: {
                     value: ''
+                },
+                perfil: {
+                    value: ''
                 }
+
             }
         }
+    }
+
+    componentWillMount() {
+        var { baseURL, config } = this.getURLUsers();
+        const url = `${baseURL}/`+localStorage.getItem('user_id')
+        axios['get'](url, config)
+            .then(resp => {
+                if (constantes.PERFIL_SUPER_USER === resp.data.perfil ) {
+                    this.setState({ ...this.state, admin: true, email: resp.data.email, perfil: resp.data.perfil });
+                }
+            });
     }
 
     getURLUsers() {
         var baseURL = undefined;
         var url = window.location.href;
-        url.includes(constantes.API_BASE_LOCAL) == true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
+        url.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
         baseURL = constantes.API_BASE_BACKEND_SERVER+'users';
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
         };
         return { baseURL, config };
-    }
-
-    componentWillMount() {
-
-        var { baseURL, config } = this.getURLUsers();
-        const url = `${baseURL}/`+localStorage.getItem('user_id')
-        axios['get'](url, config)
-            .then(resp => {
-                if (constantes.PERFIL_SUPER_USER == resp.data.perfil ) {
-                    this.setState({ ...this.state, admin: true });
-                }
-            });
     }
 
     retornarURLBackup(e) {
@@ -66,9 +69,9 @@ export default class Administrativo extends Component {
         this.setState({ showNewUser: true })
     }
 
-    efetuarBackup(user) {
+    efetuarBackup(email, perfil) {
         var config = {
-            headers: { 'Authorization': localStorage.getItem('token'), 'nickname': user }
+            headers: { 'Authorization': localStorage.getItem('token'), 'email': email, 'perfil': perfil }
         };
 
         axios['get'](this.retornarURLBackup(), config)
@@ -80,7 +83,7 @@ export default class Administrativo extends Component {
             .catch(error => {
                 console.log("Ocorreu um erro..." + error);
                 if (error.response) {
-                    if (error.response.status == 500) {
+                    if (error.response.status === 500) {
                         this.emitirToast('error', 'Ocorreu um erro interno, contate o administrador!');
                     } else {
                         this.emitirToast('error', 'Acesso não autorizado!');
@@ -148,7 +151,7 @@ export default class Administrativo extends Component {
             <div className="form-group">
                 <label>Backup Base</label>
                 <button className="btn btn-warning ml-2"
-                    onClick={() => this.efetuarBackup(localStorage.getItem('nomeUsuario'))}>
+                    onClick={() => this.efetuarBackup(this.state.email, this.state.perfil)}>
                     <i className="fa fa-database"></i>
                 </button>
                 <div></div>
@@ -199,6 +202,20 @@ export default class Administrativo extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-12 col-md-6">
+                        <div className="form-group">
+                            <label>Perfil</label>
+                            <select className="form-control" name="perfil"
+                                value={this.state.formControlsUser.perfil.value}
+                                onChange={this.changeHandler}>
+                                <option value="consulta">Consulta</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
                 <button className="btn btn-primary"
                     onClick={e => this.inserir(e)}>
                     Incluir
@@ -211,7 +228,8 @@ export default class Administrativo extends Component {
         var payload = {
             email: this.state.formControlsUser.email.value,
             userName: this.state.formControlsUser.userName.value,
-            password: this.state.formControlsUser.passwordUser.value
+            password: this.state.formControlsUser.passwordUser.value,
+            perfil: this.state.formControlsUser.perfil.value
         }
 
         if (this.validarDados(payload)) {
