@@ -131,14 +131,9 @@ class Login extends Component {
 
   obterApiLogin(url) {
     var apiBaseUrl;
-    if (url.includes('http://localhost:3000/')) {
-      console.log('localhost');
-      apiBaseUrl = 'http://localhost:3001/api-token-auth';
-    }
-    else {
-      console.log('cadastro membros');
-      apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth';
-    }
+    url.includes('http://localhost:3000/') == true
+     ? apiBaseUrl = 'http://localhost:3001/api-token-auth' : 
+     apiBaseUrl = 'https://cadastromembrosibbback.herokuapp.com/api-token-auth';
     return apiBaseUrl;
   }
 
@@ -155,22 +150,9 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
-    // let { redirectToReferrer } = this.state;
-
-    console.log('Render Routes From ' + from)
-    console.log('Usuario Logado ' + this.state.usuarioLogado)
-
     if(this.state.usuarioLogado){
-      let {telaLogin} = {
-        pathname: this.props.location.state,
-        state: { usuarioLogado: this.state.usuarioLogado }
-      }
-
      return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
-  
     } 
-    
-    // if (redirectToReferrer) return <Redirect to={from}  />;
   
     return (
       <div className="centerLogin">
