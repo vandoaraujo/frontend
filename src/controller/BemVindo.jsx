@@ -17,7 +17,6 @@ export default class BemVindo
 
     componentWillMount() {
         // this.setState({ list: undefined })
-       // this.setState({...this.state, userLogado: this.state.usuarioLogado})
     }
 
     render() {

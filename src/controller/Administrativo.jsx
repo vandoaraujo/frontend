@@ -31,21 +31,24 @@ export default class Administrativo extends Component {
 
     componentWillMount() {
         this.setState({
-            baseURL: this.retornarURLBackup(), config: this.obterApi(),
-            user: localStorage.getItem('userLogado')
+            baseURL: this.retornarURLBackup(), config: this.obterApi()
         })
-        if (localStorage.getItem('nomeUsuario') === 'vandoaraujo') {
-            this.setState({ ...this.state, admin: true });
-        }
+        var { baseURL, config } = this.obterApiNovoUsuario();
+        const url = `${baseURL}/`+localStorage.getItem('user_id')
+        axios['get'](url, config)
+            .then(resp => {
+                const admin = 777;
+                if (admin == resp.data.perfil ) {
+                    this.setState({ ...this.state, admin: true });
+                }
+            });
     }
 
     retornarURLBackup(e) {
         var url = window.location.href;
         if (url.includes('http://localhost:3000/')) {
-            console.log('localhost')
             return 'http://localhost:3001/930dca47b14ba687cdcb62469a3c95b5';
         } else {
-            console.log('cadastro membros')
             return 'https://cadastromembrosibbback.herokuapp.com/930dca47b14ba687cdcb62469a3c95b5';
         }
     }
@@ -119,13 +122,8 @@ export default class Administrativo extends Component {
     obterApiNovoUsuario() {
         var baseURL = undefined;
         var url = window.location.href;
-        if (url.includes('http://localhost:3000/')) {
-            console.log('localhost')
-            baseURL = 'http://localhost:3001/users';
-        } else {
-            console.log('cadastro membros')
-            baseURL = 'https://cadastromembrosibbback.herokuapp.com/users';
-        }
+        url.includes('http://localhost:3000/') == true ? baseURL = 'http://localhost:3001/users' : 
+        baseURL = 'https://cadastromembrosibbback.herokuapp.com/users';
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
         };

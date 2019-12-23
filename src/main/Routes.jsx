@@ -17,7 +17,6 @@ const fakeAuth = {
   },
   signout(cb) {
     this.isAuthenticated = false;
-    localStorage.removeItem('usuarioLogado')
     localStorage.removeItem('nomeUsuario')
 
     setTimeout(cb, 100);
@@ -87,15 +86,14 @@ class Login extends Component {
         email: this.state.formControls.email.value,
         password: this.state.formControls.password.value
       }
-      console.log('Api Base ' + apiBaseUrl)
       axios.post(apiBaseUrl, payload)
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
             this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
-            localStorage.removeItem('userLogado')
+            localStorage.removeItem('user_id')
             localStorage.removeItem('nomeUsuario')
-            localStorage.setItem('userLogado', response.data.user);
+            localStorage.setItem('user_id', response.data.user.id);
             localStorage.setItem('nomeUsuario', response.data.user.userName);
             localStorage.setItem('token', response.data.token);
           });
@@ -168,7 +166,7 @@ class Login extends Component {
         state: { usuarioLogado: this.state.usuarioLogado }
       }
 
-     return <Redirect to={from}  />;
+     return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
   
     } 
     
