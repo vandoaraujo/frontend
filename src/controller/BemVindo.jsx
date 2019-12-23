@@ -10,8 +10,7 @@ const headerProps = {
     subtitle: 'Sistema para cadastrar a família IBB...'
 }
 
-export default class BemVindo
- extends Component {
+export default class BemVindo extends Component {
 
     state = {}
 

@@ -154,47 +154,46 @@ class Login extends Component {
     } 
   
     return (
-      <div className="centerLogin">
-        <div className="login-box">
-        <Link to="/" className="logo">
-            {/* <img src={logo} alt="logo" /> */}
-        </Link>
-          <br />
-          <form>
-            <div className="row">
-              <div className="col-4 col-md-4">
-                <div className="form-group">
-                  <label>E-mail</label>
-                  <input type="email"
+      <div className="limiter">
+      <div className="container-login100">
+        <div className="wrap-login100">
+          <div className="login100-form-title">
+            <span className="login100-form-title-1">
+              SISCAD
+            </span>
+          </div>
+          <form className="login100-form validate-form">
+            <div className="wrap-input100 validate-input m-b-26">
+              <span className="label-input100">E-mail</span>
+              <input type="email"
                     name="email"
-                    className="form-control"
+                    className="input100"
                     value={this.state.formControls.email.value}
                     placeholder="Digite o seu e-mail..."
                     onChange={this.changeHandler} />
-                </div>
-              </div>
-              <div className="col-4 col-md-4">
-                <div className="form-group">
-                  <label>Password</label>
-                  <input type="password"
+              <span className="focus-input100"></span>
+            </div>
+              
+            <div className="wrap-input100 validate-input m-b-18">
+              <span className="label-input100">Password</span>
+              <input type="password"
                     name="password"
-                    className="form-control"
+                    className="input100"
                     value={this.state.formControls.password.value}
                     placeholder="Digite a sua senha..."
                     onChange={this.changeHandler}
-                  />
-                </div>
-              </div>
+                />
+              <span className="focus-input100"></span>
             </div>
-          </form>
-          <div className="col-4 col-md-4">
-                  <button className="btn btn-primary" onClick={() => {this.login()}}>Entrar</button>
-              </div>
-          <ToastContainer />
+            </form>     
+            <div className="container-login100-form-btn">
+              <button className="login100-form-btn" onClick={() => {this.login()}}>Login</button>
+            </div>
+            <ToastContainer />              
         </div>
-        <div>
       </div>
-      </div>
+    </div>
+
     );
   }
 }
@@ -220,7 +219,7 @@ const AuthButton = withRouter(
       <div className="col-12 d-flex justify-content-start">
           <button className="btn btn-dark"
           onClick={() => {
-            fakeAuth.signout(() => history.push("/"));
+            fakeAuth.signout(() => history.push("/login"));
           }}
           
         > <i className="fa fa-sign-out" aria-hidden="true">Sair</i>
@@ -233,11 +232,6 @@ const AuthButton = withRouter(
             <Link to="/protected" className="btn btn-dark">Acessar</Link>
           </div>
           {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a> */}
-          <hr/>
-          {/* <h1 className="centerLogin">SISCAD</h1> */}
-          {/* <div className="col-12 d-flex justify-content-start">
-            <img src={logoSistema} alt="logo" className="centerImagem"  />
-          </div> */}
         </div>
       )
 );
