@@ -253,7 +253,8 @@ export default class Administrativo extends Component {
     render() {
         return (
             <Main {...headerProps}>
-                {this.state.admin ? this.renderAdmin() : <h4>Funcionalidade exclusiva para administradores...</h4>}
+                {this.state.admin ? this.renderAdmin()
+                     : <h4>Funcionalidade exclusiva para administradores...</h4>}
             </Main>
         )
     }

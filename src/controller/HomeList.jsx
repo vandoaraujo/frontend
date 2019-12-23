@@ -4,6 +4,8 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Redirect } from 'react-router-dom'
+import constantes from '../common/constants'
+
 const fetch = require("node-fetch");
 
 const headerProps = {
@@ -22,7 +24,7 @@ const homeList = {
 
 export default class HomeList extends Component {
     
-    state = { ...homeList, edicaoMembro: false }
+    state = { ...homeList, edicaoMembro: false, admin: false }
 
     componentWillMount() {
         var apiBaseUrl = undefined;
@@ -57,12 +59,12 @@ export default class HomeList extends Component {
 
     retornarURL(e){
         var url = window.location.href;
-        if(url.includes('http://localhost:3000/')){
+        if(url.includes(constantes.API_BASE_LOCAL)){
             console.log('localhost')
-            return 'http://localhost:3001/'
+            return constantes.API_BASE_BACKEND;
         }else{
             console.log('cadastro membros')
-            return 'https://cadastromembrosibbback.herokuapp.com/'
+            return constantes.API_BASE_BACKEND_SERVER;
         }
     }
     /**
@@ -106,7 +108,7 @@ export default class HomeList extends Component {
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
-                            <th>Ações</th>
+                            {this.state.admin ? <th>Ações</th> : null}
                         </tr>
                     </thead>
                     <tbody>
@@ -124,10 +126,8 @@ export default class HomeList extends Component {
             headers: {'Authorization': localStorage.getItem('token')}
         };
         axios.delete(`${baseURL}membros/${user.id}`, config).then(resp => {
-            console.log(resp)
             if(resp.status > 200){
                 this.emitirToastErro('Ocorreu um erro ao remover o membro...');
-                //recarregar a lista de usuarios...
             }else{
                 const list = this.getUpdatedList(user, false)
                 this.setState({list})
@@ -221,6 +221,7 @@ export default class HomeList extends Component {
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.telefone}</td>
+                    {this.state.admin ?
                     <td>
                         <button className="btn btn-info"
                             onClick={() => this.load(user)}>
@@ -235,7 +236,9 @@ export default class HomeList extends Component {
                             <i className="fa fa-trash"></i>
                         </button>
 
-                    </td>   
+                    </td>  
+                         : null
+                    }
                 </tr>
             )
         }) : 'Não há membros cadastrados...'
