@@ -77,27 +77,57 @@ class Login extends Component {
         }
       }
     });
-  } 
+  }
+
+  isSistemaManutencao(){
+
+    var { baseURL, config } = this.getURLSistemaManutencao();
+    axios['get'](baseURL, config)
+        .then(resp => {
+          return resp.data.desabilitado.desabilitado
+        }).catch(error => {
+          console.log("Ocorreu um erro... " + error);
+          if (error.response) {
+            this.emitirToasterErro(error.response.data);
+          } else if (error.request) {
+            this.emitirToasterErro('Ocorreu um erro interno ao tentar obter as infos do Sistema ...');
+          } else {
+            console.log('Error codigo...', error.message);
+          }
+        });
+        console.log('caiu aqui....')
+        return 0;
+  }
+
+  getURLSistemaManutencao() {
+    var baseURL = undefined;
+    window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
+    baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
+    var config = {
+      headers: { 'Authorization': localStorage.getItem('token') }
+    };
+    return { baseURL, config };
+}
 
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
-    var url = window.location.href;
-    var apiBaseUrl = this.obterApiLogin(url);
+    var urlBase = this.obterApiLogin(window.location.href);
     if(this.validarEmail(this.state.formControls.email.value)){
       var payload = {
         email: this.state.formControls.email.value,
         password: this.state.formControls.password.value
       }
-      axios.post(apiBaseUrl.concat('api-token-auth'), payload)
+      axios.post(urlBase.concat('api-token-auth'), payload)
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
-            this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
-            localStorage.removeItem('user_id')
-            localStorage.removeItem('nomeUsuario')
-            localStorage.setItem('user_id', response.data.user.id);
-            localStorage.setItem('nomeUsuario', response.data.user.userName);
-            localStorage.setItem('token', response.data.token);
+            console.log(this.isSistemaManutencao())
+            console.log(this.isSistemaManutencao() === constantes.SISTEMA_DESABILITADO)
+            if(this.isSistemaManutencao() === constantes.SISTEMA_DESABILITADO){
+              this.emitirToasterErro('Esse sistema se encontra em manutenção! :) ');
+            }else{
+              this.informacoesUsuarioBuilder(response);
+            }
           });
         }
         else {
@@ -106,10 +136,8 @@ class Login extends Component {
       }).catch(error => {
         console.log("Ocorreu um erro... " + error);
         if (error.response) {
-          console.log('Retorno 500...');
           this.emitirToasterErro(error.response.data);
         } else if (error.request) {
-          console.log(error.request);
           this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
         } else {
           console.log('Error codigo...', error.message);
@@ -117,6 +145,15 @@ class Login extends Component {
       });
     }
   };
+
+  informacoesUsuarioBuilder(response) {
+    this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('nomeUsuario');
+    localStorage.setItem('user_id', response.data.user.id);
+    localStorage.setItem('nomeUsuario', response.data.user.userName);
+    localStorage.setItem('token', response.data.token);
+  }
 
   validarEmail(email){
     if (email) {

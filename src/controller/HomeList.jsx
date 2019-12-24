@@ -55,8 +55,7 @@ export default class HomeList extends Component {
 
     getURLUsers() {
         var baseURL = undefined;
-        var url = window.location.href;
-        url.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
+        window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
         baseURL = constantes.API_BASE_BACKEND_SERVER+'users';
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
