@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Redirect } from 'react-router-dom'
 import constantes from '../common/constants'
 
+
 const fetch = require("node-fetch");
 
 const headerProps = {
@@ -31,7 +32,7 @@ export default class HomeList extends Component {
         apiBaseUrl = this.retornarURL();
         if(localStorage.getItem('token') != null){
             (async () => {
-                const result = await fetch(
+                await fetch(
                     apiBaseUrl+'membros',
                     {
                     method: 'GET',
@@ -50,6 +51,17 @@ export default class HomeList extends Component {
                     this.setState({ ...this.state, admin: true});
                 }
             });
+    }
+
+    getURLUsers() {
+        var baseURL = undefined;
+        var url = window.location.href;
+        url.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
+        baseURL = constantes.API_BASE_BACKEND_SERVER+'users';
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        return { baseURL, config };
     }
 
     compare(a, b) {
@@ -159,7 +171,7 @@ export default class HomeList extends Component {
 
     refreshListaMembros(baseURL) {
         (async () => {
-            const result = await fetch(baseURL + 'membrosUpdated', {
+            await fetch(baseURL + 'membrosUpdated', {
                 method: 'GET',
                 headers: { 'Authorization': localStorage.getItem('token') }
             }).then(res => res.json())
