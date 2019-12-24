@@ -41,6 +41,15 @@ export default class HomeList extends Component {
                 .then(json => this.setState({ list: json.membros.sort(this.compare) }));
             })()
         }
+
+        var { baseURL, config } = this.getURLUsers();
+        const url = `${baseURL}/`+localStorage.getItem('user_id')
+        axios['get'](url, config)
+            .then(resp => {
+                if (constantes.PERFIL_SUPER_USER === resp.data.perfil ) {
+                    this.setState({ ...this.state, admin: true});
+                }
+            });
     }
 
     compare(a, b) {
@@ -210,8 +219,6 @@ export default class HomeList extends Component {
               console.log('Error codigo...', error.message);
             }
           });
-
-
     }
 
     renderRows(){

@@ -3,10 +3,11 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, Redirect, Route, withRouter } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import logoSistema from '../assets/imgs/churchA.jpg';
 import App from '../main/App';
 import Public from '../main/Public';
 import constantes from '../common/constants'
+import logo from '../assets/bg-01.jpg'
+import logo2 from '../assets/imgs/imgs.png'
 
 toast.configure()
 
@@ -157,7 +158,7 @@ class Login extends Component {
       <div className="limiter">
       <div className="container-login100">
         <div className="wrap-login100">
-          <div className="login100-form-title">
+          <div className="login100-form-title-img">
             <span className="login100-form-title-1">
               SISCAD
             </span>
