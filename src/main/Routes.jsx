@@ -79,34 +79,21 @@ class Login extends Component {
     });
   }
 
-  isSistemaManutencao(){
-
-    var { baseURL, config } = this.getURLSistemaManutencao();
-    axios['get'](baseURL, config)
+  isSistemaManutencao(token){
+    var config = {
+      headers: { 'Authorization': token }
+    };
+    axios.get( this.getURLSistemaManutencao() , config)
         .then(resp => {
           return resp.data.desabilitado.desabilitado
-        }).catch(error => {
-          console.log("Ocorreu um erro... " + error);
-          if (error.response) {
-            this.emitirToasterErro(error.response.data);
-          } else if (error.request) {
-            this.emitirToasterErro('Ocorreu um erro interno ao tentar obter as infos do Sistema ...');
-          } else {
-            console.log('Error codigo...', error.message);
-          }
-        });
-        console.log('caiu aqui....')
-        return 0;
+        })
   }
 
   getURLSistemaManutencao() {
     var baseURL = undefined;
     window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
     baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
-    var config = {
-      headers: { 'Authorization': localStorage.getItem('token') }
-    };
-    return { baseURL, config };
+    return  baseURL
 }
 
   login = (e) => {
@@ -121,13 +108,17 @@ class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
-            console.log(this.isSistemaManutencao())
-            console.log(this.isSistemaManutencao() === constantes.SISTEMA_DESABILITADO)
-            if(this.isSistemaManutencao() === constantes.SISTEMA_DESABILITADO){
-              this.emitirToasterErro('Esse sistema se encontra em manutenção! :) ');
-            }else{
-              this.informacoesUsuarioBuilder(response);
-            }
+            var config = {
+              headers: { 'Authorization': response.data.token }
+            };
+            axios.get( this.getURLSistemaManutencao() , config)
+            .then(resp => {
+              if (response.status === 200) {
+                this.informacoesUsuarioBuilder(response);
+              }else{
+                this.emitirToasterErro(response.statusText);
+              }
+            })
           });
         }
         else {
@@ -269,7 +260,7 @@ const AuthButton = withRouter(
           <div className="col-12 d-flex justify-content-start">
             <Link to="/protected" className="btn btn-dark">Acessar</Link>
           </div>
-          {/* <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a> */}
+          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a>
         </div>
       )
 );
