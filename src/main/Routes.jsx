@@ -79,23 +79,6 @@ class Login extends Component {
     });
   }
 
-  isSistemaManutencao(token){
-    var config = {
-      headers: { 'Authorization': token }
-    };
-    axios.get( this.getURLSistemaManutencao() , config)
-        .then(resp => {
-          return resp.data.desabilitado.desabilitado
-        })
-  }
-
-  getURLSistemaManutencao() {
-    var baseURL = undefined;
-    window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
-    baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
-    return  baseURL
-}
-
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     var urlBase = this.obterApiLogin(window.location.href);
@@ -108,25 +91,15 @@ class Login extends Component {
       .then(response => {
         if (response.status === 200) {
           fakeAuth.authenticate(() => {
-            var config = {
-              headers: { 'Authorization': response.data.token }
-            };
-            axios.get( this.getURLSistemaManutencao() , config)
-            .then(resp => {
-              if (response.status === 200) {
-                this.informacoesUsuarioBuilder(response);
-              }else{
-                this.emitirToasterErro(response.statusText);
-              }
-            })
+            this.informacoesUsuarioBuilder(response);
           });
-        }
-        else {
+        }else {
           this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
         }
       }).catch(error => {
         console.log("Ocorreu um erro... " + error);
         if (error.response) {
+          console.log('ocorreu um erro no response....')
           this.emitirToasterErro(error.response.data);
         } else if (error.request) {
           this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
@@ -138,7 +111,8 @@ class Login extends Component {
   };
 
   informacoesUsuarioBuilder(response) {
-    this.setState({ ...this.state, redirectToReferrer: true, usuarioLogado: response.data.user.userName });
+    this.setState({ ...this.state, redirectToReferrer: true,
+       usuarioLogado: response.data.user.userName });
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
     localStorage.setItem('user_id', response.data.user.id);

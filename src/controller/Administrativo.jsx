@@ -40,10 +40,37 @@ export default class Administrativo extends Component {
         axios['get'](url, config)
             .then(resp => {
                 if (constantes.PERFIL_SUPER_USER === resp.data.perfil ) {
-                    this.setState({ ...this.state, admin: true, email: resp.data.email, perfil: resp.data.perfil });
+                    this.setState({ ...this.state, admin: true,
+                        email: resp.data.email, perfil: resp.data.perfil });
+                    axios.get( this.getURLSistemaManutencao() , config)
+                          .then(resp => {
+                            if (resp.status === 200) {
+                                this.setState({...this.state, manutencao : 0})
+                            }
+                    }).catch(error => {
+                            if (error.response) {
+                              this.setState({...this.state, manutencao : 1})  
+                              this.emitirToast('error',error.response.data);
+                            } else if (error.request) {
+                              this.emitirToast('error', 'Ocorreu um erro interno ao tentar efetuar o login...');
+                            } else {
+                              console.log('Error codigo...', error.message);
+                            }
+                    });   
                 }
             });
     }
+
+    
+
+
+    getURLSistemaManutencao() {
+        var baseURL = undefined;
+        window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
+        baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
+        return  baseURL
+    }
+
 
     getURLUsers() {
         var baseURL = undefined;
@@ -71,7 +98,8 @@ export default class Administrativo extends Component {
 
     efetuarBackup(email, perfil) {
         var config = {
-            headers: { 'Authorization': localStorage.getItem('token'), 'email': email, 'perfil': perfil }
+            headers: { 'Authorization': localStorage.getItem('token'),
+            'email': email, 'perfil': perfil }
         };
 
         axios['get'](this.retornarURLBackup(), config)
@@ -160,8 +188,10 @@ export default class Administrativo extends Component {
                 <label>Incluir Novo Usuário</label>
                 <button className="btn btn-warning ml-2"
                     onClick={() => this.exibirUsuarioSenha()}>
-                    <i className="fa fa-database"></i>
+                    <i className="fa fa-user-circle"></i>
                 </button>
+                {this.state.showNewUser ? 
+                <div>
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <div className="form-group">
@@ -220,8 +250,27 @@ export default class Administrativo extends Component {
                     onClick={e => this.inserir(e)}>
                     Incluir
                 </button>
+                </div> : <div></div>}
+                <hr></hr>
+                <label>Habilitar/Desabilitar Sistema</label>
+                <button className="btn btn-warning ml-2"
+                    onClick={() => this.habilitarDesabilitarSistema()}>
+                    <i className="fa fa-microchip"></i>
+                </button>
+                <label>O sistema no momento está:  {this.state.manutencao ? 'EM MANUTENÇÃO' : 'ATIVO'} </label>
             </div>
         )
+    }
+
+    habilitarDesabilitarSistema(){
+        var novoEstado = this.state.manutencao ? 0 : 1;
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        axios.put(this.getURLSistemaManutencao(), novoEstado, config)
+                .then(resp => {
+                    this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
+                })
     }
 
     inserir() {
