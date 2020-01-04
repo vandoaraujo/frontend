@@ -4,6 +4,7 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import constantes from '../common/constants'
+import { Redirect } from 'react-router-dom'
 
 const headerProps = {
     icon: 'users',
@@ -42,14 +43,15 @@ export default class Administrativo extends Component {
                 if (constantes.PERFIL_SUPER_USER === resp.data.perfil ) {
                     this.setState({ ...this.state, admin: true,
                         email: resp.data.email, perfil: resp.data.perfil });
-                    axios.get( this.getURLSistemaManutencao() , config)
+                    axios.get( this.getURLSistemaManutencao()+'/1' , config)
                           .then(resp => {
-                            if (resp.status === 200) {
+                            if (resp.data.desabilitado === 0) {
                                 this.setState({...this.state, manutencao : 0})
+                            }else{
+                                this.setState({...this.state, manutencao : 1})
                             }
                     }).catch(error => {
                             if (error.response) {
-                              this.setState({...this.state, manutencao : 1})  
                               this.emitirToast('error',error.response.data);
                             } else if (error.request) {
                               this.emitirToast('error', 'Ocorreu um erro interno ao tentar efetuar o login...');
@@ -61,16 +63,12 @@ export default class Administrativo extends Component {
             });
     }
 
-    
-
-
     getURLSistemaManutencao() {
         var baseURL = undefined;
         window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
         baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
         return  baseURL
     }
-
 
     getURLUsers() {
         var baseURL = undefined;
@@ -92,7 +90,7 @@ export default class Administrativo extends Component {
         }
     }
 
-    exibirUsuarioSenha() {
+    exibirCamposNovoUsuario() {
         this.setState({ showNewUser: true })
     }
 
@@ -187,7 +185,7 @@ export default class Administrativo extends Component {
                 <hr></hr>
                 <label>Incluir Novo Usuário</label>
                 <button className="btn btn-warning ml-2"
-                    onClick={() => this.exibirUsuarioSenha()}>
+                    onClick={() => this.exibirCamposNovoUsuario()}>
                     <i className="fa fa-user-circle"></i>
                 </button>
                 {this.state.showNewUser ? 
@@ -256,21 +254,32 @@ export default class Administrativo extends Component {
                 <button className="btn btn-warning ml-2"
                     onClick={() => this.habilitarDesabilitarSistema()}>
                     <i className="fa fa-microchip"></i>
-                </button>
+                </button><p></p>
                 <label>O sistema no momento está:  {this.state.manutencao ? 'EM MANUTENÇÃO' : 'ATIVO'} </label>
             </div>
         )
     }
 
     habilitarDesabilitarSistema(){
-        var novoEstado = this.state.manutencao ? 0 : 1;
+        var payload = {
+            desabilitado: this.state.manutencao ? 0 : 1
+        }
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
         };
-        axios.put(this.getURLSistemaManutencao(), novoEstado, config)
+        axios.put(this.getURLSistemaManutencao()+'/1', payload, config)
                 .then(resp => {
-                    this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
+                    this.setState({ manutencao: payload.desabilitado })
+                    this.emitirToast('success', 'Acao efetuada com sucesso! ');
                 })
+    }
+
+    clear(){
+        this.state.formControlsUser.email.value = ''
+        this.state.formControlsUser.userName.value = ''
+        this.state.formControlsUser.passwordUser.value = ''
+        this.state.formControlsUser.perfil.value = ''
+        this.setState({ backTelaPrincipal : true})
     }
 
     inserir() {
@@ -296,12 +305,21 @@ export default class Administrativo extends Component {
                         console.log('Error codigo...', error.message);
                     }
                 });
+                this.clear()
         }
+    }
+
+    goHome() {
+        return <Redirect to={{
+              pathname: '/membros',
+              state: { user: undefined }
+        }}  />
     }
 
     render() {
         return (
             <Main {...headerProps}>
+                {this.state.backTelaPrincipal ? this.goHome() : null}
                 {this.state.admin ? this.renderAdmin()
                      : <h4>Funcionalidade exclusiva para administradores...</h4>}
             </Main>
