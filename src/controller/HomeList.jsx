@@ -25,7 +25,7 @@ const homeList = {
 
 export default class HomeList extends Component {
     
-    state = { ...homeList, edicaoMembro: false, admin: false }
+    state = { ...homeList, edicaoMembro: false, transferenciaMembro: false, admin: false }
 
     componentWillMount() {
         var apiBaseUrl = undefined;
@@ -109,6 +109,17 @@ export default class HomeList extends Component {
         this.setEdicaoMembro(user)
     }
 
+    setTransferenciaMembro = (user) => {
+        this.setState({
+          transferenciaMembro: true,
+          user: user
+        })
+    }
+    
+    loadTransferencia(user){
+        this.setTransferenciaMembro(user)
+    }
+
     renderEdicaoMembro () {
         if (this.state.edicaoMembro) {
           return <Redirect to={{
@@ -118,10 +129,20 @@ export default class HomeList extends Component {
         }
       }
 
+    renderTransferenciaMembro () {
+        if (this.state.transferenciaMembro) {
+          return <Redirect to={{
+            pathname: '/transferencia',
+            state: { userLoad: this.state.user }
+        }}  />
+        }
+      }
+
     renderTable(){
         return(
             <div>
                 {this.renderEdicaoMembro()}
+                {this.renderTransferenciaMembro()}
                 <table className="table mt-4">
                     <thead>
                         <tr>
@@ -208,30 +229,7 @@ export default class HomeList extends Component {
         };
         return { baseURL, config };
     }
-
-    transferir(user){
-        var { baseURL, config } = this.obterApi();
-        user['ativo'] = 0;
-        axios['put'](baseURL+'membros/'+user.id, user, config)
-        .then(resp => {
-            const list = this.getUpdatedList(user, false)
-            this.setState({list})
-            this.emitirToastSucesso('Membro ' + user.name  + ' desvinculado com sucesso! ');    
-            //Tentando resolver o bug do CACHE com o lowDB
-            this.refreshListaMembros(baseURL); 
-        })
-        .catch(error => {
-            console.log("Ocorreu um erro..." + error);
-            if (error.response) {
-                this.emitirToastErro(error.response.data);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error codigo...', error.message);
-            }
-          });
-    }
-
+    
     renderRows(){
         return  this.state.list ? this.state.list.map(user => {
             return (
@@ -246,7 +244,7 @@ export default class HomeList extends Component {
                             <i className="fa fa-pencil"></i>
                         </button    >
                         <button className="btn btn-warning ml-2"
-                            onClick={() => this.transferir(user)}>
+                            onClick={() => this.loadTransferencia(user)}>
                             <i className="fa fa-cut"></i>
                         </button>
                         <button className="btn btn-danger ml-2"

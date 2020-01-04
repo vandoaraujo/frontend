@@ -249,6 +249,7 @@ export default class UserCrud extends Component {
         fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
         axios.post('', fd).then(res => console.log())
     }
+    
 
     renderForm() {
         return (

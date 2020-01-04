@@ -10,6 +10,7 @@ import HomeList from '../../controller/HomeList';
 import Consulta from '../../controller/Consulta';
 import Administrativo from '../../controller/Administrativo';
 import BemVindo from '../../controller/BemVindo';
+import UserTransferir from '../../controller/UserTransferir';
 
 export default props =>
 <Router>
@@ -25,6 +26,7 @@ export default props =>
     <Route path="/protected" component={BemVindo} />
     <Route path="/administrativo" component={Administrativo} />
     <Route path="/cadastro" component={UserCrud} />
+    <Route path="/transferencia" component={UserTransferir} />
     <Route path="/consulta" component={Consulta} />
     <Route path="/membros" component={HomeList} />
 
