@@ -82,34 +82,47 @@ export default class UserTransferir extends Component {
 
     transferir(){
         var membro = this.state.user
-        var { baseURL, config } = this.obterApi();
-        membro.ativo = 0;
-        axios['put'](baseURL+'membros/'+membro.id, membro, config)
-        .then(resp => {
-            (async () => {
-                const result = await fetch(
-                    baseURL + 'membrosUpdated',
-                    {
-                        method: 'GET',
-                        headers: { 'Authorization': localStorage.getItem('token') }
-                    },
-                ).then(res => res.json())
-                    .then(json => this.setState({ list: json.membros.membros }));
-            })()
-            this.retornarListaMembros()  
-            this.emitirToast('success', 'Membro ' + membro.name  + ' transferido com sucesso! ')
-            //Tentando resolver o bug do CACHE com o lowDB
-        })
-        .catch(error => {
-            console.log("Ocorreu um erro..." + error);
-            if (error.response) {
-                this.emitirToast('error', error.response.data);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error codigo...', error.message);
-            }
-          });
+        if (this.validarDados(membro)) {
+            var { baseURL, config } = this.obterApi();
+            membro.ativo = 0;
+            axios['put'](baseURL+'membros/'+membro.id, membro, config)
+            .then(resp => {
+                (async () => {
+                    const result = await fetch(
+                        baseURL + 'membrosUpdated',
+                        {
+                            method: 'GET',
+                            headers: { 'Authorization': localStorage.getItem('token') }
+                        },
+                    ).then(res => res.json())
+                        .then(json => this.setState({ list: json.membros.membros }));
+                })()
+                this.retornarListaMembros()  
+                this.emitirToast('success', 'Membro ' + membro.name  + ' transferido com sucesso! ')
+                //Tentando resolver o bug do CACHE com o lowDB
+            })
+            .catch(error => {
+                console.log("Ocorreu um erro..." + error);
+                if (error.response) {
+                    this.emitirToast('error', error.response.data);
+                } else if (error.request) {
+                console.log(error.request);
+                } else {
+                console.log('Error codigo...', error.message);
+                }
+            });
+        }
+    }
+
+    validarDados(membro) {
+        var erro = false
+        if (!membro.motivoTransferencia) {
+            erro = true;
+            this.emitirToast('error', 'Selecione o motivo da transferência...');
+        }
+        if (erro)
+            return false;
+        return true
     }
 
     /**
