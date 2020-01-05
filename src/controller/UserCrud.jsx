@@ -18,7 +18,7 @@ const initialState = {
         name: '', email: '', cep: '', endereco: '', bairro: '',
         cidade: '', telefone: '', dataNascimento: '', numero: '',
         uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
-        escolaridade: '', profissao: '', historicoIgreja: '', ativo: 1
+        escolaridade: '', profissao: '', historicoIgreja: false, ativo: 1
     },
     list: []
 }
@@ -30,7 +30,7 @@ export default class UserCrud extends Component {
     state = { ...initialState, selectedFile: null }
 
     componentWillMount() {
-        this.setState({ list: undefined,  checkBoxDefaultStatus: false })
+        this.setState({ list: undefined })
         //obter no load do componente HomeList o user passado.
         this.buscarMembro();
     }
@@ -44,7 +44,6 @@ export default class UserCrud extends Component {
                     console.log('usuario banco' + resp.data)
                     this.setState({ user: resp.data });
                     this.habilitarNomeConjuge(resp);
-                    this.habilitarHistoricoIgreja(resp);
                 });
         }
     }
@@ -54,18 +53,6 @@ export default class UserCrud extends Component {
             this.setState({ showConjuge: true });
         }else{
             this.setState({ showConjuge: false });
-        }
-    }
-
-    habilitarHistoricoIgreja(resp) {
-        if (resp.data.historicoIgreja === 'on') {
-            this.setState({
-                checkBoxDefaultStatus: true
-            })
-        }else{
-            this.setState({
-                checkBoxDefaultStatus: false
-            })
         }
     }
 
@@ -227,27 +214,19 @@ export default class UserCrud extends Component {
      */
     updateField(event) {
         const user = { ...this.state.user }
-        user[event.target.name] = event.target.value
+        const target = event.target
+        const value = target.type === 'checkbox' ? target.checked : target.value
+        
+        user[target.name] = value
         this.setState({ user })
-        if (event.target.name === 'estadoCivil') {
-            if (event.target.value === 'Casado') {
+
+        if (target.name === 'estadoCivil') {
+            if (target.value === 'Casado') {
                 this.setState({ showConjuge: true })
             } else {
                 this.setState({ showConjuge: false })
                 user['conjuge'] = '';
                 this.setState({ user })
-            }
-        }
-        if (event.target.name === 'historicoIgreja') {
-            console.log(event.target.value);
-            if (event.target.value === 'off') {
-                this.setState({
-                    checkBoxDefaultStatus: false
-                })
-            } else {
-                this.setState({
-                    checkBoxDefaultStatus: true
-                })
             }
         }
     }
@@ -554,9 +533,9 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                         <label>Já foi membro de outra igreja?</label>
                         <input type="checkbox"
-                                name="historicoIgreja"
-                                checked={this.state.user.historicoIgreja}
-                                onChange={e => this.updateField(e)}
+                               name="historicoIgreja"
+                               checked={this.state.user.historicoIgreja}
+                               onChange={e => this.updateField(e)}
                             />
                         </div>
                     </div>
