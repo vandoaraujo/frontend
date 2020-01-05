@@ -127,39 +127,36 @@ export default class UserTransferir extends Component {
             <div className="form">
                 {this.voltarTelaMembros()}
                 <div className="row">
-                    <div className="col-8 col-md-8">
+                    <div className="col-12 col-md-12">
                         <div className="form-group">
-                            <label>Nome</label>
-                            <input type="text" className="form-control"
-                                name="name" value={this.state.user.name}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..." />
+                            <h3>{this.state.user.name}</h3>
                         </div>
                     </div>
                 </div>
                 
                 <div className="row">
-                    <div className="col-2 col-md-2">
+                    <div className="col-6 col-md-6">
                         <div className="form-group">
                             <label>Motivo</label>
                             <select className="form-control" name="motivo"
                                 value={this.state.user.motivoTransferencia}
                                 onChange={e => this.updateField(e)} >
-                                <option value="">Selecione...</option>
+                                <option value="">Selecione o motivo...</option>
                                 <option value="1">Pedido de carta</option>
                                 <option value="2">Saída do Estado/País</option>
                                 <option value="3">Falecimento</option>
-                                <option value="4">Exclusão</option>
+                                <option value="4">Afastamento</option>
+                                <option value="5">Outros</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div className="row">
-                    <div className="col-2 col-md-2">
+                    <div className="col-6 col-md-6">
                         <div className="form-group">
                             <label>Observação</label>
-                            <textarea name="observacao"
+                            <textarea name="observacao" className="form-control"
                                 value={this.state.user.observacao}
                                 onChange={e => this.updateField(e)} /> 
                         </div>
