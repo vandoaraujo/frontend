@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, Redirect, Route, withRouter } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import App from '../main/App';
-import Public from '../main/Public';
+import App from './App';
+import Public from './Public';
 import constantes from '../common/constants'
 // import logo from '../assets/bg-01.jpg'
 // import logo2 from '../assets/imgs/imgs.png'
@@ -66,7 +66,6 @@ class Login extends Component {
   }
 
   changeHandler = event => {
-
     const name = event.target.name;
     const value = event.target.value;
     this.setState({

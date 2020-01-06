@@ -277,6 +277,7 @@ export default class Administrativo extends Component {
     clear(){
         this.setState ( {
             ...this.state,
+            backTelaPrincipal : true,
             formControlsUser: {
                 email: {
                     value: ''
@@ -293,7 +294,6 @@ export default class Administrativo extends Component {
 
             }
         })
-        this.setState({ backTelaPrincipal : true})
     }
 
     inserir() {
