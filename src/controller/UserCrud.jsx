@@ -51,7 +51,7 @@ export default class UserCrud extends Component {
     habilitarNomeConjuge(resp) {
         if (resp.data.estadoCivil === CASADO) {
             this.setState({ showConjuge: true });
-        }else{
+        } else {
             this.setState({ showConjuge: false });
         }
     }
@@ -67,19 +67,17 @@ export default class UserCrud extends Component {
     voltarTelaMembros() {
         if (this.state.retornarTelaMembros) {
             return <Redirect to={{
-              pathname: '/membros',
-              state: { user: undefined }
-          }}  />
-          }
+                pathname: '/membros',
+                state: { user: undefined }
+            }} />
+        }
     }
 
     retornarURL(e) {
         var url = window.location.href;
         if (url.includes('http://localhost:3000/')) {
-            console.log('localhost')
             return 'http://localhost:3001/';
         } else {
-            console.log('cadastro membros')
             return 'https://cadastromembrosibbback.herokuapp.com/';
         }
     }
@@ -153,18 +151,16 @@ export default class UserCrud extends Component {
                 user['complemento'] = resp.data.complemento
                 this.setState({ user })
             }
-        })
-            .catch(error => {
-                console.log("Ocorreu um erro ao buscar o CEP" + error);
-                if (error.response) {
-                    console.log('Retorno 500...');
-                    this.emitirToastErro(error.response.data)
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error codigo...', error.message);
-                }
-            });
+        }).catch(error => {
+            console.log("Ocorreu um erro ao buscar o CEP" + error);
+            if (error.response) {
+                this.emitirToastErro(error.response.data)
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error codigo...', error.message);
+            }
+        });
     }
 
     validarDados(user) {
@@ -216,7 +212,7 @@ export default class UserCrud extends Component {
         const user = { ...this.state.user }
         const target = event.target
         const value = target.type === 'checkbox' ? target.checked : target.value
-        
+
         user[target.name] = value
         this.setState({ user })
 
@@ -232,9 +228,9 @@ export default class UserCrud extends Component {
     }
 
     /**
- * Interessante evoluir o estado e nao atualizá-lo diretamente
- * @param {event}
- */
+    * Interessante evoluir o estado e nao atualizá-lo diretamente
+    * @param {event}
+    */
     updateAdress(event) {
         const user = { ...this.state.user }
         user[event.target.name] = event.target.value
@@ -253,7 +249,6 @@ export default class UserCrud extends Component {
         fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
         axios.post('', fd).then(res => console.log())
     }
-    
 
     renderForm() {
         return (
@@ -407,7 +402,6 @@ export default class UserCrud extends Component {
                     </div>
                 </div>
 
-
                 <div className="row">
                     <div className="col-3 col-md-3">
                         <div className="form-group">
@@ -440,12 +434,12 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label>Data Nascimento</label>
                             <input type="date" className="form-control"
-                                name="dataNascimento" value={this.state.user.dataNascimento}
+                                name="dataNascimento"
+                                value={this.state.user.dataNascimento}
                                 onChange={e => this.updateField(e)}
                                 placeholder="Digite a Data de nascimento..." />
                         </div>
                     </div>
-
                 </div>
 
                 <div className="row">
@@ -482,7 +476,6 @@ export default class UserCrud extends Component {
                 </div>
 
                 {this.state.showConjuge ?
-
                     <div className="row" >
                         <div className="col-8 col-md-8">
                             <div className="form-group">
@@ -496,9 +489,7 @@ export default class UserCrud extends Component {
                             </div>
                         </div>
                     </div>
-
                     : null}
-
 
                 <div className="row">
                     <div className="col-3 col-md-3">
@@ -531,11 +522,11 @@ export default class UserCrud extends Component {
 
                     <div className="col-3 col-md-3">
                         <div className="form-group">
-                        <label>Já foi membro de outra igreja?</label>
-                        <input type="checkbox"
-                               name="historicoIgreja"
-                               checked={this.state.user.historicoIgreja}
-                               onChange={e => this.updateField(e)}
+                            <label>Já foi membro de outra igreja?</label>
+                            <input type="checkbox"
+                                name="historicoIgreja"
+                                checked={this.state.user.historicoIgreja}
+                                onChange={e => this.updateField(e)}
                             />
                         </div>
                     </div>
@@ -548,11 +539,12 @@ export default class UserCrud extends Component {
                             onClick={e => this.save(e)}>
                             {this.state.user.id ? 'Alterar' : 'Salvar'}
                         </button>
-                        {this.state.user ? 
+                        {this.state.user ?
                             <button className="btn btn-secondary ml-2"
                                 onClick={e => this.retornarListaMembros(e)}>
                                 Retornar
-                            </button> :
+                            </button>
+                            :
                             <button className="btn btn-secondary ml-2"
                                 onClick={e => this.clear(e)}>
                                 Cancelar
@@ -561,7 +553,6 @@ export default class UserCrud extends Component {
                     </div>
                 </div>
             </div>
-
         )
     }
 

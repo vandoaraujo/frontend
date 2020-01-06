@@ -49,7 +49,8 @@ class Login extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { ...this.state,
+    this.state = {
+      ...this.state,
       formControls: {
         email: {
           value: ''
@@ -73,7 +74,7 @@ class Login extends Component {
         ...this.state.formControls,
         [name]: {
           ...this.state.formControls[name],
-        value
+          value
         }
       }
     });
@@ -82,37 +83,39 @@ class Login extends Component {
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     var urlBase = this.obterApiLogin(window.location.href);
-    if(this.validarEmail(this.state.formControls.email.value)){
+    if (this.validarEmail(this.state.formControls.email.value)) {
       var payload = {
         email: this.state.formControls.email.value,
         password: this.state.formControls.password.value
       }
       axios.post(urlBase.concat('api-token-auth'), payload)
-      .then(response => {
-        if (response.status === 200) {
-          fakeAuth.authenticate(() => {
-            this.informacoesUsuarioBuilder(response);
-          });
-        }else {
-          this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
-        }
-      }).catch(error => {
-        console.log("Ocorreu um erro... " + error);
-        if (error.response) {
-          console.log('ocorreu um erro no response....')
-          this.emitirToasterErro(error.response.data);
-        } else if (error.request) {
-          this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
-        } else {
-          console.log('Error codigo...', error.message);
-        }
-      });
+        .then(response => {
+          if (response.status === 200) {
+            fakeAuth.authenticate(() => {
+              this.informacoesUsuarioBuilder(response);
+            });
+          } else {
+            this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
+          }
+        }).catch(error => {
+          console.log("Ocorreu um erro... " + error);
+          if (error.response) {
+            console.log('ocorreu um erro no response....')
+            this.emitirToasterErro(error.response.data);
+          } else if (error.request) {
+            this.emitirToasterErro('Ocorreu um erro interno ao tentar efetuar o login...');
+          } else {
+            console.log('Error codigo...', error.message);
+          }
+        });
     }
   };
 
   informacoesUsuarioBuilder(response) {
-    this.setState({ ...this.state, redirectToReferrer: true,
-       usuarioLogado: response.data.user.userName });
+    this.setState({
+      ...this.state, redirectToReferrer: true,
+      usuarioLogado: response.data.user.userName
+    });
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
     localStorage.setItem('user_id', response.data.user.id);
@@ -120,22 +123,22 @@ class Login extends Component {
     localStorage.setItem('token', response.data.token);
   }
 
-  validarEmail(email){
+  validarEmail(email) {
     if (email) {
       if (!constantes.EMAIL_VALIDO.test(email)) {
-          this.emitirToasterErro('Favor preencher o email no formato válido...');
-          return false;
+        this.emitirToasterErro('Favor preencher o email no formato válido...');
+        return false;
       }
       return true;
     }
     return false;
-  }        
+  }
 
   obterApiLogin(url) {
     var apiBaseUrl;
     url.includes(constantes.API_BASE_LOCAL) === true
-     ? apiBaseUrl = constantes.API_BASE_BACKEND : 
-     apiBaseUrl = constantes.API_BASE_BACKEND_SERVER;
+      ? apiBaseUrl = constantes.API_BASE_BACKEND :
+      apiBaseUrl = constantes.API_BASE_BACKEND_SERVER;
     return apiBaseUrl;
   }
 
@@ -152,50 +155,50 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
-    if(this.state.usuarioLogado){
-     return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
-    } 
-  
+    if (this.state.usuarioLogado) {
+      return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
+    }
+
     return (
       <div className="limiter">
-      <div className="container-login100">
-        <div className="wrap-login100">
-          <div className="login100-form-title-img">
-            <span className="login100-form-title-1">
-              SISCAD
+        <div className="container-login100">
+          <div className="wrap-login100">
+            <div className="login100-form-title-img">
+              <span className="login100-form-title-1">
+                SISCAD
             </span>
-          </div>
-          <form className="login100-form validate-form">
-            <div className="wrap-input100 validate-input m-b-26">
-              <span className="label-input100">E-mail</span>
-              <input type="email"
-                    name="email"
-                    className="input100"
-                    value={this.state.formControls.email.value}
-                    placeholder="Digite o seu e-mail..."
-                    onChange={this.changeHandler} />
-              <span className="focus-input100"></span>
             </div>
-              
-            <div className="wrap-input100 validate-input m-b-18">
-              <span className="label-input100">Password</span>
-              <input type="password"
-                    name="password"
-                    className="input100"
-                    value={this.state.formControls.password.value}
-                    placeholder="Digite a sua senha..."
-                    onChange={this.changeHandler}
+            <form className="login100-form validate-form">
+              <div className="wrap-input100 validate-input m-b-26">
+                <span className="label-input100">E-mail</span>
+                <input type="email"
+                  name="email"
+                  className="input100"
+                  value={this.state.formControls.email.value}
+                  placeholder="Digite o seu e-mail..."
+                  onChange={this.changeHandler} />
+                <span className="focus-input100"></span>
+              </div>
+
+              <div className="wrap-input100 validate-input m-b-18">
+                <span className="label-input100">Password</span>
+                <input type="password"
+                  name="password"
+                  className="input100"
+                  value={this.state.formControls.password.value}
+                  placeholder="Digite a sua senha..."
+                  onChange={this.changeHandler}
                 />
-              <span className="focus-input100"></span>
-            </div>
-            </form>     
+                <span className="focus-input100"></span>
+              </div>
+            </form>
             <div className="container-login100-form-btn">
-              <button className="login100-form-btn" onClick={() => {this.login()}}>Login</button>
+              <button className="login100-form-btn" onClick={() => { this.login() }}>Login</button>
             </div>
-            <ToastContainer />              
+            <ToastContainer />
+          </div>
         </div>
       </div>
-    </div>
 
     );
   }
@@ -220,11 +223,11 @@ const AuthButton = withRouter(
     fakeAuth.isAuthenticated ? (
 
       <div className="col-12 d-flex justify-content-start">
-          <button className="btn btn-dark"
+        <button className="btn btn-dark"
           onClick={() => {
             fakeAuth.signout(() => history.push("/login"));
           }}
-          
+
         > <i className="fa fa-sign-out" aria-hidden="true">Sair</i>
         </button>
       </div>
