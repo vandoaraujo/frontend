@@ -247,7 +247,6 @@ export default class HomeList extends Component {
                                 <i className="fa fa-cut"></i>
                             </button>
                             <button title="Excluir" className="btn btn-danger ml-2"
-                                // onClick={() => this.remove(user)}>
                                 onClick={this.togglePopup.bind(this, user)}>
                                 <i className="fa fa-trash"></i>
                             </button>
@@ -269,14 +268,11 @@ export default class HomeList extends Component {
     render() {
         return (
             <Main {...headerProps}>
-
                 {this.state.showPopup ?
                     <Popup
                         text='Deseja realmente apagar?'
                         removerMembro={this.removerMembro.bind(this)}
-                        closePopup={this.togglePopup.bind(this)}
-
-                            />
+                        closePopup={this.togglePopup.bind(this)} />
                     : null
                 }
                 <div className="form-group">

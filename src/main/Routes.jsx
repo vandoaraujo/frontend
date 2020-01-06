@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import App from '../main/App';
 import Public from '../main/Public';
 import constantes from '../common/constants'
-import logo from '../assets/bg-01.jpg'
-import logo2 from '../assets/imgs/imgs.png'
+// import logo from '../assets/bg-01.jpg'
+// import logo2 from '../assets/imgs/imgs.png'
 
 toast.configure()
 

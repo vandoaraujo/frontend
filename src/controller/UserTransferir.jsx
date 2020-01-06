@@ -1,11 +1,9 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import MaskedInput from 'react-text-mask';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from '../components/template/Main';
 import { Redirect } from 'react-router-dom'
-import ToastMessage from '../components/ToastMessage';
 
 const headerProps = {
     icon: 'exchange',
@@ -88,7 +86,7 @@ export default class UserTransferir extends Component {
             axios['put'](baseURL+'membros/'+membro.id, membro, config)
             .then(resp => {
                 (async () => {
-                    const result = await fetch(
+                    await fetch(
                         baseURL + 'membrosUpdated',
                         {
                             method: 'GET',

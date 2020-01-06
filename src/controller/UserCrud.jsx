@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from '../components/template/Main';
 import { Redirect } from 'react-router-dom'
-import ToastMessage from '../components/ToastMessage';
+// import ToastMessage from '../components/ToastMessage';
 
 const headerProps = {
     icon: 'address-card',
@@ -94,7 +94,7 @@ export default class UserCrud extends Component {
                     this.emitirToastSucesso('Membro cadastrado com sucesso! ');
                     //Tentando resolver o bug do CACHE com o lowDB
                     (async () => {
-                        const result = await fetch(
+                        await fetch(
                             baseURL + 'membrosUpdated',
                             {
                                 method: 'GET',

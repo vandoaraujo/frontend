@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import constantes from '../common/constants'
 import { Redirect } from 'react-router-dom'
@@ -275,10 +275,24 @@ export default class Administrativo extends Component {
     }
 
     clear(){
-        this.state.formControlsUser.email.value = ''
-        this.state.formControlsUser.userName.value = ''
-        this.state.formControlsUser.passwordUser.value = ''
-        this.state.formControlsUser.perfil.value = ''
+        this.setState ( {
+            ...this.state,
+            formControlsUser: {
+                email: {
+                    value: ''
+                },
+                userName: {
+                    value: ''
+                },
+                passwordUser: {
+                    value: ''
+                },
+                perfil: {
+                    value: ''
+                }
+
+            }
+        })
         this.setState({ backTelaPrincipal : true})
     }
 
