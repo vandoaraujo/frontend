@@ -111,10 +111,19 @@ class Login extends Component {
   };
 
   informacoesUsuarioBuilder(response) {
+    
     this.setState({
-      ...this.state, redirectToReferrer: true,
+      ...this.state,
       usuarioLogado: response.data.user.userName
     });
+    
+    if(response.data.user.primeiroAcesso){
+      this.setState({
+        ...this.state,
+        primeiroAcesso: true
+      });
+    }
+
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
     localStorage.setItem('user_id', response.data.user.id);
@@ -154,6 +163,14 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
+
+    if (this.state.usuarioLogado && this.state.primeiroAcesso) {
+      return <Redirect to={{
+        pathname: '/trocarPassword',
+        state: { userLoad: this.state.usuarioLogado }
+      }} />
+    }
+
     if (this.state.usuarioLogado) {
       return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
     }

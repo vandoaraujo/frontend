@@ -11,6 +11,7 @@ import Consulta from '../../controller/Consulta';
 import Administrativo from '../../controller/Administrativo';
 import BemVindo from '../../controller/BemVindo';
 import UserTransferir from '../../controller/UserTransferir';
+import TrocarPassword from '../../controller/TrocarPassword';
 
 export default props =>
 <Router>
@@ -23,6 +24,8 @@ export default props =>
             <NavItem rota="/administrativo"  icon="fa fa-gear" title="Administrativo" />
         </nav>
     </aside>
+    
+    <Route path="/trocarPassword" component={TrocarPassword} />
     <Route path="/protected" component={BemVindo} />
     <Route path="/administrativo" component={Administrativo} />
     <Route path="/cadastro" component={UserCrud} />

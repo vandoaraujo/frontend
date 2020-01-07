@@ -301,7 +301,8 @@ export default class Administrativo extends Component {
             email: this.state.formControlsUser.email.value,
             userName: this.state.formControlsUser.userName.value,
             password: this.state.formControlsUser.passwordUser.value,
-            perfil: this.state.formControlsUser.perfil.value
+            perfil: this.state.formControlsUser.perfil.value,
+            primeiroAcesso: true
         }
 
         if (this.validarDados(payload)) {

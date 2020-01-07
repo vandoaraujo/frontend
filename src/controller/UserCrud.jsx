@@ -469,7 +469,7 @@ export default class UserCrud extends Component {
                                 <option value="Separado">Separado</option>
                                 <option value="Divorciado">Divorciado</option>
                                 <option value="Viúvo">Viúvo</option>
-                                <option value="Amasiado">Amasiado</option>
+                                {/* <option value="Amasiado">Amasiado</option> */}
                             </select>
                         </div>
                     </div>
