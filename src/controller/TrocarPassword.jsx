@@ -94,6 +94,7 @@ export default class TrocarPassword extends Component {
                             this.setState({ user: resp.data });
                             var usuarioBD = resp.data;
                             usuarioBD.password = response.data.hash
+                            usuarioBD.primeiroAcesso = false
                             axios.put(url, usuarioBD, config)
                                 .then(responseFinal => {
                                 this.emitirToast('success', 'Senha alterada com sucesso! ');
