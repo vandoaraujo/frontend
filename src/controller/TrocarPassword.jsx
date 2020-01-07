@@ -87,9 +87,20 @@ export default class TrocarPassword extends Component {
             usuarioLogado.primeiroAcesso = false;
             usuarioLogado.password = senhas.password
             axios.post(baseURL + 'api-password-reset-confirm', usuarioLogado, config) 
-                .then(resp => {
-                    this.emitirToast('success', 'Senha alterada com sucesso! ')
-                    this.retornarListaMembros()
+                .then(response => {
+                    const url = `${baseURL}users/` + localStorage.getItem('user_id')
+                    axios['get'](url, config)
+                        .then(resp => {
+                            this.setState({ user: resp.data });
+                            var usuarioBD = resp.data;
+                            usuarioBD.password = response.data.hash
+                            axios.put(url, usuarioBD, config)
+                                .then(responseFinal => {
+                                this.emitirToast('success', 'Senha alterada com sucesso! ');
+                                this.retornarListaMembros();
+                        });
+                    });
+                    
                 }).catch(error => {
                     console.log("Ocorreu um erro..." + error);
                     if (error.response) {

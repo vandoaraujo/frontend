@@ -18,6 +18,9 @@ export default class Administrativo extends Component {
         this.state = {
             ...this.state,
             formControlsUser: {
+                idUsuarioBD: {
+                    value: ''
+                },
                 email: {
                     value: ''
                 },
@@ -31,50 +34,53 @@ export default class Administrativo extends Component {
                     value: ''
                 }
 
-            }
+            },
+
         }
     }
 
     componentWillMount() {
         var { baseURL, config } = this.getURLUsers();
-        const url = `${baseURL}/`+localStorage.getItem('user_id')
+        const url = `${baseURL}/` + localStorage.getItem('user_id')
         axios['get'](url, config)
             .then(resp => {
-                if (constantes.PERFIL_SUPER_USER === resp.data.perfil ) {
-                    this.setState({ ...this.state, admin: true,
-                        email: resp.data.email, perfil: resp.data.perfil });
-                    axios.get( this.getURLSistemaManutencao()+'/1' , config)
-                          .then(resp => {
+                if (constantes.PERFIL_SUPER_USER === resp.data.perfil) {
+                    this.setState({
+                        ...this.state, admin: true,
+                        email: resp.data.email, perfil: resp.data.perfil
+                    });
+                    axios.get(this.getURLSistemaManutencao() + '/1', config)
+                        .then(resp => {
                             if (resp.data.desabilitado === 0) {
-                                this.setState({...this.state, manutencao : 0})
-                            }else{
-                                this.setState({...this.state, manutencao : 1})
-                            }
-                    }).catch(error => {
-                            if (error.response) {
-                              this.emitirToast('error',error.response.data);
-                            } else if (error.request) {
-                              this.emitirToast('error', 'Ocorreu um erro interno ao tentar efetuar o login...');
+                                this.setState({ ...this.state, manutencao: 0 })
                             } else {
-                              console.log('Error codigo...', error.message);
+                                this.setState({ ...this.state, manutencao: 1 })
                             }
-                    });   
+                        }).catch(error => {
+                            if (error.response) {
+                                this.emitirToast('error', error.response.data);
+                            } else if (error.request) {
+                                this.emitirToast('error', 'Ocorreu um erro interno ao tentar efetuar o login...');
+                            } else {
+                                console.log('Error codigo...', error.message);
+                            }
+                        });
                 }
             });
     }
 
     getURLSistemaManutencao() {
         var baseURL = undefined;
-        window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'infoSystem' : 
-        baseURL = constantes.API_BASE_BACKEND_SERVER+'infoSystem';
-        return  baseURL
+        window.location.href.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND + 'infoSystem' :
+            baseURL = constantes.API_BASE_BACKEND_SERVER + 'infoSystem';
+        return baseURL
     }
 
     getURLUsers() {
         var baseURL = undefined;
         var url = window.location.href;
-        url.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND+'users' : 
-        baseURL = constantes.API_BASE_BACKEND_SERVER+'users';
+        url.includes(constantes.API_BASE_LOCAL) === true ? baseURL = constantes.API_BASE_BACKEND + 'users' :
+            baseURL = constantes.API_BASE_BACKEND_SERVER + 'users';
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
         };
@@ -84,9 +90,9 @@ export default class Administrativo extends Component {
     retornarURLBackup(e) {
         var url = window.location.href;
         if (url.includes(constantes.API_BASE_LOCAL)) {
-            return constantes.API_BASE_BACKEND+constantes.APP_SECRET_KEY;
+            return constantes.API_BASE_BACKEND + constantes.APP_SECRET_KEY;
         } else {
-            return constantes.API_BASE_BACKEND_SERVER+constantes.APP_SECRET_KEY
+            return constantes.API_BASE_BACKEND_SERVER + constantes.APP_SECRET_KEY
         }
     }
 
@@ -94,10 +100,16 @@ export default class Administrativo extends Component {
         this.setState({ showNewUser: true })
     }
 
+    exibirCamposBanUsuario() {
+        this.setState({ desabilitarUser: true })
+    }
+
     efetuarBackup(email, perfil) {
         var config = {
-            headers: { 'Authorization': localStorage.getItem('token'),
-            'email': email, 'perfil': perfil }
+            headers: {
+                'Authorization': localStorage.getItem('token'),
+                'email': email, 'perfil': perfil
+            }
         };
 
         axios['get'](this.retornarURLBackup(), config)
@@ -188,67 +200,67 @@ export default class Administrativo extends Component {
                     onClick={() => this.exibirCamposNovoUsuario()}>
                     <i className="fa fa-user-circle"></i>
                 </button>
-                {this.state.showNewUser ? 
-                <div>
-                <div className="row">
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>UserName</label>
-                            <input type="text"
-                                name="userName"
-                                className="form-control"
-                                value={this.state.formControlsUser.userName.value}
-                                placeholder="Digite o Nome do Usuário..."
-                                onChange={this.changeHandler} />
+                {this.state.showNewUser ?
+                    <div>
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label>UserName</label>
+                                    <input type="text"
+                                        name="userName"
+                                        className="form-control"
+                                        value={this.state.formControlsUser.userName.value}
+                                        placeholder="Digite o Nome do Usuário..."
+                                        onChange={this.changeHandler} />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>E-mail</label>
-                            <input type="email"
-                                name="email"
-                                className="form-control"
-                                value={this.state.formControlsUser.email.value}
-                                placeholder="Digite o e-mail do usuario..."
-                                onChange={this.changeHandler} />
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label>E-mail</label>
+                                    <input type="email"
+                                        name="email"
+                                        className="form-control"
+                                        value={this.state.formControlsUser.email.value}
+                                        placeholder="Digite o e-mail do usuario..."
+                                        onChange={this.changeHandler} />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input type="password"
-                                name="passwordUser"
-                                className="form-control"
-                                value={this.state.formControlsUser.passwordUser.value}
-                                placeholder="Digite a senha do usuário..."
-                                onChange={this.changeHandler}
-                            />
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input type="password"
+                                        name="passwordUser"
+                                        className="form-control"
+                                        value={this.state.formControlsUser.passwordUser.value}
+                                        placeholder="Digite a senha do usuário..."
+                                        onChange={this.changeHandler}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12 col-md-6">
-                        <div className="form-group">
-                            <label>Perfil</label>
-                            <select className="form-control" name="perfil"
-                                value={this.state.formControlsUser.perfil.value}
-                                onChange={this.changeHandler}>
-                                <option value="consulta">Consulta</option>
-                                <option value="admin">Administrador</option>
-                            </select>
+                        <div className="row">
+                            <div className="col-12 col-md-6">
+                                <div className="form-group">
+                                    <label>Perfil</label>
+                                    <select className="form-control" name="perfil"
+                                        value={this.state.formControlsUser.perfil.value}
+                                        onChange={this.changeHandler}>
+                                        <option value="consulta">Consulta</option>
+                                        <option value="admin">Administrador</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                
-                <button className="btn btn-primary"
-                    onClick={e => this.inserir(e)}>
-                    Incluir
-                </button>
-                </div> : <div></div>}
+
+                        <button className="btn btn-primary"
+                            onClick={e => this.inserir(e)}>
+                            Incluir
+                        </button>
+                    </div> : <div></div>}
                 <hr></hr>
                 <label>Habilitar/Desabilitar Sistema</label>
                 <button className="btn btn-warning ml-2"
@@ -256,28 +268,75 @@ export default class Administrativo extends Component {
                     <i className="fa fa-microchip"></i>
                 </button><p></p>
                 <label>O sistema no momento está:  {this.state.manutencao ? 'EM MANUTENÇÃO' : 'ATIVO'} </label>
+                <hr></hr>
+                <label>Desabilitar Usuário</label>
+                <button className="btn btn-warning ml-2"
+                    onClick={() => this.exibirCamposBanUsuario()}>
+                    <i className="fa fa-ban"></i>
+                </button>
+
+                {this.state.desabilitarUser ?
+                <div>
+                    <hr></hr>
+                    <label>Excluir Usuário</label>
+                    <div className="row">
+                        <div className="col-2 col-md-2">
+                            <div className="form-group">
+                                <input type="text" className="form-control"
+                                    name="idUsuarioBD"
+                                    value={this.state.formControlsUser.idUsuarioBD.value}
+                                    onChange={this.changeHandler}
+                                    placeholder="Digite o Id..." />
+                            </div>
+                        </div>
+                        <div className="col-3 col-md-3">
+                            <button className="btn btn-warning ml-2"
+                                onClick={e => this.excluirUsuario(e)}>
+                                <i className="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> : <div></div>}
+
             </div>
         )
     }
 
-    habilitarDesabilitarSistema(){
+    habilitarDesabilitarSistema() {
         var payload = {
             desabilitado: this.state.manutencao ? 0 : 1
         }
         var config = {
             headers: { 'Authorization': localStorage.getItem('token') }
         };
-        axios.put(this.getURLSistemaManutencao()+'/1', payload, config)
-                .then(resp => {
-                    this.setState({ manutencao: payload.desabilitado })
-                    this.emitirToast('success', 'Acao efetuada com sucesso! ');
-                })
+        axios.put(this.getURLSistemaManutencao() + '/1', payload, config)
+            .then(resp => {
+                this.setState({ manutencao: payload.desabilitado })
+                this.emitirToast('success', 'Acao efetuada com sucesso! ');
+            })
     }
 
-    clear(){
-        this.setState ( {
+    excluirUsuario() {
+
+        var { baseURL, config } = this.getURLUsers();
+        const url = `${baseURL}/` + this.state.formControlsUser.idUsuarioBD.value
+        var usuarioBD;
+        axios['get'](url, config)
+            .then(resp => {
+                usuarioBD = resp.data;
+                usuarioBD.desativado = 1
+                axios.put(url, usuarioBD, config)
+                    .then(response => {
+                    this.emitirToast('success', 'Usuário desabilitado com sucesso! ');
+            })
+        });
+        
+    }
+
+    clear() {
+        this.setState({
             ...this.state,
-            backTelaPrincipal : true,
+            backTelaPrincipal: true,
             formControlsUser: {
                 email: {
                     value: ''
@@ -302,7 +361,8 @@ export default class Administrativo extends Component {
             userName: this.state.formControlsUser.userName.value,
             password: this.state.formControlsUser.passwordUser.value,
             perfil: this.state.formControlsUser.perfil.value,
-            primeiroAcesso: true
+            primeiroAcesso: true,
+            desativado: 0
         }
 
         if (this.validarDados(payload)) {
@@ -320,15 +380,15 @@ export default class Administrativo extends Component {
                         console.log('Error codigo...', error.message);
                     }
                 });
-                this.clear()
+            this.clear()
         }
     }
 
     goHome() {
         return <Redirect to={{
-              pathname: '/membros',
-              state: { user: undefined }
-        }}  />
+            pathname: '/membros',
+            state: { user: undefined }
+        }} />
     }
 
     render() {
@@ -336,7 +396,7 @@ export default class Administrativo extends Component {
             <Main {...headerProps}>
                 {this.state.backTelaPrincipal ? this.goHome() : null}
                 {this.state.admin ? this.renderAdmin()
-                     : <h4>Funcionalidade exclusiva para administradores...</h4>}
+                    : <h4>Funcionalidade exclusiva para administradores...</h4>}
             </Main>
         )
     }
