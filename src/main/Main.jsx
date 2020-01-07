@@ -6,9 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import App from './App';
 import Public from './Public';
 import constantes from '../common/constants'
-// import logo from '../assets/bg-01.jpg'
-// import logo2 from '../assets/imgs/imgs.png'
-
+import TrocarPassword from '../controller/TrocarPassword';
 toast.configure()
 
 const fakeAuth = {
@@ -111,18 +109,12 @@ class Login extends Component {
   };
 
   informacoesUsuarioBuilder(response) {
-    
+
     this.setState({
       ...this.state,
-      usuarioLogado: response.data.user.userName
+      usuarioLogado: response.data.user.userName,
+      primeiroAcesso: response.data.user.primeiroAcesso
     });
-    
-    if(response.data.user.primeiroAcesso){
-      this.setState({
-        ...this.state,
-        primeiroAcesso: true
-      });
-    }
 
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
@@ -163,7 +155,6 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
-
     if (this.state.usuarioLogado && this.state.primeiroAcesso) {
       return <Redirect to={{
         pathname: '/trocarPassword',
@@ -171,7 +162,7 @@ class Login extends Component {
       }} />
     }
 
-    if (this.state.usuarioLogado) {
+    else if (this.state.usuarioLogado) {
       return <Redirect to={from} usuarioLogado={this.state.usuarioLogado} />;
     }
 
@@ -227,6 +218,7 @@ function AuthExample() {
         <AuthButton />
         <Route path="/public" component={Public} />
         <Route path="/login" component={Login} />
+        <PrivateRoute path="/trocarPassword" component={TrocarPassword} />
         <PrivateRoute path="/protected" component={App} />
       </div>
     </Router>

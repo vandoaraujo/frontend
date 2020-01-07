@@ -1,19 +1,22 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import Main from '../components/template/Main';
 import { Redirect } from 'react-router-dom'
 
 const headerProps = {
-    icon: 'exchange',
-    title: 'Transferir',
-    subtitle: 'Transferir membro'
+    icon: 'lock',
+    title: 'Primeiro Acesso',
+    subtitle: 'Alterar Senha'
 }
 
 const initialState = {
+    senhas: {
+        password: '', passwordAgain: ''
+    },
     user: {
-        name: '', motivoTransferencia: 0
+        userName: ''
     }
 }
 
@@ -22,28 +25,26 @@ export default class TrocarPassword extends Component {
     state = { ...initialState }
 
     componentWillMount() {
-        this.buscarMembro();
+        this.buscarDadosUsuario();
     }
 
-    buscarMembro() {
-        if (this.props.location.state && this.props.location.state.usuarioLogado) {
-            var { baseURL, config } = this.obterApi();
-            const url = `${baseURL}users/${this.props.location.state.usuarioLogado.id}`
-            axios['get'](url, config)
-                .then(resp => {
-                    this.setState({ user: resp.data });
-                });
-        }
+    buscarDadosUsuario() {
+        var { baseURL, config } = this.obterApi();
+        const url = `${baseURL}users/` + localStorage.getItem('user_id')
+        axios['get'](url, config)
+            .then(resp => {
+                this.setState({ user: resp.data });
+            });
     }
 
     retornarListaMembros() {
         this.setState({ retornarTelaMembros: true })
     }
 
-    voltarTelaMembros() {
+    seguirTelaInicial() {
         if (this.state.retornarTelaMembros) {
             return <Redirect to={{
-                pathname: '/membros',
+                pathname: '/protected',
                 state: { user: undefined }
             }} />
         }
@@ -78,28 +79,18 @@ export default class TrocarPassword extends Component {
         return { baseURL, config };
     }
 
-    transferir() {
-        var membro = this.state.user
-        if (this.validarDados(membro)) {
+    alterarSenha() {
+        var senhas = this.state.senhas
+        var usuarioLogado = this.state.user
+        if (this.validarDados(senhas)) {
             var { baseURL, config } = this.obterApi();
-            membro.ativo = 0;
-            axios['put'](baseURL + 'membros/' + membro.id, membro, config)
+            usuarioLogado.primeiroAcesso = false;
+            usuarioLogado.password = senhas.password
+            axios.post(baseURL + 'api-password-reset-confirm', usuarioLogado, config) 
                 .then(resp => {
-                    (async () => {
-                        await fetch(
-                            baseURL + 'membrosUpdated',
-                            {
-                                method: 'GET',
-                                headers: { 'Authorization': localStorage.getItem('token') }
-                            },
-                        ).then(res => res.json())
-                            .then(json => this.setState({ list: json.membros.membros }));
-                    })()
+                    this.emitirToast('success', 'Senha alterada com sucesso! ')
                     this.retornarListaMembros()
-                    this.emitirToast('success', 'Membro ' + membro.name + ' transferido com sucesso! ')
-                    //Tentando resolver o bug do CACHE com o lowDB
-                })
-                .catch(error => {
+                }).catch(error => {
                     console.log("Ocorreu um erro..." + error);
                     if (error.response) {
                         this.emitirToast('error', error.response.data);
@@ -112,12 +103,20 @@ export default class TrocarPassword extends Component {
         }
     }
 
-    validarDados(membro) {
+    validarDados(senhas) {
         var erro = false
-        // if (!membro.motivoTransferencia) {
-        //     erro = true;
-        //     this.emitirToast('error', 'Selecione o motivo da transferência...');
-        // }
+        if (!senhas.password) {
+            erro = true;
+            this.emitirToast('error', 'Favor preencher a senha');
+        }
+        if (!senhas.passwordAgain) {
+            erro = true;
+            this.emitirToast('error', 'Favor repetir a senha');
+        }
+        if (senhas.passwordAgain && senhas.password && senhas.passwordAgain !== senhas.password ) {
+            erro = true;
+            this.emitirToast('error', 'Senhas não conferem!');
+        }
         if (erro)
             return false;
         return true
@@ -128,67 +127,52 @@ export default class TrocarPassword extends Component {
      * @param {event}
      */
     updateField(event) {
-        const user = { ...this.state.user }
-        user[event.target.name] = event.target.value
-        this.setState({ user })
+        const senhas = { ...this.state.senhas }
+        senhas[event.target.name] = event.target.value
+        this.setState({ senhas })
     }
 
     renderForm() {
         return (
-            <div className="form">
-                {this.voltarTelaMembros()}
-                <div className="row">
-                    <div className="col-12 col-md-12">
-                        <div className="form-group">
-                            <h3>{this.state.user.userName}</h3>
-                        </div>
-                    </div>
+            <div className="limiter">
+            {this.seguirTelaInicial()}
+            <div className="container-login100">
+              <div className="wrap-login100">
+                <div className="login100-form-title-img">
+                  <span className="login100-form-title-1">
+                    SISCAD
+                </span>
                 </div>
-
-                <div className="row">
-                    <div className="col-6 col-md-6">
-                        <div className="form-group">
-                            <label>Digite a nova Senha</label>
-                            <input type="password"
-                                name="password"
-                                className="input100"
-                                value={this.state.user.password}
-                                onChange={e => this.updateField(e)}
-                            />
-
-                        </div>
-                    </div>
+                <form className="login100-form validate-form">
+                  <div className="wrap-input100 validate-input m-b-26">
+                    <span className="label-input100">Nova Senha: </span>
+                    <input type="password"
+                      name="password"
+                      className="input100"
+                      value={this.state.senhas.password}
+                      placeholder="Digite a nova senha..."
+                      onChange={e => this.updateField(e)} />
+                    <span className="focus-input100"></span>
+                  </div>
+    
+                  <div className="wrap-input100 validate-input m-b-18">
+                    <span className="label-input100">Password</span>
+                    <input type="password"
+                      name="passwordAgain"
+                      className="input100"
+                      value={this.state.senhas.passwordAgain}
+                      placeholder="Repita a sua nova senha..."
+                      onChange={e => this.updateField(e)} />
+                    <span className="focus-input100"></span>
+                  </div>
+                </form>
+                <div className="container-login100-form-btn">
+                  <button className="login100-form-btn" onClick={e => this.alterarSenha(e)}>Alterar</button>
                 </div>
-
-                <div className="row">
-                    <div className="col-6 col-md-6">
-                        <div className="form-group">
-                            <label>Repita a nova Senha</label>
-                            <input type="password"
-                                name="passwordAgain"
-                                className="input100"
-                                value={this.state.user.passwordAgain}
-                                onChange={e => this.updateField(e)}
-                            />
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div className="row">
-                    <div className="col-12 d-flex justify-content-start">
-                        <button className="btn btn-primary"
-                            onClick={e => this.transferir(e)}>
-                            Transferir
-                        </button>
-                        <button className="btn btn-secondary ml-2"
-                            onClick={e => this.retornarListaMembros(e)}>
-                            Retornar
-                        </button>
-                    </div>
-                </div>
+                <ToastContainer />
+              </div>
             </div>
+          </div>
         )
     }
 

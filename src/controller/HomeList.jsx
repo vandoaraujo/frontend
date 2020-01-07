@@ -266,7 +266,7 @@ export default class HomeList extends Component {
                                 <i className="fa fa-trash"></i>
                             </button>
                         </td>
-                        : null
+                        :null
                     }
                 </tr>
             )
