@@ -20,7 +20,7 @@ const fakeAuth = {
   signout(cb) {
     this.isAuthenticated = false;
     localStorage.removeItem('nomeUsuario')
-
+    localStorage.removeItem('token')
     setTimeout(cb, 100);
   }
 };

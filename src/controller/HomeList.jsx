@@ -58,7 +58,7 @@ export default class HomeList extends Component {
     togglePopup(membro) {
         this.setState({
             showPopup: !this.state.showPopup,
-            membroSelecionado : membro
+            membroSelecionado: membro
         });
     }
 
@@ -129,6 +129,12 @@ export default class HomeList extends Component {
         this.setTransferenciaMembro(user)
     }
 
+    setNovoMembro = () => {
+        this.setState({
+            novoMembro: true
+        })
+    }
+
     renderEdicaoMembro() {
         if (this.state.edicaoMembro) {
             return <Redirect to={{
@@ -147,11 +153,20 @@ export default class HomeList extends Component {
         }
     }
 
+    renderNovoMembro() {
+        if (this.state.novoMembro) {
+            return <Redirect to={{
+                pathname: '/cadastro'
+            }} />
+        }
+    }
+
     renderTable() {
         return (
             <div>
                 {this.renderEdicaoMembro()}
                 {this.renderTransferenciaMembro()}
+                {this.renderNovoMembro()}
                 <table className="table mt-4">
                     <thead>
                         <tr>
@@ -188,15 +203,15 @@ export default class HomeList extends Component {
                 this.refreshListaMembros(baseURL);
             }
         }).catch(error => {
-                console.log("Ocorreu um erro..." + error);
-                if (error.response) {
-                    this.emitirToast('error', error.response.data);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error codigo...', error.message);
-                }
-            });
+            console.log("Ocorreu um erro..." + error);
+            if (error.response) {
+                this.emitirToast('error', error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error codigo...', error.message);
+            }
+        });
     }
 
     refreshListaMembros(baseURL) {
@@ -209,7 +224,7 @@ export default class HomeList extends Component {
         })();
     }
 
-    emitirToast(action ,mensagem) {
+    emitirToast(action, mensagem) {
         toast[action](mensagem, {
             position: "top-right",
             autoClose: 6000,
@@ -230,7 +245,7 @@ export default class HomeList extends Component {
     }
 
     renderRows() {
-        return this.state.list ? this.state.list.map(user => {
+        return this.state.list.length !== 0 ? this.state.list.map(user => {
             return (
                 <tr key={user.id}>
                     <td>{user.name}</td>
@@ -275,9 +290,21 @@ export default class HomeList extends Component {
                         closePopup={this.togglePopup.bind(this)} />
                     : null
                 }
-                <div className="form-group">
-                    <label>Quantidade de membros: </label>
-                    <h3>{this.quantidadeMembros()}</h3>
+                <div className="row">
+                    <div className="col-9 col-md-9">
+                        <div className="form-group">
+                            <label>Quantidade de membros: </label>
+                            <h3>{this.quantidadeMembros()}</h3>
+                        </div>
+                    </div>
+                    <div className="col-3 col-md-3">
+                        <div className="col-12 d-flex justify-content-start">
+                            <button className="btn btn-info"
+                                onClick={() => this.setNovoMembro()}>
+                                <i className="fa fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 {this.renderTable()}
             </Main>
