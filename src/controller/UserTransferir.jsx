@@ -26,9 +26,9 @@ export default class UserTransferir extends Component {
     }
 
     buscarMembro() {
-        if (this.props.location.state && this.props.location.state.userLoad) {
+        if (this.props.location.state && this.props.location.state.usuarioLogado) {
             var { baseURL, config } = this.obterApi();
-            const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
+            const url = `${baseURL}membros/${this.props.location.state.usuarioLogado.id}`
             axios['get'](url, config)
                 .then(resp => {
                     this.setState({ user: resp.data });

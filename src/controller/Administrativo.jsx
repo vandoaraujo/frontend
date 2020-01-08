@@ -327,6 +327,7 @@ export default class Administrativo extends Component {
                 usuarioBD.desativado = 1
                 axios.put(url, usuarioBD, config)
                     .then(response => {
+                    this.efetuarBackup(this.state.email, this.state.perfil)
                     this.emitirToast('success', 'Usuário desabilitado com sucesso! ');
             })
         });
@@ -361,7 +362,7 @@ export default class Administrativo extends Component {
             userName: this.state.formControlsUser.userName.value,
             password: this.state.formControlsUser.passwordUser.value,
             perfil: this.state.formControlsUser.perfil.value,
-            primeiroAcesso: true,
+            primeiroAcesso: 1,
             desativado: 0
         }
 
@@ -369,6 +370,7 @@ export default class Administrativo extends Component {
             var { baseURL, config } = this.getURLUsers();
             axios.post(baseURL, payload, config)
                 .then(resp => {
+                    this.efetuarBackup(this.state.email, this.state.perfil)
                     this.emitirToast('success', 'Novo usuario cadastrado com sucesso! ');
                 }).catch(error => {
                     console.log("Ocorreu um erro..." + error);

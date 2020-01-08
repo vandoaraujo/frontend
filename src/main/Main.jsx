@@ -19,6 +19,7 @@ const fakeAuth = {
     this.isAuthenticated = false;
     localStorage.removeItem('nomeUsuario')
     localStorage.removeItem('token')
+    localStorage.removeItem('user_id');
     setTimeout(cb, 100);
   }
 };
@@ -47,8 +48,11 @@ class Login extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      ...this.state,
+    this.state = this.initialState
+  }
+
+  get initialState() {
+    return {
       formControls: {
         email: {
           value: ''
@@ -118,6 +122,7 @@ class Login extends Component {
 
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
+    localStorage.removeItem('token');
     localStorage.setItem('user_id', response.data.user.id);
     localStorage.setItem('nomeUsuario', response.data.user.userName);
     localStorage.setItem('token', response.data.token);
@@ -155,10 +160,12 @@ class Login extends Component {
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
+    
     if (this.state.usuarioLogado && this.state.primeiroAcesso) {
+      console.log('Trocar password')
       return <Redirect to={{
         pathname: '/trocarPassword',
-        state: { userLoad: this.state.usuarioLogado }
+        state: { usuarioLogado: this.state.usuarioLogado }
       }} />
     }
 
