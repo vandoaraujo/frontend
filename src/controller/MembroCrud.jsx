@@ -255,18 +255,7 @@ export default class MembroCrud extends Component {
         return (
             <div className="form">
                 {this.voltarTelaMembros()}
-                <div className="row">
-                    <div className="col-8 col-md-8">
-                        <div className="form-group">
-                            <label>Foto</label>
-                            <input type="file" className="form-control"
-                                name="foto"
-                                onChange={this.fileSelectedHandler}
-                                placeholder="Selecione a foto..." />
-                            <button onClick={this.fileUploadHandler}>Upload</button>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div className="row">
                     <div className="col-8 col-md-8">
