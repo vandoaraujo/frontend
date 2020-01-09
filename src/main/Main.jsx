@@ -81,6 +81,25 @@ class Login extends Component {
     });
   }
 
+init = (e) => {
+var urlBase = this.obterApiLogin(window.location.href);
+    if (this.validarEmail(this.state.formControls.email.value)) {
+      var payload = {
+        email: this.state.formControls.email.value,
+        password: this.state.formControls.password.value
+      }
+      axios.post(urlBase.concat('api-token-auth'), payload)
+        .then(response => {
+          if (response.status === 200) {
+            fakeAuth.authenticate(() => {
+              this.informacoesUsuarioBuilder(response);
+            });
+          } else {
+            this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
+          }
+        })
+} 
+
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     var urlBase = this.obterApiLogin(window.location.href);
