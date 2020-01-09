@@ -5,7 +5,7 @@ import {
     BrowserRouter as Router,
     Route
   } from "react-router-dom";
-import UserCrud from '../../controller/UserCrud'
+import MembroCrud from '../../controller/MembroCrud'
 import HomeList from '../../controller/HomeList';
 import Consulta from '../../controller/Consulta';
 import Administrativo from '../../controller/Administrativo';
@@ -28,7 +28,7 @@ export default props =>
     <Route path="/trocarPassword" component={TrocarPassword} />
     <Route path="/protected" component={BemVindo} />
     <Route path="/administrativo" component={Administrativo} />
-    <Route path="/cadastro" component={UserCrud} />
+    <Route path="/cadastro" component={MembroCrud} />
     <Route path="/transferencia" component={UserTransferir} />
     <Route path="/consulta" component={Consulta} />
     <Route path="/membros" component={HomeList} />

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import Main from '../components/template/Main'
-import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import constantes from '../common/constants'
 
 const headerProps = {
     icon: 'search',
@@ -11,23 +12,24 @@ const headerProps = {
 }
 
 const consultaState = {
-    user: { name: ''},
+    membro: { name: '', inativo: false }, list: []
 }
 
 
 export default class Consulta
- extends Component {
+    extends Component {
 
     state = { ...consultaState }
 
-   updateField(event){
-       const user = { ...this.state.user }
-       user[event.target.name] = event.target.value
-       this.setState({ user })
-   }
+    updateField(event) {
+        const membroPesquisa = { ...this.state.membro }
+        const target = event.target
+        const value = target.type === 'checkbox' ? target.checked : target.value
+        membroPesquisa[target.name] = value
+        this.setState({ membro: membroPesquisa })
+    }
 
     componentWillMount() {
-        this.setState({ list: undefined })
     }
 
     renderFormConsulta() {
@@ -38,9 +40,19 @@ export default class Consulta
                         <div className="form-group">
                             <label>Buscar por Nome</label>
                             <input type="text" className="form-control"
-                                name="name" value={this.state.user.name}
+                                name="name" value={this.state.membro.name}
                                 onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..."/>
+                                placeholder="Digite o nome..." />
+                        </div>
+                    </div>
+                    <div className="col-4 col-md-4">
+                        <div className="form-group">
+                            <label>Inativo?</label>
+                            <input type="checkbox"
+                                name="inativo"
+                                checked={this.state.membro.inativo}
+                                onChange={e => this.updateField(e)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -51,41 +63,72 @@ export default class Consulta
                             onClick={e => this.buscar(e)}>
                             Buscar
                         </button>
-                    </div>   
-                </div>  
+                    </div>
+                </div>
             </div>
         )
+    }
+
+
+    retornarURL(e) {
+        var url = window.location.href;
+        if (url.includes(constantes.API_BASE_LOCAL)) {
+            return constantes.API_BASE_BACKEND;
+        } else {
+            return constantes.API_BASE_BACKEND_SERVER;
+        }
     }
 
     render() {
         return (
             <Main {...headerProps}>
-                 {this.renderFormConsulta()} 
+                {this.renderFormConsulta()}
             </Main>
         )
     }
 
+    efetuarBackup() {
+        var config = {
+            headers: {
+                'Authorization': localStorage.getItem('token'),
+                'email': 'vandoaraujo@hotmail.com', 'perfil': 777
+            }
+        };
+
+        axios['get'](this.retornarURLBackup(), config)
+            .then(resp => {
+                var backup = resp.data.backup
+            });
+    }
+
     buscar() {
-        const user  = this.state.user
-        if(this.validarDados(user)){
-            var baseURL = undefined;
-            //baseURL = this.retornarURL();
-            var config = {
-                headers: {'Authorization': localStorage.getItem('token')}
-            };
-            
-            const url = user.id ? `${baseURL}/${user.id}` : baseURL
-            axios['get'](url, user, config)
-                .then(resp => {
-                    //const list = this.getUpdatedList(resp.data)
-                    //this.setState({ user: initialState.user, list })    
-                })
+        const membroFiltro = this.state.membro
+        console.log('Inativo ' + membroFiltro.inativo)
+        console.log('Nome ' + membroFiltro.name)
+        var ativo = !membroFiltro.inativo
+        console.log('ATIVO FRONT ' + ativo)
+        if (this.validarDados(membroFiltro)) {
+            var apiBaseUrl = undefined;
+            apiBaseUrl = this.retornarURL();
+            if (localStorage.getItem('token') != null) {
+                var config = {
+                    headers: {
+                        'Authorization': localStorage.getItem('token'),
+                        'ativo': ativo,
+                        'name': membroFiltro.name
+                    }
+                };
+                axios['get'](apiBaseUrl + 'membrosConsulta', config)
+                    .then(resp => {
+                        console.log(resp.data.membros)
+                    });
+            }
         }
     }
 
     validarDados(user) {
         var erro = false
-        if(!user.name){
+        if (!user.name) {
             toast.error('Favor preencher o nome desejado...', {
                 position: "top-right",
                 autoClose: 5000,
@@ -93,13 +136,13 @@ export default class Consulta
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true
-                });
-                erro = true
-         }
+            });
+            erro = true
+        }
 
-        if(erro)
+        if (erro)
             return false;
-     
+
         return true
     }
 
