@@ -7,6 +7,9 @@ import App from './App';
 import Public from './Public';
 import constantes from '../common/constants'
 import TrocarPassword from '../controller/TrocarPassword';
+import * as moment from 'moment';
+import 'moment/locale/pt-br';
+
 toast.configure()
 
 const fakeAuth = {
@@ -49,6 +52,7 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = this.initialState
+    this.init()
   }
 
   get initialState() {
@@ -81,24 +85,20 @@ class Login extends Component {
     });
   }
 
-init = (e) => {
-var urlBase = this.obterApiLogin(window.location.href);
-    if (this.validarEmail(this.state.formControls.email.value)) {
-      var payload = {
-        email: this.state.formControls.email.value,
-        password: this.state.formControls.password.value
-      }
-      axios.post(urlBase.concat('api-token-auth'), payload)
-        .then(response => {
-          if (response.status === 200) {
-            fakeAuth.authenticate(() => {
-              this.informacoesUsuarioBuilder(response);
-            });
-          } else {
-            this.emitirToasterErro('Ops, Usuario e/ou Senha inválidos...');
-          }
-        })
-} 
+  init = (e) => {
+    var urlBase = this.obterApiLogin(window.location.href);
+    axios.get(urlBase.concat('estatistica/1'))
+      .then(resp => {
+        var incremento = resp.data.count + 1;
+        var payload = {
+          count: incremento
+        }
+        axios.put(urlBase.concat('estatistica/1'), payload)
+          .then(response => {
+          })
+      })
+
+  };
 
   login = (e) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -145,6 +145,10 @@ var urlBase = this.obterApiLogin(window.location.href);
     localStorage.setItem('user_id', response.data.user.id);
     localStorage.setItem('nomeUsuario', response.data.user.userName);
     localStorage.setItem('token', response.data.token);
+    console.log(response.data.user.ultimoLogin)
+    if (response.data.user.primeiroAcesso === 0)
+      localStorage.setItem('ultimoLogin', response.data.user.ultimoLogin);
+
   }
 
   validarEmail(email) {
@@ -179,9 +183,8 @@ var urlBase = this.obterApiLogin(window.location.href);
 
   render() {
     let { from } = this.props.location.state || { from: { pathname: "/" } };
-    
+
     if (this.state.usuarioLogado && this.state.primeiroAcesso) {
-      console.log('Trocar password')
       return <Redirect to={{
         pathname: '/trocarPassword',
         state: { usuarioLogado: this.state.usuarioLogado }
@@ -251,12 +254,14 @@ function AuthExample() {
   );
 }
 
+
 /**Cabecalho da pagina */
 const AuthButton = withRouter(
   ({ history }) =>
     fakeAuth.isAuthenticated ? (
 
       <div className="col-12 d-flex justify-content-start">
+        <DataHora />
         <button className="btn btn-dark"
           onClick={() => {
             fakeAuth.signout(() => history.push("/login"));
@@ -277,3 +282,27 @@ const AuthButton = withRouter(
 );
 
 export default AuthExample;
+
+class DataHora extends Component {
+
+  render() {
+    return (
+      <div className="form">
+        <div className="row">
+          <div className="col-12 col-md-12">
+            <div className="form-group">
+              <p>{this.exibeDataHora()}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  exibeDataHora(){
+    moment.locale('pt-BR');
+    return moment().format('LLL')
+  }
+}
+
+
