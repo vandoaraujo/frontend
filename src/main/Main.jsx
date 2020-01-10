@@ -23,6 +23,7 @@ const fakeAuth = {
     localStorage.removeItem('nomeUsuario')
     localStorage.removeItem('token')
     localStorage.removeItem('user_id');
+    localStorage.removeItem('ultimoLogin');
     setTimeout(cb, 100);
   }
 };
@@ -142,6 +143,7 @@ class Login extends Component {
     localStorage.removeItem('user_id');
     localStorage.removeItem('nomeUsuario');
     localStorage.removeItem('token');
+    localStorage.removeItem('ultimoLogin')
     localStorage.setItem('user_id', response.data.user.id);
     localStorage.setItem('nomeUsuario', response.data.user.userName);
     localStorage.setItem('token', response.data.token);

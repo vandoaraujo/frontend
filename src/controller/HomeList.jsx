@@ -89,10 +89,8 @@ export default class HomeList extends Component {
     retornarURL(e) {
         var url = window.location.href;
         if (url.includes(constantes.API_BASE_LOCAL)) {
-            console.log('localhost')
             return constantes.API_BASE_BACKEND;
         } else {
-            console.log('cadastro membros')
             return constantes.API_BASE_BACKEND_SERVER;
         }
     }

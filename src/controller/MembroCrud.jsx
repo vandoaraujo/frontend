@@ -41,7 +41,6 @@ export default class MembroCrud extends Component {
             const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
             axios['get'](url, config)
                 .then(resp => {
-                    console.log('usuario banco' + resp.data)
                     this.setState({ user: resp.data });
                     this.habilitarNomeConjuge(resp);
                 });
