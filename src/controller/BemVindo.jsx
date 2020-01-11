@@ -45,6 +45,19 @@ class BoasVindas extends Component {
         }
     }
 
+    emitirToast(action, mensagem) {
+        toast[action](mensagem, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+        return true;
+    }
+
+
     getURLUsers() {
         var baseURL = undefined;
         var url = window.location.href;
