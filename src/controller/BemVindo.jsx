@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Main from '../components/template/Main'
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
+import { toast } from 'react-toastify';
 import constantes from '../common/constants'
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
