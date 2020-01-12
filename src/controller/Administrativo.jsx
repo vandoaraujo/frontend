@@ -44,6 +44,13 @@ export default class Administrativo extends Component {
         const url = `${baseURL}/` + localStorage.getItem('user_id')
         axios['get'](url, config)
             .then(resp => {
+                console.log(resp.data.id)
+                if(resp.data.id === 1){
+                    console.log('Entrou...')
+                    this.setState({perfilSuperUser : true})
+                }else{
+                    this.setState({perfilSuperUser : false})
+                }
                 if (constantes.PERFIL_SUPER_USER === resp.data.perfil) {
                     this.setState({
                         ...this.state, admin: true,
@@ -56,6 +63,7 @@ export default class Administrativo extends Component {
                             } else {
                                 this.setState({ ...this.state, manutencao: 1 })
                             }
+                            
                         }).catch(error => {
                             if (error.response) {
                                 this.emitirToast('error', error.response.data);
@@ -269,6 +277,9 @@ export default class Administrativo extends Component {
                 </button><p></p>
                 <label>O sistema no momento está:  {this.state.manutencao ? 'EM MANUTENÇÃO' : 'ATIVO'} </label>
                 <hr></hr>
+
+                {this.state.perfilSuperUser ?
+                <div>
                 <label>Desabilitar Usuário</label>
                 <button className="btn btn-warning ml-2"
                     onClick={() => this.exibirCamposBanUsuario()}>
@@ -296,6 +307,7 @@ export default class Administrativo extends Component {
                             </button>
                         </div>
                     </div>
+                </div> : <div></div>}
                 </div> : <div></div>}
 
             </div>
