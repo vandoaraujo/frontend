@@ -131,12 +131,15 @@ export default class Consulta
                 axios['get'](apiBaseUrl + 'membrosConsulta', config)
                     .then(resp => {
                         console.log(resp.data.membros)
-                        this.setState({ list: resp.data.membros, msgRetorno : resp.data.msgRetorno });
+                        this.setState({ ...this.state, list: resp.data.membros, 
+                            msgRetorno: resp.data.msgRetorno });
                         // this.efetuarBackup()
                     }).catch(error => {
                         console.log("Ocorreu um erro..." + error);
                         if (error.response) {
-                            this.emitirToastErro(error.response.data);
+                            console.log(error.response.data.msgRetorno)
+                            console.log(error.response.msgRetorno)
+                            this.emitirToastErro(error.response.data.msgRetorno);
                         } else if (error.request) {
                             console.log(error.request);
                         } else {
@@ -208,12 +211,12 @@ export default class Consulta
                     <td>{user.telefone}</td>
                 </tr>
             )
-        }) : 
-        <tr>
-            <td>
-                {this.state.msgRetorno}
-            </td>
-        </tr>
+        }) :
+            <tr>
+                <td>
+                    {this.state.msgRetorno}
+                </td>
+            </tr>
     }
 
 
