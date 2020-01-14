@@ -83,6 +83,7 @@ export default class Consulta
         return (
             <Main {...headerProps}>
                 {this.renderFormConsulta()}
+                {this.renderTable()}
             </Main>
         )
     }
@@ -99,6 +100,15 @@ export default class Consulta
             .then(resp => {
                 var backup = resp.data.backup
             });
+    }
+
+    retornarURLBackup(e) {
+        var url = window.location.href;
+        if (url.includes(constantes.API_BASE_LOCAL)) {
+            return constantes.API_BASE_BACKEND + constantes.APP_SECRET_KEY;
+        } else {
+            return constantes.API_BASE_BACKEND_SERVER + constantes.APP_SECRET_KEY
+        }
     }
 
     buscar() {
@@ -121,14 +131,37 @@ export default class Consulta
                 axios['get'](apiBaseUrl + 'membrosConsulta', config)
                     .then(resp => {
                         console.log(resp.data.membros)
+                        this.setState({ list: resp.data.membros, msgRetorno : resp.data.msgRetorno });
+                        // this.efetuarBackup()
+                    }).catch(error => {
+                        console.log("Ocorreu um erro..." + error);
+                        if (error.response) {
+                            this.emitirToastErro(error.response.data);
+                        } else if (error.request) {
+                            console.log(error.request);
+                        } else {
+                            console.log('Error codigo...', error.message);
+                        }
                     });
             }
         }
     }
 
+    emitirToastErro(erro) {
+        toast.error(erro, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+    }
+
+
     validarDados(user) {
         var erro = false
-        if (!user.name) {
+        if (!user.inativo && !user.name) {
             toast.error('Favor preencher o nome desejado...', {
                 position: "top-right",
                 autoClose: 5000,
@@ -146,6 +179,42 @@ export default class Consulta
         return true
     }
 
+    renderTable() {
+        return (
+            <div>
+                <table className="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            {this.state.admin ? <th>Ações</th> : null}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderRows()}
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
+    renderRows() {
+        return this.state.list.length !== 0 ? this.state.list.map(user => {
+            return (
+                <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.telefone}</td>
+                </tr>
+            )
+        }) : 
+        <tr>
+            <td>
+                {this.state.msgRetorno}
+            </td>
+        </tr>
+    }
 
 
 }
