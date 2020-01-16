@@ -113,10 +113,7 @@ export default class Consulta
 
     buscar() {
         const membroFiltro = this.state.membro
-        console.log('Inativo ' + membroFiltro.inativo)
-        console.log('Nome ' + membroFiltro.name)
         var ativo = !membroFiltro.inativo
-        console.log('ATIVO FRONT ' + ativo)
         if (this.validarDados(membroFiltro)) {
             var apiBaseUrl = undefined;
             apiBaseUrl = this.retornarURL();
@@ -133,12 +130,9 @@ export default class Consulta
                         console.log(resp.data.membros)
                         this.setState({ ...this.state, list: resp.data.membros, 
                             msgRetorno: resp.data.msgRetorno });
-                        // this.efetuarBackup()
                     }).catch(error => {
                         console.log("Ocorreu um erro..." + error);
                         if (error.response) {
-                            console.log(error.response.data.msgRetorno)
-                            console.log(error.response.msgRetorno)
                             this.emitirToastErro(error.response.data.msgRetorno);
                         } else if (error.request) {
                             console.log(error.request);

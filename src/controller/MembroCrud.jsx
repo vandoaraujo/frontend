@@ -18,7 +18,8 @@ const initialState = {
         name: '', email: '', cep: '', endereco: '', bairro: '',
         cidade: '', telefone: '', dataNascimento: '', numero: '',
         uf: '', sexo: '', estadoCivil: '', conjuge: '', complemento: '',
-        escolaridade: '', profissao: '', historicoIgreja: false, ativo: 1
+        escolaridade: '', profissao: '', historicoIgreja: false, ativo: 1,
+        photo_id: ''
     },
     list: []
 }
@@ -275,7 +276,7 @@ export default class MembroCrud extends Component {
                             <MaskedInput
                                 mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
                                 className="form-control"
-                                placeholder="Enter cep"
+                                placeholder="Digite o cep"
                                 guide={false}
                                 value={this.state.user.cep}
                                 name="cep"
