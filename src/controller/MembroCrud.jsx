@@ -87,7 +87,7 @@ export default class MembroCrud extends Component {
             var { baseURL, config } = this.obterApi();
             const method = user.id ? 'put' : 'post'
             const url = user.id ? `${baseURL}membros/${user.id}` : baseURL + 'membros'
-            user.name = user.name.toUpperCase
+            user.name = user.name.toUpperCase()
             axios[method](url, user, config)
                 .then(resp => {
                     this.setState({ user: initialState.user })
