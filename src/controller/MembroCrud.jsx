@@ -405,122 +405,142 @@ export default class MembroCrud extends Component {
                     </div>
 
                     <div class="card-body">
-                        <fieldset>
-                            <legend>Dados Endereço</legend>
 
-                            <div className="form-group">
-                                <label>CEP</label>
-                                <MaskedInput
-                                    mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-                                    className="form-control"
-                                    placeholder="Digite o cep"
-                                    guide={false}
-                                    value={this.state.user.cep}
-                                    name="cep"
-                                    onChange={e => this.updateAdress(e)} />
+                        <div className="row">
+                            <div className="col-2 col-md-2">
+                                <div className="form-group">
+                                    <label>CEP</label>
+                                    <MaskedInput
+                                        mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                                        className="form-control"
+                                        placeholder="Digite o cep"
+                                        guide={false}
+                                        value={this.state.user.cep}
+                                        name="cep"
+                                        onChange={e => this.updateAdress(e)} />
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Consultar</label>
-                                <button className="btn btn-warning"
-                                    onClick={() => this.buscarCEP()}>
-                                    <i className="fa fa-search"></i>
-                                </button>
+
+                            <div className="col-1 col-md-1">
+                                <div className="form-group">
+                                    <label></label>
+                                    <button className="btn btn-success btn-lg"
+                                        onClick={() => this.buscarCEP()}>
+                                        <i className="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-6 col-md-6">
+                                <div className="form-group">
+                                    <label>Endereço</label>
+                                    <input type="text" className="form-control"
+                                        name="endereco"
+                                        value={this.state.user.endereco}
+                                        onChange={e => this.updateField(e)} />
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Endereço</label>
-                                <input type="text" className="form-control"
-                                    name="endereco"
-                                    value={this.state.user.endereco}
-                                    onChange={e => this.updateField(e)} />
+                            <div className="col-1 col-md-1">
+                                <div className="form-group">
+                                    <label>Número</label>
+                                    <input type="number" className="form-control"
+                                        name="numero" value={this.state.user.numero}
+                                        onChange={e => this.updateField(e)} />
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Número</label>
-                                <input type="number" className="form-control"
-                                    name="numero" value={this.state.user.numero}
-                                    onChange={e => this.updateField(e)} />
+                            <div className="col-3 col-md-3">
+                                <div className="form-group">
+                                    <label>Complemento</label>
+                                    <input type="text" className="form-control"
+                                        name="complemento"
+                                        value={this.state.user.complemento}
+                                        onChange={e => this.updateField(e)} />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row">
+
+                            <div className="col-3 col-md-3">
+                                <div className="form-group">
+                                    <label>Bairro</label>
+                                    <input type="text" className="form-control"
+                                        name="bairro" value={this.state.user.bairro}
+                                        onChange={e => this.updateField(e)} />
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Bairro</label>
-                                <input type="text" className="form-control"
-                                    name="bairro" value={this.state.user.bairro}
-                                    onChange={e => this.updateField(e)} />
+                            <div className="col-3 col-md-3">
+                                <div className="form-group">
+                                    <label>UF</label>
+                                    <select className="form-control" name="uf"
+                                        value={this.state.user.uf}
+                                        onChange={e => this.updateField(e)} >
+                                        <option value="">Selecione...</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                        <option value="ES">Estrangeiro</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div className="form-group">
-                                <label>Complemento</label>
-                                <input type="text" className="form-control"
-                                    name="complemento"
-                                    value={this.state.user.complemento}
-                                    onChange={e => this.updateField(e)} />
+                            <div className="col-3 col-md-3">
+                                <div className="form-group">
+                                    <label>Cidade</label>
+                                    <input type="text" className="form-control"
+                                        name="cidade" value={this.state.user.cidade}
+                                        onChange={e => this.updateField(e)}
+                                    />
+                                </div>
                             </div>
-
-                            <div className="form-group">
-                                <label>UF</label>
-                                <select className="form-control" name="uf"
-                                    value={this.state.user.uf}
-                                    onChange={e => this.updateField(e)} >
-                                    <option value="">Selecione...</option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espírito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MS">Mato Grosso do Sul</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">RJ</option>
-                                    <option value="RN">Rio Grande do Norte</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
-                                    <option value="ES">Estrangeiro</option>
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Cidade</label>
-                                <input type="text" className="form-control"
-                                    name="cidade" value={this.state.user.cidade}
-                                    onChange={e => this.updateField(e)}
-                                />
-                            </div>
-
-                        </fieldset>
+                        </div>
                     </div>
                 </div>
 
                 <hr />
                 <div className="row">
                     <div className="col-12 d-flex justify-content-start">
-                        <button className="btn btn-primary"
+                        <button className="btn btn-primary btn-lg"
                             onClick={e => this.save(e)}>
                             {this.state.user.id ? 'Alterar' : 'Salvar'}
                         </button>
                         {this.state.user ?
-                            <button className="btn btn-secondary ml-2"
+                            <button className="btn btn-secondary"
                                 onClick={e => this.retornarListaMembros(e)}>
                                 Retornar
                             </button>
                             :
-                            <button className="btn btn-secondary ml-2"
+                            <button className="btn btn-secondary"
                                 onClick={e => this.clear(e)}>
                                 Cancelar
                             </button>
