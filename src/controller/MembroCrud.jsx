@@ -446,7 +446,7 @@ export default class MembroCrud extends Component {
 
                             <div className="col-1 col-md-1">
                                 <div className="form-group">
-                                    <label>Número</label>
+                                    <label>Num:</label>
                                     <input type="number" className="form-control"
                                         name="numero" value={this.state.user.numero}
                                         onChange={e => this.updateField(e)} />
