@@ -30,6 +30,7 @@ export default class Consulta
     }
 
     componentWillMount() {
+        this.setState({msgRetorno: 'Efetue sua busca'})
     }
 
     renderFormConsulta() {
@@ -133,6 +134,8 @@ export default class Consulta
                     }).catch(error => {
                         console.log("Ocorreu um erro..." + error);
                         if (error.response) {
+                            this.setState({ ...this.state, list: [], 
+                                msgRetorno: 'Busca sem Registros...' });
                             this.emitirToastErro(error.response.data.msgRetorno);
                         } else if (error.request) {
                             console.log(error.request);
