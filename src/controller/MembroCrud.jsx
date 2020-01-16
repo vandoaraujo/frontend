@@ -273,33 +273,6 @@ export default class MembroCrud extends Component {
                                     placeholder="Digite o nome..." />
                             </div>
 
-                            <div className="row">
-                                <div className="col-2 col-md-2">
-                                    <div className="form-group">
-                                        <label>Celular</label>
-                                        <MaskedInput
-                                            mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                                            className="form-control"
-                                            placeholder="Digite o celular"
-                                            guide={false}
-                                            value={this.state.user.telefone}
-                                            name="telefone"
-                                            onChange={e => this.updateAdress(e)} />
-
-                                    </div>
-                                </div>
-
-                                <div className="col-6 col-md-6">
-                                    <div className="form-group">
-                                        <label>E-mail</label>
-                                        <input type="email" className="form-control"
-                                            name="email"
-                                            value={this.state.user.email}
-                                            onChange={e => this.updateField(e)}
-                                            placeholder="Digite o email..." />
-                                    </div>
-                                </div>
-                            </div>
 
                             <div className="row">
                                 <div className="col-2 col-md-2">
@@ -399,6 +372,44 @@ export default class MembroCrud extends Component {
                     </div>
                 </div>
 
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h2>Informações Contato</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div className="row">
+                            <div className="col-2 col-md-2">
+                                <div className="form-group">
+                                    <label>Celular</label>
+                                    <MaskedInput
+                                        mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                                        className="form-control"
+                                        placeholder="Digite o celular"
+                                        guide={false}
+                                        value={this.state.user.telefone}
+                                        name="telefone"
+                                        onChange={e => this.updateAdress(e)} />
+
+                                </div>
+                            </div>
+
+                            <div className="col-6 col-md-6">
+                                <div className="form-group">
+                                    <label>E-mail</label>
+                                    <input type="email" className="form-control"
+                                        name="email"
+                                        value={this.state.user.email}
+                                        onChange={e => this.updateField(e)}
+                                        placeholder="Digite o email..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card mb-3">
                     <div class="card-header">
                         <h2>Dados Endereço</h2>
@@ -424,7 +435,7 @@ export default class MembroCrud extends Component {
 
                             <div className="col-1 col-md-1">
                                 <div className="form-group">
-                                    <label></label>
+                                    <label>Buscar</label>
                                     <button className="btn btn-success btn-lg"
                                         onClick={() => this.buscarCEP()}>
                                         <i className="fa fa-search"></i>
