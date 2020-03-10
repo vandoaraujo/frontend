@@ -19,7 +19,7 @@ const consultaState = {
 export default class Consulta
     extends Component {
 
-    state = { ...consultaState }
+    state = { ...consultaState, admin: true }
 
     updateField(event) {
         const membroPesquisa = { ...this.state.membro }
@@ -179,6 +179,32 @@ export default class Consulta
         return true
     }
 
+    setEdicaoMembro = (user) => {
+        this.setState({
+            edicaoMembro: true,
+            user: user
+        })
+    }
+
+    load(user) {
+        this.setEdicaoMembro(user)
+    }
+
+    togglePopup(membro) {
+        this.setState({
+            showPopup: !this.state.showPopup,
+            membroSelecionado: membro
+        });
+    }
+
+    loadTransferencia(user) {
+        this.setTransferenciaMembro(user)
+    }
+
+
+
+
+
     renderTable() {
         return (
             <div>
@@ -206,6 +232,23 @@ export default class Consulta
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.telefone}</td>
+                    {this.state.admin ?
+                        <td>
+                            <button title="Editar" className="btn btn-info"
+                                onClick={() => this.load(user)}>
+                                <i className="fa fa-pencil"></i>
+                            </button    >
+                            <button title="Transferir" className="btn btn-warning ml-2"
+                                onClick={() => this.loadTransferencia(user)}>
+                                <i className="fa fa-cut"></i>
+                            </button>
+                            <button title="Excluir" className="btn btn-danger ml-2"
+                                onClick={this.togglePopup.bind(this, user)}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </td>
+                        :null
+                    }
                 </tr>
             )
         }) :
