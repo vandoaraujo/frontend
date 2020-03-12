@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import constantes from '../common/constants'
+import Popup from '../components/template/Popup'
+import { Redirect } from 'react-router-dom'
 
 const headerProps = {
     icon: 'search',
@@ -19,7 +21,7 @@ const consultaState = {
 export default class Consulta
     extends Component {
 
-    state = { ...consultaState, admin: true }
+    state = { ...consultaState, admin: true, showPopup: false,  transferenciaMembro: false, }
 
     updateField(event) {
         const membroPesquisa = { ...this.state.membro }
@@ -83,11 +85,81 @@ export default class Consulta
     render() {
         return (
             <Main {...headerProps}>
+                {this.state.showPopup ?
+                <Popup
+                    text='Deseja realmente apagar?'
+                    removerMembro={this.removerMembro.bind(this)}
+                    closePopup={this.togglePopup.bind(this)} />
+                : null
+                }
                 {this.renderFormConsulta()}
                 {this.renderTable()}
             </Main>
         )
     }
+
+    getUpdatedList(user, add = true) {
+        const list = this.state.list.filter(u => u.id !== user.id)
+        if (add) list.unshift(user)
+        return list
+    }
+
+    setTransferenciaMembro = (user) => {
+        this.setState({
+            transferenciaMembro: true,
+            user: user
+        })
+    }
+    
+    renderTransferenciaMembro() {
+        if (this.state.transferenciaMembro) {
+            return <Redirect to={{
+                pathname: '/transferencia',
+                state: { userLoad: this.state.user }
+            }} />
+        }
+    }
+
+    emitirToast(action, mensagem) {
+        toast[action](mensagem, {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+        });
+    }
+
+    removerMembro() {
+        var membroARemover = this.state.membroSelecionado
+        var baseURL = undefined;
+        baseURL = this.retornarURL();
+        var config = {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        };
+        axios.delete(`${baseURL}membros/${membroARemover.id}`, config).then(resp => {
+            this.togglePopup()
+            if (resp.status > 200) {
+                this.emitirToast('error', 'Ocorreu um erro ao remover o membro...');
+            } else {
+                const list = this.getUpdatedList(membroARemover, false)
+                this.setState({ list })
+                this.emitirToast('success', 'Membro ' + membroARemover.name + ' removido com sucesso! ');
+                this.refreshListaMembros(baseURL);
+            }
+        }).catch(error => {
+            console.log("Ocorreu um erro..." + error);
+            if (error.response) {
+                this.emitirToast('error', error.response.data);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error codigo...', error.message);
+            }
+        });
+    }
+
 
     efetuarBackup() {
         var config = {
@@ -208,6 +280,8 @@ export default class Consulta
     renderTable() {
         return (
             <div>
+                {this.renderTransferenciaMembro()}
+
                 <table className="table mt-4">
                     <thead>
                         <tr>
@@ -227,6 +301,7 @@ export default class Consulta
 
     renderRows() {
         return this.state.list.length !== 0 ? this.state.list.map(user => {
+
             return (
                 <tr key={user.id}>
                     <td>{user.name}</td>
