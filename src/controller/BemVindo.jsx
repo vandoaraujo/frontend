@@ -11,7 +11,7 @@ import 'moment/locale/pt-br';
 const headerProps = {
     icon: 'book',
     title: 'Início',
-    subtitle: 'Sistema para cadastrar a família IBB...'
+    subtitle: 'Sistema de dados da família IBB'
 }
 
 export default class BemVindo extends Component {

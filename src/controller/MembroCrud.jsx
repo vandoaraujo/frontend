@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from '../components/template/Main';
 import { Redirect } from 'react-router-dom'
-// import ToastMessage from '../components/ToastMessage';
 
 const headerProps = {
     icon: 'address-card',
@@ -275,7 +274,7 @@ export default class MembroCrud extends Component {
 
 
                             <div className="row">
-                                <div className="col-2 col-md-2">
+                                <div className="col-3 col-md-3">
                                     <div className="form-group">
                                         <label>Data Nascimento</label>
                                         <input type="date" className="form-control"

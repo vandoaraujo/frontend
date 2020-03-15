@@ -277,6 +277,27 @@ export default class HomeList extends Component {
         else return 0;
     }
 
+    mediaFaixaEtaria() {
+        if (this.state.list && this.state.list.length > 0)
+            for(let i =0 ; i < this.state.list.length; i++){
+                var membro = this.state.list[i];
+                
+                
+            }
+        else return 0;
+    }
+
+    quantidadeMembrosMasculino() {
+        if (this.state.list && this.state.list.length > 0)
+            return this.state.list.length
+        else return 0;
+    }
+
+    quantidadeMembrosFeminino() {
+        if (this.state.list && this.state.list.length > 0)
+            return this.state.list.length
+        else return 0;
+    }
 
     render() {
         return (
@@ -291,7 +312,7 @@ export default class HomeList extends Component {
                 <div className="row">
                     <div className="col-9 col-md-9">
                         <div className="form-group">
-                            <label>Quantidade de membros: </label>
+                            <label>Quantidade </label>
                             <h3>{this.quantidadeMembros()}</h3>
                         </div>
                     </div>
@@ -301,6 +322,28 @@ export default class HomeList extends Component {
                                 onClick={() => this.setNovoMembro()}>
                                 <i className="fa fa-user-plus"></i>
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Masculinos: </label>
+                            <h3>{this.quantidadeMembrosMasculino()}</h3>
+                        </div>
+                    </div>
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Femininos: </label>
+                            <h3>{this.quantidadeMembrosFeminino()}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Média Etária </label>
+                            <h3>{this.mediaFaixaEtaria()}</h3>
                         </div>
                     </div>
                 </div>

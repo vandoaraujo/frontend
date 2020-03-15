@@ -230,8 +230,9 @@ class Login extends Component {
                 <span className="focus-input100"></span>
               </div>
             </form>
+            <button className="login100-form-btn" onClick={() => { this.login() }}>Login</button>
             <div className="container-login100-form-btn">
-              <button className="login100-form-btn" onClick={() => { this.login() }}>Login</button>
+              
             </div>
             <ToastContainer />
           </div>
@@ -275,10 +276,14 @@ const AuthButton = withRouter(
     ) : (
         <div>
           {/* <Link to="/public">Manual de Uso</Link> */}
-          <div className="col-12 d-flex justify-content-start">
-            <Link to="/protected" className="btn btn-dark">Acessar</Link>
+          <div className="row">
+              <div className="col-9 col-md-9">
+                <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">Site IBB</a>
+              </div>
+              <div className="col- col-md-3">
+                <Link to="/protected" className="btn btn-dark">Acessar</Link>
+              </div>
           </div>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.igrejabatistanosbancarios.org.br">igrejabatistanosbancarios</a>
         </div>
       )
 );

@@ -26,9 +26,10 @@ export default class UserTransferir extends Component {
     }
 
     buscarMembro() {
-        if (this.props.location.state && this.props.location.state.usuarioLogado) {
+        console.log(this.props.location.state.userLoad);
+        if (this.props.location.state && this.props.location.state.userLoad) {
             var { baseURL, config } = this.obterApi();
-            const url = `${baseURL}membros/${this.props.location.state.usuarioLogado.id}`
+            const url = `${baseURL}membros/${this.props.location.state.userLoad.id}`
             axios['get'](url, config)
                 .then(resp => {
                     this.setState({ user: resp.data });
@@ -79,6 +80,7 @@ export default class UserTransferir extends Component {
     }
 
     transferir(){
+        //userLoad
         var membro = this.state.user
         if (this.validarDados(membro)) {
             var { baseURL, config } = this.obterApi();
@@ -128,9 +130,13 @@ export default class UserTransferir extends Component {
      * @param {event}
      */
     updateField(event) {
+        console.log(event.target.value)
+        console.log(this.state.user)
         const user = { ...this.state.user }
+        console.log(user.id)
         user[event.target.name] = event.target.value
         this.setState({ user })
+        console.log(user)
     }
 
     renderForm() {
@@ -149,7 +155,7 @@ export default class UserTransferir extends Component {
                     <div className="col-6 col-md-6">
                         <div className="form-group">
                             <label>Motivo</label>
-                            <select className="form-control" name="motivo"
+                            <select className="form-control" name="motivoTransferencia"
                                 value={this.state.user.motivoTransferencia}
                                 onChange={e => this.updateField(e)} >
                                 <option value="">Selecione o motivo...</option>

@@ -10,7 +10,7 @@ import { Redirect } from 'react-router-dom'
 const headerProps = {
     icon: 'search',
     title: 'Consulta',
-    subtitle: 'Permite consultar dados específicos...'
+    subtitle: 'Consulta por filtros específicos...'
 }
 
 const consultaState = {
