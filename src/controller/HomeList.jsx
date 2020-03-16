@@ -281,9 +281,13 @@ export default class HomeList extends Component {
         if (this.state.list && this.state.list.length > 0)
             for(let i =0 ; i < this.state.list.length; i++){
                 var membro = this.state.list[i];
-                
+                if(membro.dataNascimento){
+                    console.log(membro.dataNascimento.substring(0, 3))
+                }
+                return -2;
                 
             }
+            
         else return 0;
     }
 
