@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Redirect } from 'react-router-dom'
 import constantes from '../common/constants'
 import Popup from '../components/template/Popup'
+import * as moment from 'moment';
+import 'moment/locale/pt-br';
 
 const fetch = require("node-fetch");
 
@@ -278,17 +280,20 @@ export default class HomeList extends Component {
     }
 
     mediaFaixaEtaria() {
-        if (this.state.list && this.state.list.length > 0)
+        var somaIdades = 0;
+        if (this.state.list && this.state.list.length > 0){
             for(let i =0 ; i < this.state.list.length; i++){
                 var membro = this.state.list[i];
                 if(membro.dataNascimento){
-                    console.log(membro.dataNascimento.substring(0, 3))
+                    moment.locale('pt-BR');
+                    var idade = moment().year() - membro.dataNascimento.substring(0, 4);
+                    somaIdades = somaIdades + idade;
                 }
-                return -2;
-                
             }
-            
-        else return 0;
+            var media = somaIdades / this.state.list.length
+            return media;
+        }
+        return 0;
     }
 
     quantidadeMembrosMasculino() {
