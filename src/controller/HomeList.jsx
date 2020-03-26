@@ -297,9 +297,16 @@ export default class HomeList extends Component {
     }
 
     quantidadeMembrosMasculino() {
-        if (this.state.list && this.state.list.length > 0)
-            return this.state.list.length
-        else return 0;
+        var somaIdadesMasculino = 0;
+        if (this.state.list && this.state.list.length > 0){
+            for(let i =0 ; i < this.state.list.length; i++){
+                var membro = this.state.list[i];
+                if(membro.sexo && membro.sexo === 'M' ){
+                    somaIdadesMasculino++
+                }
+            }
+        }
+        return somaIdadesMasculino
     }
 
     quantidadeMembrosFeminino() {
