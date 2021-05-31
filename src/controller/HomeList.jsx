@@ -296,6 +296,24 @@ export default class HomeList extends Component {
         return 0;
     }
 
+    retornarQuantidadeCriancas(){
+        var qtdCriancas = 0;
+        if (this.state.list && this.state.list.length > 0){
+            for(let i =0 ; i < this.state.list.length; i++){
+                var membro = this.state.list[i];
+                if(membro.dataNascimento){
+                    moment.locale('pt-BR');
+                    var idade = moment().year() - membro.dataNascimento.substring(0, 4);
+                    if(idade < 12){
+                        qtdCriancas++;    
+                    }
+                }
+            }
+            return qtdCriancas;
+        }
+        return 0;
+    }
+
     quantidadeMembrosMasculino() {
         var somaIdadesMasculino = 0;
         if (this.state.list && this.state.list.length > 0){
@@ -369,7 +387,22 @@ export default class HomeList extends Component {
                             <h3>{this.mediaFaixaEtaria()}</h3>
                         </div>
                     </div>
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Crianças</label>
+                            <h3>{this.retornarQuantidadeCriancas()}</h3>
+                        </div>
+                    </div>
+                    <div className="col-3 col-md-3">
+                        <div className="form-group">
+                            <label>Adolescentes</label>
+                            <h3>Em breve...</h3>
+                        </div>
+                    </div>
                 </div>
+                
+                
+                
                 {this.renderTable()}
             </Main>
         )

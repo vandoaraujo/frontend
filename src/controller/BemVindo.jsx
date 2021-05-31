@@ -11,7 +11,7 @@ import 'moment/locale/pt-br';
 const headerProps = {
     icon: 'book',
     title: 'Início',
-    subtitle: 'Sistema de dados da família IBB'
+    subtitle: 'Cadastro de Membros'
 }
 
 export default class BemVindo extends Component {
@@ -80,11 +80,11 @@ class BoasVindas extends Component {
                             <p>{this.exibeUltimoLogin()}</p>
                         </div>
                         <hr></hr>
-                        <div className="form-group">
+{/*                         <div className="form-group">
                             <label>Avisos: </label>
                             <label>Link Agenda Site Igreja</label>
                             <label>https://docs.google.com/spreadsheets/d/1ZgEwDF99_eBjJrLIC9QN--haI0ljkOg45nyry3gfn9o/edit#gid=1791516055</label>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <hr />

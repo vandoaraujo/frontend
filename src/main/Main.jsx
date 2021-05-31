@@ -284,6 +284,7 @@ const AuthButton = withRouter(
                 <Link to="/protected" className="btn btn-dark">Acessar</Link>
               </div>
           </div>
+          <div>Versão 2.0</div>
         </div>
       )
 );
